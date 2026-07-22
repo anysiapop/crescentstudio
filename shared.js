@@ -105,19 +105,28 @@
     if (e.key === 'Escape' && nav.classList.contains('is-open')) closeMenu();
   });
 
-  // Hide the pill while the hero's own CTA buttons are on screen
-  // (reappears once they're out of view), and hide it for good once the
-  // footer is reached — the footer has its own Work/Services/About pill
-  // row at its top that takes over from here. Driven by a rAF loop
-  // rather than a 'scroll' listener: the hero's crescent-state class
-  // reacts to scroll too, and listener order isn't guaranteed, so a
-  // scroll-event check can read one tick stale.
+  // Desktop: hide the pill while the hero's own CTA buttons are on
+  // screen (reappears once they're out of view), and hide it for good
+  // once the footer is reached — the footer has its own Work/Services/
+  // About pill row at its top that takes over from here.
+  //
+  // Mobile (<=640px, matching the site's own mobile breakpoint): the
+  // pill competes with the hero's own copy for a small screen, so it
+  // stays fully hidden for the whole hero — not just while the hero's
+  // CTAs happen to be on screen — then behaves like a normal
+  // hide-on-scroll-down / reveal-on-scroll-up nav once past it, right
+  // up until the footer takes over.
+  //
+  // Driven by a rAF loop rather than a 'scroll' listener: the hero's
+  // crescent-state class reacts to scroll too, and listener order isn't
+  // guaranteed, so a scroll-event check can read one tick stale.
   // (On pages with no hero — e.g. About — heroBtns/heroPinWrap are just
-  // null and isHeroCtaVisible() always returns false, which is exactly
-  // the right behavior there.)
+  // null and isHeroCtaVisible()/isInHero() always return false, which is
+  // exactly the right behavior there.)
   var heroBtns      = document.querySelector('.hero-btns');
   var heroPinWrap   = document.querySelector('.hero-pin-wrap');
   var footerCurtain = document.getElementById('footer-curtain');
+  var mobileMq      = window.matchMedia('(max-width: 640px)');
 
   function isHeroCtaVisible() {
     // The hero's scroll progress clamps at 1 and never resets, so
@@ -129,6 +138,10 @@
     if (heroPinWrap.getBoundingClientRect().bottom <= 0) return false;
     return parseFloat(getComputedStyle(heroBtns).opacity) > 0.15;
   }
+  function isInHero() {
+    if (!heroPinWrap) return false;
+    return heroPinWrap.getBoundingClientRect().bottom > 0;
+  }
   function hasReachedFooter() {
     // .site-footer is position:fixed, so its own getBoundingClientRect
     // is always viewport-sized regardless of the ancestor clip-path —
@@ -137,8 +150,31 @@
     if (!footerCurtain) return false;
     return footerCurtain.getBoundingClientRect().top < window.innerHeight;
   }
+
+  // Direction tracking for the mobile hide/reveal behavior. A small
+  // threshold (rather than reacting to every 1px delta) filters out
+  // sub-pixel scroll noise so the pill doesn't flicker mid-gesture.
+  var lastScrollY  = window.scrollY;
+  var scrollingDown = false;
+  function updateScrollDirection() {
+    var y = window.scrollY;
+    var delta = y - lastScrollY;
+    if (Math.abs(delta) > 4) {
+      scrollingDown = delta > 0;
+      lastScrollY = y;
+    }
+  }
+
   function updatePillVisibility() {
-    nav.classList.toggle('pill-nav--hidden', isHeroCtaVisible() || hasReachedFooter());
+    updateScrollDirection();
+    var reachedFooter = hasReachedFooter();
+    var hidden;
+    if (mobileMq.matches) {
+      hidden = isInHero() || reachedFooter || (scrollingDown && window.scrollY > 40);
+    } else {
+      hidden = isHeroCtaVisible() || reachedFooter;
+    }
+    nav.classList.toggle('pill-nav--hidden', hidden);
   }
 
   (function loop() {
