@@ -1,0 +1,868 @@
+/* Second and third section */
+
+position: relative;
+width: 1643px;
+height: 2885px;
+
+/* Moon Background
+
+Backgrounds
+*/
+background: #F1E9DE;
+
+
+/* Vector 20 */
+
+position: absolute;
+width: 941.57px;
+height: 941.25px;
+left: 204.52px;
+top: 734.25px;
+
+transform: rotate(110.44deg);
+
+
+/* Vector 21 */
+
+position: absolute;
+width: 1001px;
+height: 1004.56px;
+left: 165px;
+top: 695px;
+
+transform: rotate(110.44deg);
+
+
+/* background-stars */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 1273px;
+height: 834px;
+left: calc(50% - 1273px/2);
+top: 1752px;
+
+background: url(Group 20.png);
+border-width: 0px 1px 1px 1px;
+border-style: solid;
+border-color: #000000;
+border-radius: 79px;
+
+
+/* Vector 16 */
+
+position: absolute;
+width: 702.3px;
+height: 711.19px;
+left: 358.15px;
+top: 889.38px;
+
+transform: rotate(110.44deg);
+
+
+/* Vector 19 */
+
+position: absolute;
+width: 875.89px;
+height: 896.1px;
+left: 241.09px;
+top: 776.07px;
+
+transform: rotate(110.44deg);
+
+
+/* Vector 22 */
+
+position: absolute;
+width: 618.74px;
+height: 632.96px;
+left: 409.93px;
+top: 950.94px;
+
+transform: rotate(110.44deg);
+
+
+/* Vector 17 */
+
+position: absolute;
+width: 758.07px;
+height: 759.8px;
+left: 324.51px;
+top: 859.44px;
+
+transform: rotate(110.44deg);
+
+
+/* Vector 23 */
+
+position: absolute;
+width: 542.28px;
+height: 542.28px;
+left: 465.67px;
+top: 1005.39px;
+
+transform: rotate(110.44deg);
+
+
+/* Vector 18 */
+
+position: absolute;
+width: 816.79px;
+height: 818.57px;
+left: 284.3px;
+top: 824.79px;
+
+transform: rotate(110.44deg);
+
+
+/* Vector 24 */
+
+position: absolute;
+width: 476.5px;
+height: 478.28px;
+left: 506.83px;
+top: 1048.23px;
+
+transform: rotate(110.44deg);
+
+
+/* card1 */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 52.7052px 35.1368px;
+gap: 31.62px;
+
+position: absolute;
+width: 368.94px;
+height: 409.03px;
+left: 244px;
+top: 402px;
+
+/* Moon White
+
+Primary
+*/
+background: #F5F4EF;
+border: 0.878419px solid #000000;
+border-radius: 18.4468px;
+
+
+/* Relying entirely on AI. */
+
+width: 298.66px;
+height: 90px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 42.1641px;
+line-height: 107.33%;
+/* or 45px */
+letter-spacing: 0.01em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* You are using very powerful tools, but the output is recognizable. Your product looks like everyone else's product. Founders who care about standing out know 
+this feeling. */
+
+width: 298.66px;
+height: 182px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 23.7877px;
+line-height: 26px;
+letter-spacing: 0.01em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* card4 */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 52.7052px 35.1368px;
+gap: 31.62px;
+
+position: absolute;
+width: 368.94px;
+height: 454.03px;
+left: 244px;
+top: 832.43px;
+
+/* Moon White
+
+Primary
+*/
+background: #F5F4EF;
+border: 0.878419px solid #000000;
+border-radius: 18.4468px;
+
+
+/* You can feel it's off. You can't explain why. */
+
+width: 298.66px;
+height: 135px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 42.1641px;
+line-height: 107.33%;
+/* or 45px */
+letter-spacing: 0.01em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Something about the product doesn't land. Users leave. Investors hesitate. You can't articulate the problem — which means you can't fix it. Design decisions get made by default. */
+
+width: 298.66px;
+height: 182px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 23.7877px;
+line-height: 26px;
+letter-spacing: 0.01em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* card2 */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 52.7052px 35.1368px;
+gap: 31.62px;
+
+position: absolute;
+width: 368.94px;
+height: 376.03px;
+left: 637.53px;
+top: 402px;
+
+/* Moon White
+
+Primary
+*/
+background: #F5F4EF;
+border: 0.878419px solid #000000;
+border-radius: 18.4468px;
+
+
+/* Design 
+keeps getting deprioritized. */
+
+width: 298.66px;
+height: 135px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 42.1641px;
+line-height: 107.33%;
+/* or 45px */
+letter-spacing: 0.01em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Design accumulates debt silently, until a deal falls through because the product didn't look serious. */
+
+width: 298.66px;
+height: 104px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 23.7877px;
+line-height: 26px;
+letter-spacing: 0.01em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* card5 */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 52.7052px 35.1368px;
+gap: 31.62px;
+
+position: absolute;
+width: 368.94px;
+height: 428.03px;
+left: 637.53px;
+top: 801.68px;
+
+/* Moon White
+
+Primary
+*/
+background: #F5F4EF;
+border: 0.878419px solid #000000;
+border-radius: 18.4468px;
+
+
+/* Full-time is too much. Nothing is too little. */
+
+width: 298.66px;
+height: 135px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 42.1641px;
+line-height: 107.33%;
+/* or 45px */
+letter-spacing: 0.01em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* You need design consistently. A full-time hire feels like a commitment you can't justify yet. So you do nothing, which costs you more than either option. */
+
+width: 298.66px;
+height: 156px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 23.7877px;
+line-height: 26px;
+letter-spacing: 0.01em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* card3 */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 52.7052px 35.1368px;
+gap: 31.62px;
+
+position: absolute;
+width: 368.94px;
+height: 454.03px;
+left: 1031.06px;
+top: 402px;
+
+/* Moon White
+
+Primary
+*/
+background: #F5F4EF;
+border: 0.878419px solid #000000;
+border-radius: 18.4468px;
+
+
+/* You hired a designer once. 
+It didn't work. */
+
+width: 298.66px;
+height: 135px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 42.1641px;
+line-height: 107.33%;
+/* or 45px */
+letter-spacing: 0.01em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Pretty mockups that couldn't be built. A junior who needed constant direction. Or an agency that charged a lot and delivered a template. Now you're skeptical, and behind. */
+
+width: 298.66px;
+height: 182px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 23.7877px;
+line-height: 26px;
+letter-spacing: 0.01em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* card6 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 52.7052px 35.1368px;
+gap: 31.62px;
+
+position: absolute;
+width: 368.94px;
+height: 454.03px;
+left: 1031.06px;
+top: 878.11px;
+
+/* Sunset Mandarin
+
+Accent
+*/
+background: #EB7848;
+border-radius: 18.4468px;
+
+
+/* Your product is losing deals silently. */
+
+width: 298.66px;
+height: 135px;
+
+font-family: 'PP Neue Montreal';
+font-style: italic;
+font-weight: 400;
+font-size: 42.1641px;
+line-height: 107.33%;
+/* or 45px */
+letter-spacing: 0.01em;
+
+/* Moon White */
+color: #F5F4EF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* A potential customer lands on your site. Tries the product. Leaves. You never know why. But somewhere between the first impression and the decision, design was part of the reason. */
+
+width: 298.66px;
+height: 182px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 500;
+font-size: 23.7877px;
+line-height: 26px;
+letter-spacing: 0.01em;
+
+/* Moon White */
+color: #F5F4EF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Your product deserves
+better than good enough. */
+
+position: absolute;
+width: 606px;
+height: 150px;
+left: 519px;
+top: 154px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 62.614px;
+line-height: 75px;
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+
+/* & */
+
+position: absolute;
+width: 140px;
+height: 206px;
+left: 752.16px;
+top: 2236.22px;
+
+font-family: 'Times New Roman';
+font-style: normal;
+font-weight: 400;
+font-size: 178.881px;
+line-height: 206px;
+/* identical to box height */
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+
+
+/* Crescent title made of letters */
+
+position: absolute;
+width: 816.72px;
+height: 292.96px;
+left: 414px;
+top: 1767px;
+
+
+
+/* r */
+
+position: absolute;
+width: 75px;
+height: 256px;
+left: 548.05px;
+top: 1778.59px;
+
+font-family: 'Times New Roman';
+font-style: normal;
+font-weight: 400;
+font-size: 222.543px;
+line-height: 256px;
+/* identical to box height */
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 4px 4px rgba(241, 233, 222, 0.25);
+transform: rotate(1.65deg);
+
+
+/* e */
+
+position: absolute;
+width: 99px;
+height: 256px;
+left: 594.29px;
+top: 1791.67px;
+
+font-family: 'Times New Roman';
+font-style: normal;
+font-weight: 400;
+font-size: 222.543px;
+line-height: 256px;
+/* identical to box height */
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 4px 4px rgba(241, 233, 222, 0.25);
+transform: rotate(-8.96deg);
+
+
+/* s */
+
+position: absolute;
+width: 87px;
+height: 256px;
+left: 724.47px;
+top: 1775.69px;
+
+font-family: 'Times New Roman';
+font-style: normal;
+font-weight: 400;
+font-size: 222.543px;
+line-height: 256px;
+/* identical to box height */
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 4px 4px rgba(241, 233, 222, 0.25);
+transform: rotate(1.85deg);
+
+
+/* c */
+
+position: absolute;
+width: 99px;
+height: 256px;
+left: 795.61px;
+top: 1784.43px;
+
+font-family: 'Times New Roman';
+font-style: normal;
+font-weight: 400;
+font-size: 222.543px;
+line-height: 256px;
+/* identical to box height */
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 4px 4px rgba(241, 233, 222, 0.25);
+transform: rotate(-9.5deg);
+
+
+/* e */
+
+position: absolute;
+width: 99px;
+height: 256px;
+left: 919.33px;
+top: 1767px;
+
+font-family: 'Times New Roman';
+font-style: normal;
+font-weight: 400;
+font-size: 222.543px;
+line-height: 256px;
+/* identical to box height */
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 4px 4px rgba(241, 233, 222, 0.25);
+transform: rotate(4.82deg);
+
+
+/* n */
+
+position: absolute;
+width: 112px;
+height: 256px;
+left: 1028.48px;
+top: 1778.04px;
+
+font-family: 'Times New Roman';
+font-style: normal;
+font-weight: 400;
+font-size: 222.543px;
+line-height: 256px;
+/* identical to box height */
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 4px 4px rgba(241, 233, 222, 0.25);
+transform: rotate(4.82deg);
+
+
+/* t */
+
+position: absolute;
+width: 62px;
+height: 256px;
+left: 1140.02px;
+top: 1777.9px;
+
+font-family: 'Times New Roman';
+font-style: normal;
+font-weight: 400;
+font-size: 222.543px;
+line-height: 256px;
+/* identical to box height */
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 4px 4px rgba(241, 233, 222, 0.25);
+transform: rotate(-6.53deg);
+
+
+/* Vector 39 */
+
+position: absolute;
+width: 115.3px;
+height: 122.08px;
+left: calc(50% - 115.3px/2 - 349.85px);
+top: 1864.02px;
+
+/* Moon White
+
+Primary
+*/
+background: #F5F4EF;
+box-shadow: 0px 4px 4px rgba(241, 233, 222, 0.25);
+transform: rotate(-3.22deg);
+
+
+/* helps you make your product feel like it was built with intention. */
+
+position: absolute;
+width: 769px;
+height: 151px;
+left: 437px;
+top: 2075px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 56.3819px;
+line-height: 68px;
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 4px 4px rgba(255, 255, 255, 0.25);
+
+
+/* cta banner section 3 */
+
+position: absolute;
+width: 840px;
+height: 218px;
+left: 402px;
+top: 2459.22px;
+
+
+
+/* cta-section3 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 840px;
+height: 218px;
+left: calc(50% - 840px/2 + 0.5px);
+top: 2459.22px;
+
+/* Sunset Mandarin
+
+Accent
+*/
+background: #EB7848;
+/* Eclipse Black
+
+Primary
+*/
+border: 3.22609px solid #0B0B0B;
+border-radius: 20px;
+
+
+/* show the world what your 
+business actually is. */
+
+position: absolute;
+width: 769px;
+height: 151px;
+left: calc(50% - 769px/2);
+top: 2489.22px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 56.3819px;
+line-height: 68px;
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;

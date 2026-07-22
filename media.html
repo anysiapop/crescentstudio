@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Media &amp; Speeches — Crescent Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css?v=2" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            eclipse:      '#0B0B0B',
+            'moon-white': '#F5F4EF',
+            lunar:        '#A7A7A7',
+            'moon-bg':    '#F1E9DE',
+            terracotta:   '#C1623B',
+            'terra-dark': '#9C4F30',
+          },
+          fontFamily: {
+            sans:  ['PP Neue Montreal', 'Inter', 'system-ui', 'sans-serif'],
+            serif: ['Times New Roman', 'Times', 'Georgia', 'serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* ── Media & speeches page ── pulled from Figma via get_design_context
+       (node 161:354, frame 1643 × 3330). Simple left-aligned column, no
+       repeating cards, so this reuses the site's 1440/1643 = 0.876445
+       scale factor for type sizes only; layout uses the existing
+       `.wrap`-style centered-column convention (see index.html) rather
+       than literal absolute positioning, since there's nothing here that
+       needs pixel-locked bleed/overlap like the about/work pages. */
+    body { background: #F1E9DE; color: #0B0B0B; }
+
+    .media-hero { padding: 168px 24px 140px; }
+    .media-wrap { max-width: 1160px; margin: 0 auto; padding: 0 48px; }
+    @media (max-width: 640px) { .media-wrap { padding: 0 24px; } }
+    .media-col { max-width: 840px; }
+
+    .media-heading {
+      margin: 0 0 48px;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(40px, 6.6vw, 89.9px);
+      letter-spacing: -0.06em;
+      color: #EB7848;
+    }
+    .media-heading--speeches { color: #D2A1FF; }
+    .media-section + .media-section { margin-top: 128px; }
+
+    .media-list { list-style: none; counter-reset: media-item; }
+    .media-item { counter-increment: media-item; display: flex; gap: 12px; margin-bottom: 48px; }
+    .media-item:last-child { margin-bottom: 0; }
+    .media-item::before {
+      content: counter(media-item) ".";
+      flex: 0 0 auto;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: clamp(18px, 2.4vw, 32.4px);
+      line-height: 1.073;
+      letter-spacing: 0.01em;
+      color: #0B0B0B;
+    }
+    .media-item-body { flex: 1 1 auto; }
+    .media-item-title {
+      display: inline-block;
+      margin: 0;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: clamp(18px, 2.4vw, 32.4px);
+      line-height: 1.073;
+      letter-spacing: 0.01em;
+      color: #0B0B0B;
+      text-decoration: none;
+    }
+    a.media-item-title { cursor: pointer; }
+    a.media-item-title:hover, a.media-item-title:focus-visible { text-decoration: underline; }
+    a.media-item-title:focus-visible { outline: 2px solid #0B0B0B; outline-offset: 3px; }
+    .media-item-meta {
+      margin: 6px 0 0;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.01em;
+      color: rgba(11, 11, 11, 0.6);
+    }
+
+    @media (max-width: 640px) {
+      .media-hero { padding-top: 120px; }
+      .media-section + .media-section { margin-top: 88px; }
+      .media-item { gap: 8px; margin-bottom: 32px; }
+    }
+
+    /* Floating hover preview — one shared element, repositioned to follow
+       the cursor and re-sourced per item on mouseenter (see script below).
+       Flat surface, transform/opacity-only fade+scale per the brand's
+       motion rules — no shadow, no bounce. Fine-pointer devices only: a
+       thing that chases your mouse has no equivalent on touch. */
+    .media-hover-preview {
+      position: fixed;
+      top: 0; left: 0;
+      width: 280px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 14px;
+      pointer-events: none;
+      z-index: 60;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.94);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      will-change: transform, opacity;
+    }
+    .media-hover-preview.is-visible { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    @media (max-width: 640px), (pointer: coarse) {
+      .media-hover-preview { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav: floating pill (shared across pages — see partials/nav.html) -->
+  <!--#include virtual="partials/nav.html" -->
+
+  <section class="media-hero">
+    <div class="media-wrap">
+      <div class="media-col">
+
+        <div class="media-section">
+          <h1 class="media-heading fade-up" style="--i:0">Media</h1>
+          <ol class="media-list">
+            <li class="media-item fade-up" style="--i:1">
+              <div class="media-item-body">
+                <a class="media-item-title" href="https://medium.com/@tijanacresenzi/unleashing-the-power-of-ai-and-organization-my-ux-success-story-with-chatgpt-and-notion-660bb4e5440e" target="_blank" rel="noopener" data-hover-img="brand_assets/media-hover/1.webp">Power of AI and Organization: My UX Success Story with ChatGPT and Notion</a>
+                <p class="media-item-meta">article · 3 min read</p>
+              </div>
+            </li>
+            <li class="media-item fade-up" style="--i:2">
+              <div class="media-item-body">
+                <a class="media-item-title" href="https://blog.brainster.co/ux-proekt-doniraj-kompjuter/?fbclid=IwAR1tkgFfuqCIvSQtgJxV-S8iHxuC1yrsKqI8JMsMbUFuBW7SN0doYS4B9gA" target="_blank" rel="noopener" data-hover-img="brand_assets/media-hover/2.png">Creative UX/UI solution for Donate a Computer</a>
+                <p class="media-item-meta">article · 6 min read</p>
+              </div>
+            </li>
+            <li class="media-item fade-up" style="--i:3">
+              <div class="media-item-body">
+                <a class="media-item-title" href="https://blog.brainster.co/ux-tijana-uspeshna-anant/" target="_blank" rel="noopener" data-hover-img="brand_assets/media-hover/3.jpg">Don't give up on your dream and desire for knowledge.</a>
+                <p class="media-item-meta">article · 5 min read</p>
+              </div>
+            </li>
+            <li class="media-item fade-up" style="--i:4">
+              <div class="media-item-body">
+                <a class="media-item-title" href="https://blog.brainster.co/ux-dream-team-noemvri-2022/" target="_blank" rel="noopener" data-hover-img="brand_assets/media-hover/4.jpg">Tijana Cresenzi – Dream Team student at the UX/UI Design Academy</a>
+                <p class="media-item-meta">article · 5 min read</p>
+              </div>
+            </li>
+            <li class="media-item fade-up" style="--i:5">
+              <div class="media-item-body">
+                <a class="media-item-title" href="https://blog.brainster.co/corp-najgolem-brainster-hakaton-redi/" target="_blank" rel="noopener" data-hover-img="brand_assets/media-hover/5.jpg">48 hours that will be remembered!</a>
+                <p class="media-item-meta">article · 7 min read</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="media-section">
+          <h1 class="media-heading media-heading--speeches fade-up" style="--i:0">Speeches</h1>
+          <ol class="media-list">
+            <li class="media-item fade-up" style="--i:1">
+              <div class="media-item-body">
+                <a class="media-item-title" href="https://www.youtube.com/watch?v=EOnrocPJTWs&t=703s" target="_blank" rel="noopener" data-hover-img="brand_assets/media-hover/11.png">From a French Teacher to a Web Designer - with retraining to a better job</a>
+                <p class="media-item-meta">interview · 10 min</p>
+              </div>
+            </li>
+            <li class="media-item fade-up" style="--i:2">
+              <div class="media-item-body">
+                <a class="media-item-title" href="https://youtu.be/yrho4rKRskY?si=3XSDOIOcNhw14gKT&t=209" target="_blank" rel="noopener" data-hover-img="brand_assets/media-hover/22.webp">TVTaxi 28 | Interview: My superpower | UX/UI design talks</a>
+                <p class="media-item-meta">interview · 6 min</p>
+              </div>
+            </li>
+            <li class="media-item fade-up" style="--i:3">
+              <div class="media-item-body">
+                <span class="media-item-title" data-hover-img="brand_assets/media-hover/33.webp">Youth Conference on Women's Entrepreneurship | MCO</span>
+                <p class="media-item-meta">live speech</p>
+              </div>
+            </li>
+            <li class="media-item fade-up" style="--i:4">
+              <div class="media-item-body">
+                <span class="media-item-title" data-hover-img="brand_assets/media-hover/44.webp">[officehours #37] Journey To AI Builder / Entrepreneur</span>
+                <p class="media-item-meta">live webinar</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer (shared across pages — see partials/footer.html) -->
+  <!--#include virtual="partials/footer.html" -->
+
+  <img class="media-hover-preview" id="media-hover-preview" src="" alt="" aria-hidden="true" />
+
+  <script src="shared.js?v=2"></script>
+  <script>
+    // ── Media/Speeches item hover preview: image follows the cursor ──
+    (function () {
+      var preview = document.getElementById('media-hover-preview');
+      var items = document.querySelectorAll('[data-hover-img]');
+      if (!preview || !items.length) return;
+      if (!window.matchMedia('(pointer: fine)').matches) return;
+
+      function move(e) {
+        preview.style.left = e.clientX + 'px';
+        preview.style.top = e.clientY + 'px';
+      }
+
+      items.forEach(function (item) {
+        item.addEventListener('mouseenter', function (e) {
+          preview.src = item.getAttribute('data-hover-img');
+          move(e);
+          preview.classList.add('is-visible');
+        });
+        item.addEventListener('mousemove', move);
+        item.addEventListener('mouseleave', function () {
+          preview.classList.remove('is-visible');
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

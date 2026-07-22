@@ -1,0 +1,3616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crescent Studio — Your designer. Monthly.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/flubber@0.4.2/build/flubber.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css?v=2" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            eclipse:      '#0B0B0B',
+            'moon-white': '#F5F4EF',
+            lunar:        '#A7A7A7',
+            'moon-bg':    '#F1E9DE',
+            terracotta:   '#C1623B',
+            'terra-dark': '#9C4F30',
+          },
+          fontFamily: {
+            sans:  ['PP Neue Montreal', 'Inter', 'system-ui', 'sans-serif'],
+            serif: ['Times New Roman', 'Times', 'Georgia', 'serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* Reset, .pill-nav, .hero-btn, .marquee-*, and .footer-* now live in
+       shared.css (linked above) — single source of truth across pages. */
+
+    /* ── Layout ── */
+    .wrap { max-width: 1160px; margin: 0 auto; padding: 0 48px; }
+    @media (max-width: 640px) { .wrap { padding: 0 24px; } }
+
+    /* .pill-nav and its sub-classes now live in shared.css. */
+    /* ── Hero pin wrapper (provides scroll room for the moon transition) ── */
+    .hero-pin-wrap { height: 280vh; }
+
+    /* ── Hero ── */
+    .hero {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: #0B0B0B;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 130px 48px 80px;
+      text-align: center;
+      gap: 0;
+    }
+    @media (max-width: 640px) { .hero { padding: 64px 24px 64px; } }
+
+    /* ── Moon canvas ── */
+    #moon-canvas {
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+      width: 180px;
+      height: 180px;
+      margin-bottom: 36px;
+      opacity: 0;
+      transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+      filter: drop-shadow(0 0 28px rgba(241, 233, 222, 0.22)) drop-shadow(0 0 56px rgba(241, 233, 222, 0.10));
+    }
+    #moon-canvas.in { opacity: 1; }
+
+    /* ── Scroll-driven headline pair ── */
+    .hero-copy-wrap {
+      display: grid;
+      z-index: 2;
+      margin-bottom: 20px;
+    }
+    .copy-a, .copy-b {
+      grid-area: 1/1;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: clamp(30px, 4.4vw, 58px);
+      color: #F5F4EF;
+      font-weight: 400;
+      letter-spacing: -0.025em;
+      line-height: 1.06;
+    }
+    .copy-a {
+      font-size: clamp(38px, 5.8vw, 76px);
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .copy-a.in { opacity: 1; transform: translateY(0); }
+    .copy-b { font-size: clamp(36px, 5.6vw, 74px); opacity: 0; }
+
+    /* Rotating word — Times New Roman italic, crossfades via JS */
+    .rw-word {
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      transition: opacity 0.5s ease;
+    }
+
+    /* Hero sub — full-moon state + crescent state, grid-stacked */
+    .hero-subs {
+      display: grid;
+      position: relative; z-index: 2;
+      margin-top: 14px;
+      margin-bottom: 40px;
+    }
+    .hero-sub-a, .hero-sub-b {
+      grid-area: 1/1;
+      justify-self: center;
+      font-size: clamp(18px, 1.4vw, 16px);
+      color: #A7A7A7;
+      line-height: 1.65;
+      font-weight: 300;
+      text-align: center;
+    }
+    .hero-sub-a { max-width: 560px; opacity: 0; }
+    .hero-sub-b {
+      /* Wide enough that each of the two <br>-separated rows sits on its
+         own line at desktop widths instead of also wrapping within itself
+         (the old 480px cap was sized for the previous single-paragraph
+         copy and was narrower than either row's own text). */
+      max-width: 640px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+    .hero-sub-b.in { opacity: 1; transform: translateY(0); }
+
+    /* Button group — entrance animation lives on the wrapper */
+    .hero-btns {
+      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+      position: relative; z-index: 2;
+      opacity: 0; transform: translateY(12px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .hero-btns.in { opacity: 1; transform: translateY(0); }
+
+    /* Mobile — stacked one below another instead of side by side, sized
+       to match .footer-btns/.pill-cta--mobile (same 85%-width-capped-
+       at-300px rule in all three places) so every mobile CTA button on
+       the site is the same size regardless of which section it's in. */
+    @media (max-width: 640px) {
+      .hero-btns { flex-direction: column; align-items: center; width: 100%; }
+      .hero-btns .hero-btn { width: 85%; max-width: 300px; text-align: center; }
+    }
+
+    /* .hero-btn / .hero-btn--primary / .hero-btn--secondary now live in shared.css. */
+
+    /* ── Scroll cue — pulsing hint, full-moon state only ── */
+    .scroll-cue {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      pointer-events: none;
+      animation: scrollCuePulse 2.8s ease-in-out infinite;
+      transition: opacity 0.7s ease;
+    }
+    .scroll-cue.hidden { opacity: 0 !important; animation: none; }
+    .scroll-cue-label {
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(167, 167, 167, 0.65);
+      font-weight: 400;
+    }
+    @keyframes scrollCuePulse {
+      0%, 100% { opacity: 0.36; }
+      50%       { opacity: 0.80; }
+    }
+
+    /* ── Corner vignette — draws focus toward the moon ── */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      box-shadow: inset 0 0 120px 40px rgba(11, 11, 11, 0.55);
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    /* ── Reduced motion: skip pin, show end state ── */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-pin-wrap { height: auto; }
+      .hero { position: relative; height: auto; min-height: 100vh; }
+      .copy-a { display: none; }
+      .copy-b { opacity: 1 !important; }
+      #moon-canvas, .hero-sub-a, .hero-sub-b, .hero-btns { opacity: 1 !important; transform: none !important; }
+      .scroll-cue { display: none; }
+    }
+
+    /* .marquee-wrap / .marquee-inner / .marquee-item / .marquee-sep now live in shared.css. */
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #A7A7A7; font-weight: 500;
+    }
+
+    /* ── The Problem — Figma "Section 2" conversion ──
+       Values (padding, gap, radius, font-size, letter-spacing) scaled down
+       from Figma's exported CSS (1643px-wide frame) by 0.8997× so the
+       content column matches the site-wide standard established below,
+       instead of running edge-to-edge at the Figma frame's own proportions.
+       The three-column, two-card-per-column layout is reproduced with
+       flexbox instead of the source's absolute positioning so it reflows
+       on mobile.
+
+       ── Site-wide side-margin standard (apply to future sections too) ──
+       Reference screen width: 1440px.
+       Content column: 1040px max-width, 24px min gutter below that.
+       → At 1440px, that's 200px of clear space on each side
+         (1440 − 1040 = 400, split evenly).
+       Implementation pattern: `max-width: 1040px; margin: 0 auto; padding: 0 24px;` */
+    .problem {
+      position: relative;
+      background: #F1E9DE;
+      padding: 120px 0 0;
+    }
+    .problem2-wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+    .problem-headline {
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(27px, 3.9vw, 56.3px);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: #0B0B0B;
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 56px;
+    }
+    .problem-headline em {
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+    }
+    .problem-grid {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      gap: 22.12px;
+    }
+    .problem-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 22.12px;
+    }
+    @media (max-width: 760px) {
+      .problem-grid { flex-direction: column; }
+    }
+    .problem-card {
+      box-sizing: border-box;
+      background: #F5F4EF;
+      border: 0.8px solid #000000;
+      border-radius: 16.6px;
+      padding: 47.4px 31.6px;
+      display: flex;
+      flex-direction: column;
+      gap: 28.45px;
+      text-align: left;
+    }
+    .problem-card-title {
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(26px, 2.9vw, 37.9px);
+      line-height: 1.0733;
+      letter-spacing: 0.01em;
+      color: #0B0B0B;
+    }
+    .problem-card-body {
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(16px, 1.5vw, 21.4px);
+      line-height: 1.4;
+      letter-spacing: 0.01em;
+      color: #0B0B0B;
+    }
+    /* Same title/body weight and style on every card, including the
+       accent one — only its background/text color differs — so the six
+       read as one consistent family rather than the accent card standing
+       out with its own italic/medium treatment. */
+    .problem-card--accent { background: #EB7848; border: none; }
+    .problem-card--accent .problem-card-title { color: #F5F4EF; }
+    .problem-card--accent .problem-card-body { color: #F5F4EF; }
+
+    /* Mobile-only statement + 5-card list (see markup comment above) —
+       hidden on desktop; .problem-headline/.problem-grid hide the other
+       way at the same breakpoint below. */
+    .problem-mobile-statement,
+    .problem-mobile-list {
+      display: none;
+    }
+    @media (max-width: 560px) {
+      .problem { padding-top: 0; }
+      .problem2-wrap { padding: 0; max-width: none; }
+      .problem-headline, .problem-grid { display: none; }
+
+      .problem-mobile-statement {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        align-items: flex-start;
+        padding: 40px 20px;
+        text-align: left;
+      }
+      .problem-mobile-title {
+        margin: 0;
+        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-weight: 300;
+        font-size: 36px;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+        color: #0B0B0B;
+      }
+      .problem-mobile-title em {
+        font-family: 'Times New Roman', Times, serif;
+        font-style: italic;
+        letter-spacing: -0.02em;
+      }
+      .problem-mobile-sub {
+        margin: 0;
+        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #4A4A4A;
+      }
+
+      .problem-mobile-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 0 20px 79px;
+      }
+      .problem-mobile-card {
+        box-sizing: border-box;
+        background: #F5F4EF;
+        border: 0.5px solid #0B0B0B;
+        border-radius: 20px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .problem-mobile-card-title {
+        margin: 0;
+        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-weight: 400;
+        font-size: 22px;
+        line-height: 1.2;
+        color: #0B0B0B;
+      }
+      .problem-mobile-card-body {
+        margin: 0;
+        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #3A3A3A;
+      }
+      .problem-mobile-card--accent { background: #EB7848; border: none; }
+      .problem-mobile-card--accent .problem-mobile-card-title,
+      .problem-mobile-card--accent .problem-mobile-card-body { color: #F5F4EF; }
+      .problem-mobile-card--accent .problem-mobile-card-title { font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif; font-weight: 500; }
+    }
+
+    /* ── "Crescent" promise — Figma "Section 3" conversion ──
+       Star-field card + hand-set rotated wordmark + overlapping CTA banner.
+       .crescent-frame uses container query units (cqw) so type scales with
+       the card's own width rather than the viewport, and every child is
+       positioned with plain left/top percentages copied from the Figma
+       export (percentages resolve against the frame's own box because it
+       has an explicit size via aspect-ratio, so no unit conversion needed).
+       The CTA banner is a sibling of the card, not a child clipped inside
+       it, so it can overlap the card's bottom edge and spill past it —
+       exactly as in the reference. Frame is capped at the same 1040px
+       content-column standard as .problem2-wrap above. Section background
+       is the same cream as section 2 — only the card itself is black. */
+    .crescent-promise {
+      position: relative;
+      background: #F1E9DE;
+      padding: 0 24px 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .crescent-frame {
+      position: relative;
+      z-index: 1;
+      width: min(1040px, 100%);
+      aspect-ratio: 1273 / 834;
+      container-type: inline-size;
+      margin: 0 auto;
+    }
+    .crescent-bg {
+      position: absolute;
+      inset: 0;
+      background: #0B0B0B url('brand_assets/Group 20.png') center / cover;
+      border-style: solid;
+      border-color: #000000;
+      border-width: 0 1px 1px 1px;
+      border-radius: 48px;
+      border-radius: 6.207cqw;
+    }
+
+    /* Rings bridge — the wavy echo lines between sections 2 and 3, pulled
+       fresh from Figma (node 165:428) — the file's own ring placement was
+       updated since the first pass (all nine wrappers now rotate -136deg,
+       not 110.44deg, at new left/top/size values) and, per the new paint
+       order, all nine sit behind the card now — none cross in front — so
+       a single normal-flow container before .crescent-frame is enough,
+       no separate in-front layer needed. Each ring's box (left/top/width/
+       height from Figma) is re-based from the 1643-wide frame to the
+       card's own box — card left 297.73px/top 1542.9px/width 1047.54px
+       becomes 0/0/100cqw, so 1 frame px = 100/1047.54 = 0.095463cqw —
+       and top is further re-based from the card's own top to the
+       cards-grid's bottom edge (1194.55px, 33.254cqw above the card),
+       which is this container's own top. Every ring's box already
+       reaches past the container's bottom (into where the card now
+       covers it) with real margin to spare, so nothing falls short and
+       leaves a gap the way an under-sized ring would. */
+    .rings-behind {
+      position: relative;
+      width: min(1040px, 100%);
+      height: 33.254cqw;
+      container-type: inline-size;
+      /* Negative bottom margin pulls .crescent-frame (z-index: 1, painted
+         after this in normal flow) up over the bottom half of this box.
+         Since it's cqw (relative to this element's own width, same basis
+         as its height above and as .crescent-frame's own width cap), the
+         50% overlap holds at every viewport width, not just the one it
+         was tuned at. */
+      margin: 0 auto -16.627cqw;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .echo-ring { position: absolute; display: flex; align-items: center; justify-content: center; }
+    .echo-ring img { flex: none; transform: rotate(-136deg); display: block; }
+
+    .echo-ring--21 { left: -5.631cqw; top: -9.995cqw; width: 111.381cqw; height: 111.388cqw; }
+    .echo-ring--21 img { width: 78.633cqw; height: 78.912cqw; }
+    .echo-ring--20 { left: -2.235cqw; top: -6.633cqw; width: 104.569cqw; height: 104.568cqw; }
+    .echo-ring--20 img { width: 73.965cqw; height: 73.940cqw; }
+    .echo-ring--19 { left: 0.501cqw; top: -3.381cqw; width: 98.393cqw; height: 98.432cqw; }
+    .echo-ring--19 img { width: 68.805cqw; height: 70.393cqw; }
+    .echo-ring--18 { left: 3.856cqw; top: -0.061cqw; width: 90.823cqw; height: 90.826cqw; }
+    .echo-ring--18 img { width: 64.162cqw; height: 64.303cqw; }
+    .echo-ring--16 { left: 10.469cqw; top: 6.598cqw; width: 78.494cqw; height: 78.511cqw; }
+    .echo-ring--16 img { width: 55.169cqw; height: 55.867cqw; }
+    .echo-ring--17 { left: 7.266cqw; top: 3.474cqw; width: 84.298cqw; height: 84.302cqw; }
+    .echo-ring--17 img { width: 59.550cqw; height: 59.686cqw; }
+    .echo-ring--22 { left: 14.318cqw; top: 10.852cqw; width: 69.503cqw; height: 69.530cqw; }
+    .echo-ring--22 img { width: 48.604cqw; height: 49.722cqw; }
+    .echo-ring--23 { left: 18.754cqw; top: 15.405cqw; width: 60.235cqw; height: 60.235cqw; }
+    .echo-ring--23 img { width: 42.599cqw; height: 42.599cqw; }
+    .echo-ring--24 { left: 22.309cqw; top: 18.960cqw; width: 53.025cqw; height: 53.028cqw; }
+    .echo-ring--24 img { width: 37.431cqw; height: 37.571cqw; }
+
+    .crescent-letters { position: absolute; inset: 0; }
+    .crescent-letter {
+      position: absolute;
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: 400;
+      font-size: 150px;
+      font-size: 17.48cqw;
+      line-height: 1.15;
+      color: #F5F4EF;
+      text-shadow: 0 4px 4px rgba(241, 233, 222, 0.25);
+      white-space: nowrap;
+    }
+    .crescent-c-mark {
+      position: absolute;
+      /* Both sized in cqw — % of the frame's own width, the same basis the
+         letters' font-size uses — not % (which for height would mean % of
+         the frame's HEIGHT). The frame isn't square (1273:834), so that
+         mismatch was silently squashing the logo's rendered height well
+         below the letters' actual scale even though its width looked
+         reasonable. 17.5cqw ≈ the letters' own 17.48cqw font-size; the SVG's
+         viewBox (680×675) is close enough to square that both dimensions
+         use nearly the same number. */
+      width: 15.5cqw;
+      height: 17.36cqw;
+      top: 5.2%;
+      transform: rotate(-5.22deg);
+      fill: #F5F4EF;
+      filter: drop-shadow(0 4px 4px rgba(241, 233, 222, 0.25));
+    }
+    .crescent-tagline {
+      position: absolute;
+      left: 19.80%; top: 38.73%; width: 60.41%;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(19px, 4.429cqw, 46.4px);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      text-align: center;
+      color: #F5F4EF;
+      text-shadow: 0 4px 4px rgba(255, 255, 255, 0.25);
+    }
+    .crescent-tagline em {
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      color: #EB7848;
+    }
+    .crescent-amp {
+      position: absolute;
+      left: 44.55%; top: 58.06%;
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: 400;
+      font-size: clamp(46px, 14.05cqw, 147.2px);
+      line-height: 1.15;
+      color: #F5F4EF;
+      text-align: center;
+    }
+    .crescent-cta {
+      position: absolute;
+      box-sizing: border-box;
+      left: 17.05%; top: 84.79%; width: 65.99%;
+      background: #EB7848;
+      border: 3.23px solid #0B0B0B;
+      border-radius: 16px;
+      border-radius: 1.57cqw;
+      padding: 3.4% 4%;
+      text-align: center;
+    }
+    .crescent-cta p {
+      margin: 0;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(19px, 4.429cqw, 46.4px);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: #F5F4EF;
+    }
+    .crescent-cta em {
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      color: #0B0B0B;
+    }
+    /* Mobile crescent section — hidden on desktop; shown at the breakpoint
+       below. Sourced from Figma node 284:72 ("third section", the
+       isolated/corrected version of this exact composition), width 390px.
+
+       COORDINATE MODEL — read this before touching any number below:
+       .crescent-mobile is both the position:relative anchor AND the cqw
+       container (container-type: inline-size), sized to its own full
+       border-box width (100% → 390px at the reference size, so 1cqw =
+       3.9px). Every absolutely-positioned child (ring, C-mark, letters,
+       tagline, intention, &) is positioned relative to that FULL 390px
+       box, unadjusted for padding — BUT container query units resolve
+       against the query container's own CONTENT box, which is NOT the
+       same thing as "unadjusted for padding": if this element carries
+       its own 20px left/right padding, cqw silently shrinks to 350px's
+       worth (confirmed by measuring the rendered ring: it came out to
+       exactly 89.74×3.5, not ×3.9 — every cqw figure here had been
+       rendering at 350/390 = 89.7% scale, shifted left, this whole
+       time). Fixed by moving the horizontal padding OFF the cqw
+       container entirely, onto a separate .crescent-mobile-inner used
+       only by the normal-flow card/CTA — vertical padding (pt/pb) stays
+       here since it doesn't affect inline-size containment at all. */
+    .crescent-mobile { display: none; }
+    @media (max-width: 560px) {
+      .rings-behind, .crescent-frame { display: none; }
+      .crescent-promise { padding: 0; display: block; }
+      .crescent-mobile {
+        display: block;
+        position: relative;
+        container-type: inline-size;
+        padding: 108px 0 48px;
+      }
+      .crescent-mobile-inner { padding: 0 20px; }
+
+      .crescent-mobile-ring {
+        position: absolute;
+        left: 5.13cqw; top: -4cqw;
+        width: 89.74cqw; height: 89.6cqw;
+        transform: rotate(180deg);
+        pointer-events: none;
+      }
+
+      /* Normal-flow card — respects the 20px side padding naturally. */
+      .crescent-mobile-card {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        aspect-ratio: 350 / 653;
+        margin-bottom: -46px;
+        border-radius: 79px;
+        border: 1px solid #000;
+        background: #0B0B0B url('brand_assets/Group 20.png') center / cover;
+      }
+
+      .crescent-mobile-cmark {
+        position: absolute;
+        z-index: 2;
+        left: 9cqw; top: 60cqw;
+        width: 19cqw; height: 20cqw;
+        fill: #F5F4EF;
+        filter: drop-shadow(0 4px 4px rgba(241, 233, 222, 0.25));
+        transform: rotate(-5.22deg);
+      }
+      .crescent-mobile-letters { position: absolute; inset: 0; z-index: 2; }
+      .crescent-mobile-letters span {
+        position: absolute;
+        font-family: 'Times New Roman', Times, serif;
+        font-weight: 400;
+        font-size: 21.45cqw;
+        line-height: 1;
+        color: #F5F4EF;
+        text-shadow: 0 4px 4px rgba(241, 233, 222, 0.25);
+        white-space: nowrap;
+      }
+      /* Figma places this small decorative squiggle directly under "r",
+         but rendered as a real asset (rather than Figma's own vector
+         fill) it reads as a second crescent/logo shape no matter which
+         z-index or nearby position it's given — text glyphs aren't
+         opaque boxes, so it always peeks out around the letter. The
+         reference screenshot itself shows no visible extra mark here,
+         so it's dropped rather than fought with further. */
+      .crescent-mobile-tick { display: none; }
+
+      .crescent-mobile-tagline {
+        position: absolute;
+        z-index: 2;
+        left: 50%; top: 91.15cqw;
+        transform: translateX(-50%);
+        width: 77.95cqw;
+        margin: 0;
+        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-size: 10.26cqw;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        text-align: center;
+        color: #F5F4EF;
+        text-shadow: 0 4px 4px rgba(255, 255, 255, 0.55);
+      }
+      .crescent-mobile-intention {
+        position: absolute;
+        z-index: 2;
+        left: 50%; top: 128cqw;
+        transform: translateX(-50%);
+        width: 77.95cqw;
+        margin: 0;
+        font-family: 'Times New Roman', Times, serif;
+        font-style: italic;
+        font-size: 13.85cqw;
+        text-align: center;
+        color: #C1623B;
+        text-shadow: 0 2px 4px rgba(255, 255, 255, 0.55);
+      }
+      .crescent-mobile-amp {
+        position: absolute;
+        z-index: 2;
+        left: 50%; top: 144cqw;
+        transform: translateX(-50%);
+        margin: 0;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 37.02cqw;
+        line-height: 1;
+        color: #F5F4EF;
+      }
+
+      /* Normal-flow CTA — follows the card in document order; the card's
+         own margin-bottom: -46px (Figma's exact value) is what pulls it
+         up into the card's bottom edge. */
+      .crescent-mobile-cta {
+        position: relative;
+        z-index: 3;
+        box-sizing: border-box;
+        width: 290px;
+        margin: 0 auto;
+        padding: 20px 10px;
+        background: #EB7848;
+        border: 3.226px solid #0B0B0B;
+        border-radius: 20px;
+        text-align: center;
+      }
+      .crescent-mobile-cta p {
+        margin: 0;
+        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-size: 28px;
+        line-height: 1.2;
+        letter-spacing: -0.04em;
+        color: #F5F4EF;
+      }
+      .crescent-mobile-cta em {
+        font-family: 'Times New Roman', Times, serif;
+        font-style: italic;
+        font-size: 35px;
+        color: #0B0B0B;
+      }
+    }
+
+    /* ── Story proof — Figma "Section 4" conversion ──
+       All values scaled from the 1643px-wide Figma frame by 1440/1643 =
+       0.8763 (the "reference viewport" ratio established for section 2/3),
+       since — like the rings — this section's dome background spans the
+       full frame edge to edge rather than a capped content column, so its
+       measurements are viewport-relative (vw), not content-column-relative.
+
+       Card stack: Rectangle 39 (star card), 40 (terracotta), and 41 (the
+       white card) are three independently-rotated rectangles the Figma
+       export gives literal left/top/width/height for. Rather than
+       recompute a rotated bounding box (like the rings needed, since they
+       had to align with a separately-cropped copy of themselves), these
+       three just get placed directly at their own percentages within one
+       shared, non-rotating "stack" frame — position:absolute plus
+       transform:rotate() renders them correctly with no further math,
+       since nothing else needs to align with them individually.
+
+       Rectangle 41 has no border-radius in the export despite its visibly
+       wavy edge in the reference — that's the same hand-drawn blob shape
+       as brand_assets/main card.svg (reused from the very first hero
+       section build), not a plain rounded rectangle, so it's used as an
+       image here instead of a CSS box. The quote text and logo are a
+       separate content layer positioned to match Rectangle 41's own box
+       exactly, rotated the same amount, rather than nested inside the
+       image (an SVG isn't a valid text container). */
+    .story-proof {
+      position: relative;
+      background: #F1E9DE;
+      /* 111px of cream margin above the dome in the 1643-wide Figma frame,
+         scaled by 1440/1643 = 0.8763 (the reference-viewport ratio used
+         throughout this section, since like the rings, the dome spans the
+         full frame edge to edge rather than a capped content column). */
+      padding-top: 107.3px;
+    }
+    .story-dome {
+      position: relative;
+      container-type: inline-size;
+      /* No background here — it would paint *behind* ::before within this
+         same box, so ::before's transparent corners would reveal this
+         element's own fill instead of .story-proof's cream (the exact
+         bug the removed comment here used to warn about). The curve+
+         corners (::before) and the flat black body below it (::after)
+         are two separate, non-overlapping boxes instead. */
+      padding: 199.8px 24px 166.5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    /* dome-arc.svg's curve resolves to y=247.154 out of its own 1252
+       viewBox height (0.150432) before the sides go straight down — that
+       ratio is scale-invariant since the image scales uniformly with
+       width. ::before shows exactly that curve+corners band (cream shows
+       through its transparent corners); ::after is a plain solid-black
+       fill starting right where the curve's sides go straight, extending
+       to the dome's actual content height instead of being capped by the
+       image's own fixed 1252-tall body — that's what breaks on narrow/
+       tall viewports where wrapped text needs more room than the source
+       ratio gives. */
+    .story-dome::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; width: 100%;
+      height: 15.0432cqw;
+      background-image: url('brand_assets/dome-arc.svg');
+      background-repeat: no-repeat;
+      background-position: top center;
+      background-size: 100% auto;
+    }
+    .story-dome::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 15.0432cqw; width: 100%; bottom: 0;
+      background: #0B0B0B;
+    }
+    .story-stack {
+      position: relative;
+      z-index: 1;
+      /* Floored at 280px — below that, the quote text (sized in cqw off
+         this container) becomes unreadably small on narrow phones, so the
+         card holds a minimum size rather than keep shrinking with the
+         viewport. */
+      width: max(280px, min(615px, 42.72vw));
+      aspect-ratio: 701.83 / 432.35;
+      container-type: inline-size;
+      /* 226.65px (card bottom to headline top) × 0.8763. */
+      margin-bottom: 198.6px;
+    }
+    .story-card {
+      position: absolute;
+      box-sizing: border-box;
+      display: block;
+    }
+    /* Card offsets tightened from the raw Figma deltas — those, combined
+       with each layer's own rotation swinging its corners out from center,
+       produced more spread between the three layers than the reference
+       shows. Rotation angles also scaled down (~55% of the export's
+       values) to match the reference's closer-to-level tilt. */
+    .story-card--stars {
+      left: -0.5%; top: 2.5%; width: 99%; height: 94.5%;
+      background: #0B0B0B url('brand_assets/Group 20.png') center / cover;
+      border: 1.55px solid #F1E9DE;
+      border-radius: 20.79px;
+      transform: rotate(1.9deg);
+    }
+    .story-card--terracotta {
+      left: 1.2%; top: 0.8%; width: 97.5%; height: 96%;
+      background: #C1623B;
+      border-radius: 22.34px;
+      transform: rotate(-4.1deg);
+    }
+    .story-card--main-bg {
+      left: 0.56%; top: 3.62%; width: 99.44%; height: 96.38%;
+      transform: rotate(-3deg);
+    }
+    .story-card-content {
+      position: absolute;
+      left: -1.5%; top: 2.62%; width: 99.44%; height: 96.38%;
+      box-sizing: border-box;
+      transform: rotate(-5deg);
+    }
+    .story-logo {
+      position: absolute;
+      /* Sized in cqw (% of .story-stack's own width) to match the letters/
+         text basis, not % of height — the card isn't square (1273:834-ish
+         proportions), so height:% was resolving against a shorter
+         reference dimension than width:%, silently squashing it smaller
+         than intended. Same root cause as the "Crescent" wordmark C-mark
+         fix from section 3. */
+      left: calc(50% - 5.55cqw); top: 12%;
+      width: 11.1cqw; height: 11.74cqw;
+      fill: #0B0B0B;
+    }
+    /* .story-quote-wrap is the flex container (for vertical centering only)
+       — .story-quote itself must stay plain block/inline so its text runs
+       and .underline/.accent spans flow and wrap together as one normal
+       paragraph. Making the paragraph itself display:flex (tried first)
+       turns each text run and span into its own flex item laid out
+       side-by-side instead of wrapping together — that's what fragmented
+       the text into separate columns. */
+    .story-quote-wrap {
+      position: absolute;
+      left: 10.90%; top: 37.05%; width: 82.64%; height: 44.4%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .story-quote {
+      margin: 0;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 28px;
+      font-size: 4.56cqw;
+      line-height: 1.156;
+      text-align: center;
+      letter-spacing: -0.04em;
+      color: #0B0B0B;
+    }
+    .story-quote .underline { text-decoration: underline; }
+    .story-quote .accent { color: #C1623B; }
+    .story-headline {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      max-width: min(776px, 53.9vw);
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(28px, 4.15vw, 56.9px);
+      line-height: 1.2;
+      text-align: center;
+      letter-spacing: -0.02em;
+      color: #F5F4EF;
+      text-shadow: 0 4px 4px rgba(255, 255, 255, 0.25);
+    }
+    .story-headline em {
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      color: #C1623B;
+    }
+    /* Mobile merged story+stats+CTA block — hidden on desktop. Rebuilt
+       from Figma node 286:157 ("fourth section"), same coordinate model
+       learned from the crescent section: .storystats-mobile is the
+       cqw container, sized to its own FULL 390px width — it carries
+       ONLY vertical padding (pt/pb), never horizontal, because
+       container-type:inline-size resolves cqw against the content box,
+       and horizontal padding on the same element would silently shrink
+       that basis (exactly the bug that broke the crescent section
+       twice). The 20px side inset that normal-flow content needs lives
+       on .ss-inner instead — a plain wrapper, not a cqw container.
+       .ss-sparkle/.ss-swirl/.ss-cta-stack are absolutely positioned
+       cqw-based children of the OUTER element, matching Figma's own
+       absolute coordinates directly (÷3.9, since 1cqw = 3.9px at the
+       390px reference width). The CTA card is deliberately built to
+       straddle this section's own bottom edge and the section that
+       follows (Pricing) — see the comment on .ss-cta-stack. */
+    .storystats-mobile { display: none; }
+    @media (max-width: 560px) {
+      .story-dome, .services { display: none; }
+      .storystats-mobile {
+        display: block;
+        position: relative;
+        z-index: 2;
+        container-type: inline-size;
+        background: #0B0B0B;
+        padding: 90px 0 285px;
+        overflow: visible;
+      }
+      .storystats-mobile-dome {
+        position: absolute;
+        left: 0; top: -21px;
+        width: 100%; height: 174px;
+        pointer-events: none;
+      }
+
+      .ss-inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 72px;
+        padding: 0 20px;
+      }
+
+      /* Story quote card stack — each layer is Figma's own left/top/w/h
+         (its ml/mt-on-a-shared-grid-cell trick), used here as plain
+         absolute px within a fixed ~350×235 stack. Not cqw: this
+         component doesn't need to rescale beyond what its own
+         percentage width already gives it across 360–560px. */
+      .ss-card-stack { position: relative; width: 100%; max-width: 350px; height: 235px; }
+      .ss-card-layer { position: absolute; display: flex; align-items: center; justify-content: center; }
+      .ss-card-layer--stars { left: 0; top: 6.84px; width: 349.9px; height: 221.65px; transform: rotate(3.49deg); }
+      .ss-card-layer--stars > div {
+        width: 338.27px; height: 201.43px;
+        border: 0.857px solid #F1E9DE;
+        border-radius: 11.466px;
+        background: #0B0B0B url('brand_assets/about-star-tile.png') repeat;
+        background-size: 150px auto;
+      }
+      .ss-card-layer--terracotta { left: 0.79px; top: 0; width: 349.1px; height: 235.28px; transform: rotate(-7.47deg); }
+      .ss-card-layer--terracotta > div { width: 326.6px; height: 194.49px; border-radius: 12.323px; background: #C1623B; }
+      .ss-card-layer--cream { left: 1.89px; top: 7.56px; width: 348.1px; height: 220.03px; transform: rotate(-3.22deg); }
+      .ss-card-layer--cream img { display: block; width: 337.3px; height: 201.42px; border-radius: 8px; }
+      .ss-card-layer--mark { left: 162.98px; top: 52.06px; width: 24.7px; height: 26px; transform: rotate(-3.22deg); }
+      .ss-card-layer--mark img { width: 23.3px; height: 24.7px; }
+      .ss-card-layer--quote { left: 38.67px; top: 82.17px; width: 283.4px; height: 105.5px; transform: rotate(-3.22deg); text-align: center; }
+      .ss-card-quote {
+        margin: 0;
+        max-width: 278.8px;
+        font-family: 'Times New Roman', Times, serif;
+        font-style: italic;
+        font-size: 15.47px;
+        line-height: 1.3;
+        letter-spacing: -0.02em;
+        color: #0B0B0B;
+      }
+      .ss-card-quote .underline { text-decoration: underline; }
+      .ss-card-quote .accent { color: #C1623B; }
+
+      .ss-headline {
+        margin: 0;
+        max-width: 340px;
+        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-size: 25.66px;
+        line-height: 1.25;
+        letter-spacing: -0.01em;
+        text-align: center;
+        color: #F5F4EF;
+        text-shadow: 0 1.8px 1.8px rgba(255, 255, 255, 0.25);
+      }
+      .ss-headline em {
+        font-family: 'Times New Roman', Times, serif;
+        font-style: italic;
+        color: #C1623B;
+      }
+
+      /* Stats badges — same ml/mt-on-shared-cell trick, converted to
+         plain absolute px within a ~256×282 bounding box. */
+      .ss-stats { position: relative; width: 100%; max-width: 256px; height: 282px; }
+      .ss-stat {
+        position: absolute;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        gap: 13.4px;
+        padding: 13.4px 16.7px;
+        border: 0.418px solid #F5F4EF;
+        border-radius: 8.35px;
+        color: #F5F4EF;
+        white-space: nowrap;
+      }
+      .ss-stat-num {
+        margin: 0;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 42px;
+        letter-spacing: -0.02em;
+      }
+      .ss-stat-label {
+        margin: 0;
+        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-size: 18.15px;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        text-shadow: 0 1.3px 1.3px rgba(255, 255, 255, 0.25);
+      }
+      .ss-stat--projects { left: 45.1px; top: 0; width: 210.9px; height: 88.95px; }
+      .ss-stat--experience { left: 0; top: 96.47px; width: 213.8px; height: 88.95px; }
+      .ss-stat--designer {
+        left: 76.43px; top: 192.94px; width: 179.6px; height: 88.95px;
+        justify-content: center;
+        background: #F1E9DE;
+        border-color: #0B0B0B;
+        color: #0B0B0B;
+      }
+
+      /* Absolute, cqw-based, direct children of the OUTER container —
+         positioned exactly like Figma's own coordinates (÷3.9). */
+      .ss-sparkle {
+        position: absolute;
+        left: 0; top: 170.13cqw;
+        width: 31.03cqw; height: 31.03cqw;
+        pointer-events: none;
+      }
+      .ss-swirl {
+        position: absolute;
+        left: 25.64cqw; top: 180.25cqw;
+        width: 42.74cqw; height: 49.34cqw;
+        transform: rotate(138.55deg);
+        pointer-events: none;
+      }
+
+      /* CTA card stack — deliberately positioned so its vertical center
+         lands on this section's own bottom edge (pt-90 + flow content
+         + pb-285 ≈ where the card's center sits): the top half paints
+         inside this section's black background, the bottom half
+         overflows past it (storystats-mobile has no overflow:hidden)
+         and — because storystats-mobile carries z-index:2 while
+         Pricing right after it doesn't set one — paints ON TOP of the
+         start of the Pricing section instead of being hidden behind
+         it. That's the "50% in this section, 50% in the next" split.
+
+         `top` is a fixed px value on every layer here, NOT cqw, even
+         though left/width/height stay cqw. Reason: this section's own
+         height is fixed-px (90/285 padding + fixed-height content, the
+         headline is width-capped so it never reflows), so it does not
+         grow with viewport width — but cqw DOES scale with width. A
+         cqw `top` drifted further down (in real px) than the section's
+         actual bottom edge on any viewport wider than the 390px this
+         was tuned at (confirmed on iPhone 14 Pro Max's 430px width: the
+         card's center landed ~111px past the boundary instead of ~0),
+         so the card swallowed increasing amounts of Pricing below it as
+         width grew. Fixed px keeps the vertical straddle pinned to the
+         real boundary at every width; cqw left/width/height still let
+         the card scale proportionally with the viewport. */
+      .ss-cta-stack { position: absolute; left: 0; top: 0; width: 100%; z-index: 3; }
+      .ss-cta-back {
+        position: absolute;
+        left: 6.69cqw; top: 1022.07px;
+        width: 87.02cqw; height: 39.75cqw;
+        border-radius: 6.4px;
+        background: #C1623B;
+      }
+      .ss-cta-front {
+        position: absolute;
+        left: 5.13cqw; top: 1008.5px;
+        width: 89.74cqw; height: 45.38cqw;
+        transform: rotate(-7.7deg);
+        border-radius: 6.4px;
+        background: #EB7848;
+        overflow: hidden;
+      }
+      .ss-cta-texture {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+        opacity: 0.12;
+      }
+      .ss-cta-line1, .ss-cta-line2 {
+        position: absolute;
+        margin: 0;
+        white-space: nowrap;
+        color: #F5F4EF;
+        text-shadow: 0 1.5px 1.5px rgba(255, 255, 255, 0.25);
+        font-size: 5.36cqw;
+      }
+      .ss-cta-line1 {
+        left: 13.27cqw; top: 1066.65px; width: 74.82cqw;
+        transform: rotate(-2.7deg);
+        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      }
+      .ss-cta-line2 {
+        left: 31.31cqw; top: 1101.28px; width: 38.18cqw;
+        transform: rotate(-2.7deg);
+        font-family: 'Times New Roman', Times, serif;
+        font-style: italic;
+      }
+    }
+
+
+    /* ── Services (section 5) ──
+       Figma reference frame: 1643 × 1705. Whole section is treated as one
+       uniformly-scaled "stage" (aspect-ratio locked + container query
+       units) since almost every element is absolutely positioned art —
+       same technique as .story-stack in section 4. Because the stage's
+       aspect-ratio is locked to 1643:1705, a single scale factor works
+       for BOTH axes: 100cqw / 1643 = 0.060864 cqw per Figma px. All
+       left/top/width/height/font-size values below are that px value
+       × 0.060864, expressed directly in cqw. */
+    .services { position: relative; background: #0B0B0B; overflow: hidden; margin-top: -120px; }
+    .services-stage {
+      position: relative;
+      width: min(100%, 1280px);
+      margin: 0 auto;
+      aspect-ratio: 1643 / 1705;
+      container-type: inline-size;
+    }
+    /* Full-bleed — sits outside the capped/centered .services-stage so the
+       black-to-beige transition still spans the full section width. Uses
+       %-of-height (not vw) so the seam stays locked to the stage's own
+       rendered height (= section height) regardless of the stage's cap —
+       77.664cqw inside the stage is the same physical line as 74.868% of
+       the section's height, since aspect-ratio ties the two together. */
+    .services-texture {
+      position: absolute;
+      left: 0; top: 74.868%;
+      width: 100%; height: 103.695%;
+      object-fit: cover;
+    }
+
+    .services-stat {
+      position: absolute;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      padding: 1.698cqw 2.123cqw;
+      gap: 1.698cqw;
+      border-radius: 1.061cqw;
+      border: 0.053cqw solid #F5F4EF;
+    }
+    .services-stat-num {
+      margin: 0;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 6.899cqw; line-height: 7.912cqw;
+      text-align: center; letter-spacing: -0.02em;
+    }
+    .services-stat-label {
+      margin: 0;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 2.992cqw; line-height: 3.591cqw;
+      letter-spacing: -0.02em;
+      text-shadow: 0 0.212cqw 0.212cqw rgba(255, 255, 255, 0.25);
+    }
+    .services-stat--projects { left: 38.541cqw; top: 13.086cqw; width: 26.759cqw; height: 11.309cqw; color: #F5F4EF; }
+    .services-stat--experience { left: 32.808cqw; top: 25.345cqw; width: 27.184cqw; height: 11.309cqw; color: #F5F4EF; }
+    .services-stat--designer {
+      left: 42.518cqw; top: 37.605cqw; width: 22.821cqw; height: 11.309cqw;
+      justify-content: center;
+      background: #F1E9DE; border-color: #0B0B0B; color: #0B0B0B;
+    }
+
+    .services-sparkles { position: absolute; left: 20.815cqw; top: 27.416cqw; width: 19.744cqw; height: 19.744cqw; }
+    .services-sparkles img { display: block; width: 100%; height: 100%; }
+
+    /* Repositioned (and shrunk, aspect preserved) to sit entirely in the
+       black gap between the "1 Designer." card and the card stack: top
+       clears the designer card's bottom edge, bottom stays above the
+       (higher, z-index-covering) back card's top edge so the arrowhead
+       isn't painted over and hidden behind it. */
+    .services-swirl { position: absolute; left: 46.01cqw; top: 50.41cqw; width: 8.26cqw; height: 13cqw; }
+    .services-swirl img { display: block; width: 100%; height: 100%; }
+
+    /* Card stack at 88% of the Figma-literal size (was 72% — bumped back
+       up per feedback). Front card's vertical center is pinned to exactly
+       77.664cqw — the same line as the black/beige seam (.services-texture
+       top) — so it sits precisely half on black, half on beige. */
+    .services-card {
+      position: absolute;
+      box-sizing: border-box;
+      border-radius: 0.934cqw;
+    }
+    .services-card--back {
+      left: calc(50% - 25.79cqw); top: 64.534cqw;
+      width: 50.078cqw; height: 21.550cqw;
+      background: #EB7848;
+      transform: rotate(-4.59deg);
+    }
+    .services-card--front {
+      left: calc(50% - 24.90cqw); top: 66.501cqw;
+      width: 50.078cqw; height: 22.326cqw;
+      background: #C1623B;
+      overflow: hidden;
+    }
+    .services-card-texture {
+      /* image 112.png is authored as a low-alpha glitter overlay (~12%
+         alpha baked into the PNG itself) — no extra opacity needed here.
+         Scaled up so only the flat texture region is visible, cropping
+         out the source asset's own rotated-card edges/corners — those
+         don't align with this container's straight edges, so showing
+         them read as "misaligned" against the real card shape. */
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transform: scale(1.35);
+      transform-origin: center;
+    }
+    .services-cta-line1,
+    .services-cta-line2 {
+      position: absolute;
+      margin: 0;
+      text-align: center;
+      letter-spacing: -0.02em;
+      color: #F5F4EF;
+      text-shadow: 0 0.217cqw 0.217cqw rgba(255, 255, 255, 0.25);
+      transform: rotate(-2.63deg);
+    }
+    .services-cta-line1 {
+      left: 3.79cqw; top: 6.43cqw; width: 42.42cqw;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 3.047cqw; line-height: 3.642cqw;
+    }
+    .services-cta-line2 {
+      left: 14.17cqw; top: 11.41cqw; width: 21.53cqw;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-size: 3.047cqw; line-height: 3.481cqw;
+    }
+
+    /* Mobile: the desktop stat/CTA type is sized in cqw off a ~1280px
+       stage, so at a ~390px mobile stage the same percentages render as
+       uncomfortably small text (labels were rendering ~12px). Bigger type
+       needs bigger boxes to hold it without clipping, and bigger boxes
+       need re-spaced top offsets so the three stat cards don't run into
+       each other — all cqw still (so it keeps scaling with the stage),
+       just bigger cqw and repositioned. The two big cards keep their
+       vertical centers pinned to the same 75.309cqw / 77.664cqw lines
+       (back/front) as the beige seam so that alignment isn't lost. */
+    @media (max-width: 560px) {
+      .services-stat {
+        padding: 2cqw 2.6cqw;
+        gap: 2cqw;
+        border-radius: 1.6cqw;
+      }
+      .services-stat-num { font-size: 7.6cqw; line-height: 8.6cqw; }
+      .services-stat-label { font-size: 3.6cqw; line-height: 4.2cqw; }
+
+      /* Starts at 12cqw (not the earlier 7cqw) so it clears the story
+         headline above rather than running into it — that overlap was
+         the real bug, not just "too small". Each card is 12.5cqw tall
+         with a 3.5cqw gap between, which is what actually fits before
+         the swirl arrow at 58cqw without the stack overlapping itself. */
+      .services-stat--projects { left: 7cqw; top: 12cqw; width: 47cqw; height: 12.5cqw; }
+      .services-stat--experience { left: 32cqw; top: 28cqw; width: 47cqw; height: 12.5cqw; }
+      .services-stat--designer { left: 10cqw; top: 44cqw; width: 36cqw; height: 12.5cqw; }
+
+      /* Moved off the experience card's face — it was sitting directly on
+         top of that box's border before — into the open black gap below
+         the stat stack and left of the swirl instead. */
+      .services-sparkles { left: 60cqw; top: 45cqw; width: 12cqw; height: 12cqw; }
+      .services-swirl { left: 46cqw; top: 58cqw; width: 10cqw; height: 15.7cqw; }
+
+      .services-card--back { left: calc(50% - 35cqw); width: 70cqw; height: 29.5cqw; top: calc(75.309cqw - 14.75cqw); }
+      .services-card--front { left: calc(50% - 34cqw); width: 70cqw; height: 31cqw; top: calc(77.664cqw - 15.5cqw); }
+      .services-cta-line1 { left: 5cqw; top: 8cqw; width: 60cqw; font-size: 4.3cqw; line-height: 5cqw; }
+      .services-cta-line2 { left: 18cqw; top: 15cqw; width: 34cqw; font-size: 4.3cqw; line-height: 4.8cqw; }
+    }
+
+    /* ── Pricing (section 6) ── beige texture continues from section 5.
+       Figma reference frame 1643 × 1528, same 1440/1643 = 0.876445 scale
+       factor used by .problem-card / .crescent-frame elsewhere in this
+       file — structural values (padding/border/radius/gap) are literal
+       Figma px × 0.876445; type sizes use clamp() for responsiveness. */
+    .pricing {
+      position: relative;
+      background: #F1E9DE url('brand_assets/beige background.png') center / cover;
+      padding: 50px 24px 238px;
+    }
+    .pricing-wrap { max-width: 1040px; margin: 0 auto; }
+    .pricing-cards {
+      display: flex;
+      justify-content: center;
+      gap: 22.03px;
+      flex-wrap: wrap;
+    }
+    .pricing-card {
+      box-sizing: border-box;
+      flex: 1 1 414px;
+      max-width: 414px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 48.14px 32.1px;
+      gap: 28.89px;
+      background: #F5F4EF;
+      border: 0.913px solid #0B0B0B;
+      border-radius: 16.855px;
+    }
+    .pricing-card-title {
+      margin: 0;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(30px, 3.55vw, 51.14px);
+      line-height: 1.0733;
+      letter-spacing: 0.01em;
+      color: #0B0B0B;
+    }
+    .pricing-card-eyebrow {
+      margin: 0;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 500;
+      font-size: clamp(15px, 1.5vw, 21.73px);
+      line-height: 1.09;
+      letter-spacing: 0.01em;
+    }
+    .pricing-card--sprint .pricing-card-eyebrow { color: #EB7848; }
+    .pricing-card--retainer .pricing-card-eyebrow { color: #D2A1FF; }
+    .pricing-card-body {
+      margin: 0;
+      max-width: 311px;
+      min-height: 213px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(15px, 1.5vw, 21.73px);
+      line-height: 1.09;
+      letter-spacing: 0.01em;
+      color: #0B0B0B;
+    }
+    .pricing-cta {
+      box-sizing: border-box;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 21.93px;
+      min-width: 271.77px;
+      border-radius: 51.14px;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 500;
+      font-size: clamp(15px, 1.5vw, 21.73px);
+      letter-spacing: 0.01em;
+      text-decoration: none;
+      color: #F5F4EF;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .pricing-cta:hover { opacity: 0.85; }
+    .pricing-cta:focus-visible { outline: 2px solid #0B0B0B; outline-offset: 3px; }
+    .pricing-cta:active { transform: scale(0.97); }
+    .pricing-card--sprint .pricing-cta { background: #C1623B; }
+    .pricing-card--retainer .pricing-cta { background: #0B0B0B; }
+
+    .pricing-card-mark { width: 46px; height: 48.7px; transform: rotate(-3.22deg); }
+    .pricing-card--sprint .pricing-card-mark { fill: #EB7848; }
+    .pricing-card--retainer .pricing-card-mark { fill: #E2C2FF; }
+
+    .pricing-quote {
+      margin: 119px auto 0;
+      max-width: 676px;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(24px, 3vw, 43.22px);
+      line-height: 1.0733;
+      text-align: center;
+      letter-spacing: 0.01em;
+      color: #0B0B0B;
+    }
+    .pricing-quote .accent { color: #C1623B; font-weight: 700; }
+    .pricing-quote .underline { text-decoration: underline; }
+
+    /* Mobile trims the Sprint card's first line ("MVP Product." instead of
+       "Design/build of MVP Product. (website/web app)") per the mobile
+       Figma frame — everything else on this card matches desktop as-is. */
+    .pricing-mobile-only { display: none; }
+    @media (max-width: 640px) {
+      /* Top padding is deliberately large (Figma's own value, node
+         288:186) — the previous section's CTA card straddles the
+         boundary and overflows down into here (see .ss-cta-stack), so
+         this needs enough clear cream space before "The Sprint" card
+         starts or the overlapping card would cover its heading. */
+      .pricing { padding: 149px 20px 140px; }
+      .pricing-quote { margin-top: 72px; }
+      .pricing-desktop-only { display: none; }
+      .pricing-mobile-only { display: inline; }
+      /* Tighter internal rhythm — the desktop gap (28.89px) plus the
+         body's own min-height (213px, sized to match the taller
+         Retainer card) left a lot of dead air between title/eyebrow/
+         body/button on mobile, where cards stack instead of sitting
+         side by side. */
+      .pricing-card { gap: 32px; padding: 48px 40px; }
+      .pricing-card-body { min-height: 0; }
+    }
+
+    /* Tablet: the flex-wrap decision above is based on each card's
+       414px flex-basis, not its shrunk size — two cards need ~850px
+       (414×2 + gap) to be considered "fits on one line" at all, so
+       anything narrower wraps them to stacked instead of shrinking,
+       which covers most tablet portrait widths (768–834px are typical)
+       even though there's easily enough room for two narrower cards
+       side by side. A percentage basis guarantees exactly 2 columns
+       and shrinks with the viewport instead of wrapping. */
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .pricing-card { flex: 1 1 calc(50% - 11.015px); max-width: calc(50% - 11.015px); }
+    }
+
+    /* ── Working-with-me (section 7) ──
+       Figma reference frame 1643 × 1246. Headline pieces, star bullets and
+       the photo cutout are all free-form absolute art like section 5, so
+       this uses the same locked-aspect-ratio + cqw "stage" technique:
+       100cqw / 1643 = 0.060864 cqw per Figma px, uniform on both axes. */
+    .working { position: relative; background: #F1E9DE; overflow: hidden; }
+    .working-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1643 / 1246;
+      container-type: inline-size;
+    }
+    .working-stars {
+      position: absolute;
+      left: 0; top: -6.938cqw;
+      width: 100%; height: 62.325cqw;
+      object-fit: cover;
+    }
+
+    .working-headline { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+    .working-h1,
+    .working-h2,
+    .working-h3 {
+      position: absolute;
+      margin: 0;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: #F5F4EF;
+      text-shadow: 0 0.314cqw 0.314cqw rgba(255, 255, 255, 0.25);
+    }
+    .working-h1 {
+      left: 8.278cqw; top: 9.392cqw;
+      font-size: 4.426cqw; line-height: 5.295cqw;
+    }
+    .working-h2 {
+      /* Figma's box math has this butting against "What" — that box was
+         evidently tight to the original (paid) font's metrics. Nudged
+         right so the two words keep a visible gap with the fallback
+         font, matching the reference screenshot. */
+      left: 19cqw; top: 8.156cqw;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-size: 5.483cqw; line-height: 6.573cqw;
+      color: #EB7848;
+      text-shadow: 0 0.389cqw 0.389cqw rgba(255, 255, 255, 0.25);
+      transform: rotate(3.73deg);
+    }
+    .working-h3 {
+      left: 8.499cqw; top: 13.63cqw; width: 31.53cqw;
+      font-size: 4.426cqw; line-height: 5.295cqw;
+    }
+
+    .working-list { position: absolute; left: 0; top: 0; width: 100%; height: 100%; list-style: none; margin: 0; padding: 0; }
+    .working-item {
+      position: absolute;
+      left: 8.499cqw;
+      display: flex;
+      align-items: center;
+      gap: 0.85cqw;
+      margin: 0;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: 1.939cqw;
+      line-height: 1.0733;
+      letter-spacing: 0.01em;
+      color: #F5F4EF;
+    }
+    .working-item svg { flex: none; width: 2.878cqw; height: 2.907cqw; }
+    .working-item--1 { top: 25.034cqw; }
+    .working-item--1 svg { transform: rotate(0deg); }
+    .working-item--2 { top: 29.140cqw; }
+    .working-item--2 svg { transform: rotate(-30.22deg); }
+    .working-item--3 { top: 33.207cqw; }
+    .working-item--3 svg { transform: rotate(0deg); }
+    .working-item--4 { top: 37.313cqw; }
+    .working-item--4 svg { transform: rotate(69.95deg); }
+    .working-item--5 { top: 41.410cqw; }
+    .working-item--5 svg { transform: rotate(30.22deg); }
+
+    /* Real photo (imageofme.png) already has the sticker cutout + white
+       border baked into its alpha channel, so it's placed directly —
+       no clip-path/placeholder needed. Sized to the image's own native
+       ratio (919:849) rather than the Figma mask box, anchored at the
+       same left/top. */
+    .working-photo {
+      position: absolute;
+      left: 47.98cqw; top: 14.67cqw;
+      width: 52.05cqw; height: auto;
+      aspect-ratio: 919 / 849;
+    }
+
+    /* Mobile — rebuilt from Figma node 288:203 ("sixt-section"), a real
+       390px-wide mobile frame rather than desktop's 1643px one. Reusing
+       the desktop cqw stage for mobile (letting it just shrink with the
+       viewport) looked reasonable in isolation but is actually wrong:
+       that stage's cqw values were tuned for a ~1280-1440px desktop
+       width, so at 390px they render at a fraction of their intended
+       size — the list text was rendering at under 8px. Built fresh here
+       with the mobile frame's own numbers instead. */
+    .working-mobile { display: none; }
+    @media (max-width: 560px) {
+      .working-stage { display: none; }
+      .working {
+        background: #0B0B0B url('brand_assets/about-star-tile.png') repeat;
+        background-size: 150px auto;
+        padding: 56px 20px;
+      }
+      .working-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .wm-headline { margin: 0; }
+      .wm-row {
+        margin: 0;
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+      }
+      .wm-h1, .wm-h3 {
+        margin: 0;
+        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-size: 41px;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        color: #F5F4EF;
+        text-shadow: 0 2.9px 2.9px rgba(255, 255, 255, 0.25);
+      }
+      .wm-h2 {
+        display: inline-block;
+        font-family: 'Times New Roman', Times, serif;
+        font-style: italic;
+        font-size: 51px;
+        color: #EB7848;
+        text-shadow: 0 3.6px 3.6px rgba(255, 255, 255, 0.25);
+        transform: rotate(3.73deg);
+      }
+      .wm-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .wm-list li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-size: 16.3px;
+        line-height: 1.3;
+        letter-spacing: 0.01em;
+        color: #F5F4EF;
+      }
+      .wm-star { flex: none; width: 24px; height: 24px; }
+      /* Pre-cut sticker asset (image-for-sixt-section.png) — the white
+         border + jagged cutout are already baked into it, same "no
+         clip-path/mask needed" deal as desktop's imageofme.png, so this
+         replaces the earlier hand-rolled CSS mask entirely. */
+      .wm-photo {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 8px;
+        margin-right: -20px;
+      }
+      .wm-photo img {
+        display: block;
+        width: 92%;
+        max-width: 355px;
+        height: auto;
+      }
+    }
+
+    /* No further breakpoint overrides needed on the desktop stage itself:
+       .working-stage is hidden entirely under 560px by the mobile block
+       above, so its own cqw scaling only ever has to serve desktop. */
+
+    /* ── Before/After (section 8) ── pulled straight from Figma via
+       get_design_context (node 197:136, frame 1643 × 1246) — exact
+       positions/sizes, not estimated from the screenshot. Same locked
+       aspect-ratio + cqw "stage" technique as sections 5/7. */
+    .swap { position: relative; background: #F1E9DE; overflow: hidden; }
+    .swap-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1643 / 1246;
+      container-type: inline-size;
+    }
+    .swap-headline {
+      position: absolute;
+      left: 26.408cqw; top: 7.851cqw; width: 46.646cqw;
+      margin: 0;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 2.982cqw;
+      line-height: 1.073;
+      text-align: center;
+      letter-spacing: 0.01em;
+      color: #0B0B0B;
+    }
+    .swap-headline em { font-family: 'Times New Roman', Times, serif; font-style: italic; font-weight: 700; color: #C1623B; }
+
+    .swap-card { position: absolute; box-sizing: border-box; border-radius: 0.9686cqw; }
+    .swap-card--before { left: 16.373cqw; top: 24.065cqw; width: 34.238cqw; height: 36.363cqw; background: #F5F4EF; }
+    .swap-card--after-back { left: 47.702cqw; top: 22.858cqw; width: 33.121cqw; height: 39.514cqw; background: #C1623B; }
+    .swap-card--after-front-wrap {
+      position: absolute;
+      left: 46.386cqw; top: 24.045cqw; width: 35.762cqw; height: 41.702cqw;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .swap-card--after-front {
+      flex: none;
+      width: 33.121cqw; height: 39.514cqw;
+      border-radius: 0.9686cqw;
+      background: #EB7848;
+      transform: rotate(-3.94deg);
+      position: relative;
+      overflow: hidden;
+    }
+    .swap-card--after-front img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.12;
+      transform: scale(1.3);
+    }
+
+    .swap-label {
+      position: absolute;
+      margin: 0;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 3.249cqw;
+      line-height: 1.14;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .swap-label--before { left: 18.698cqw; top: 27.410cqw; color: #0B0B0B; text-shadow: 0 0.0584cqw 0.0584cqw rgba(241, 233, 222, 0.25); }
+    .swap-label--after { left: 51.144cqw; top: 27.410cqw; color: #F5F4EF; text-shadow: 0 0.0584cqw 0.0584cqw rgba(241, 233, 222, 0.25); }
+
+    .swap-list {
+      position: absolute;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.7235cqw;
+      margin: 0;
+      padding: 1.447cqw 1.085cqw;
+      list-style: none;
+    }
+    .swap-list--before {
+      left: 18.843cqw; top: 32.155cqw; width: 26.581cqw;
+      border: 0.0242cqw solid #0B0B0B;
+      border-radius: 1.017cqw;
+    }
+    .swap-list--after {
+      left: 50.951cqw; top: 32.155cqw; width: 25.973cqw;
+      border: 0.0969cqw solid #F5F4EF;
+      border-radius: 1.017cqw;
+    }
+    .swap-item {
+      position: relative;
+      margin: 0;
+      padding-left: 1.1cqw;
+      padding-bottom: 0.7235cqw;
+      border-bottom: 0.0242cqw solid currentColor;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 1.0757cqw;
+      line-height: 1.073;
+      letter-spacing: 0.01em;
+    }
+    .swap-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .swap-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0.5cqw;
+      width: 0.35cqw; height: 0.35cqw;
+      background: currentColor;
+    }
+    .swap-list--before .swap-item { color: #0B0B0B; font-weight: 400; }
+    .swap-list--after .swap-item { color: #F5F4EF; font-weight: 500; }
+
+    .swap-star { position: absolute; }
+    .swap-star--big { left: 41.849cqw; top: 17.772cqw; width: 12.446cqw; height: 12.570cqw; }
+    /* Asset (small star.png) already has the 38.52deg Figma rotation
+       baked into its pixels — no CSS transform needed, that would
+       double-rotate it and shift its apparent position. */
+    .swap-star--small { left: 74.000cqw; top: 48.284cqw; width: 13.842cqw; height: 13.857cqw; }
+
+    /* Mobile — rebuilt from Figma node 288:225 ("seventh-section"): the
+       before/after cards stack vertically instead of sitting side by
+       side, so this is fresh markup rather than a squeeze of the
+       desktop cqw stage. The "after" card reuses a single flattened
+       asset (star-background-7-section.png — the rotated card stack +
+       both corner stars already baked in) instead of rebuilding that
+       composition from separate rotated divs and star images. */
+    .swap-mobile { display: none; }
+    @media (max-width: 560px) {
+      .swap-stage { display: none; }
+      .swap { padding: 56px 20px 100px; }
+      .swap-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+      }
+      .swap-mobile-headline {
+        margin: 0;
+        font-family: 'Times New Roman', Times, serif;
+        font-style: italic;
+        font-size: 32px;
+        line-height: 1.15;
+        letter-spacing: 0.01em;
+        text-align: center;
+        color: #0B0B0B;
+        text-shadow: 0 1px 1px rgba(241, 233, 222, 0.25);
+      }
+      .swap-mobile-headline em { font-weight: 700; font-style: italic; color: #C1623B; }
+
+      .swap-mobile-label {
+        position: relative;
+        margin: 0 0 -8px;
+        font-family: 'Times New Roman', Times, serif;
+        font-style: italic;
+        font-size: 32px;
+        letter-spacing: -0.04em;
+      }
+      .swap-mobile-label--before { margin-left: 30px; color: #0B0B0B; }
+      .swap-mobile-label--after { z-index: 1; color: #F5F4EF; text-shadow: 0 1px 1px rgba(241, 233, 222, 0.25); }
+
+      .swap-mobile-list {
+        list-style: none;
+        margin: 0;
+        padding: 17px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+      }
+      .swap-mobile-list--before {
+        margin: 0 30px;
+        border: 0.5px solid #0B0B0B;
+        border-radius: 12px;
+        background: #F1E9DE;
+      }
+      .swap-mobile-item {
+        position: relative;
+        margin: 0;
+        padding-left: 18px;
+        padding-bottom: 9px;
+        border-bottom: 0.5px solid currentColor;
+        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-size: 13px;
+        line-height: 1.3;
+        letter-spacing: 0.01em;
+      }
+      .swap-mobile-item:last-child { border-bottom: none; padding-bottom: 0; }
+      .swap-mobile-item::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 5px;
+        width: 4px; height: 4px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .swap-mobile-list--before .swap-mobile-item { color: #0B0B0B; }
+      .swap-mobile-list--after .swap-mobile-item { color: #F5F4EF; font-weight: 500; }
+
+      .swap-mobile-after-wrap {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 389 / 483;
+        background-image: url('brand_assets/star-background-7-section.png');
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        box-sizing: border-box;
+        padding: 52px 30px 78px;
+      }
+      .swap-mobile-list--after {
+        border: 1.2px solid #F5F4EF;
+        border-radius: 12px;
+      }
+    }
+
+    /* ── One decision (section 9) ── pulled from Figma via get_design_context
+       (node 197:201, frame 1643 × 1194). Nine concentric hand-drawn ring
+       SVGs (real assets, downloaded — not redrawn), each in a flex-center
+       wrapper sized to its own rotated bounding box, same "wrapper +
+       rotated child" pattern Figma exported for every rotated element in
+       this file. Same cqw-stage technique as sections 5/7/8. */
+    .decision { position: relative; background: #F1E9DE; overflow: hidden; }
+    .decision-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1643 / 1194;
+      container-type: inline-size;
+    }
+    .decision-ring {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .decision-ring img {
+      flex: none;
+      transform: rotate(90.36deg);
+      display: block;
+    }
+    .decision-ring--41 { left: 22.702cqw; top: 7.791cqw; width: 51.940cqw; height: 51.759cqw; }
+    .decision-ring--41 img { width: 51.443cqw; height: 51.626cqw; }
+    .decision-ring--40 { left: 24.317cqw; top: 9.355cqw; width: 48.673cqw; height: 48.690cqw; }
+    .decision-ring--40 img { width: 48.390cqw; height: 48.373cqw; }
+    .decision-ring--42 { left: 30.514cqw; top: 15.606cqw; width: 36.774cqw; height: 36.319cqw; }
+    .decision-ring--42 img { width: 36.094cqw; height: 36.551cqw; }
+    .decision-ring--43 { left: 25.738cqw; top: 11.132cqw; width: 46.328cqw; height: 45.294cqw; }
+    .decision-ring--43 img { width: 45.017cqw; height: 46.038cqw; }
+    .decision-ring--44 { left: 32.720cqw; top: 18.177cqw; width: 32.725cqw; height: 31.998cqw; }
+    .decision-ring--44 img { width: 31.798cqw; height: 32.529cqw; }
+    .decision-ring--45 { left: 29.284cqw; top: 14.410cqw; width: 39.288cqw; height: 39.199cqw; }
+    .decision-ring--45 img { width: 38.963cqw; height: 39.052cqw; }
+    .decision-ring--46 { left: 35.108cqw; top: 20.293cqw; width: 28.043cqw; height: 28.043cqw; }
+    .decision-ring--46 img { width: 27.870cqw; height: 27.870cqw; }
+    .decision-ring--47 { left: 27.707cqw; top: 13.086cqw; width: 42.328cqw; height: 42.237cqw; }
+    .decision-ring--47 img { width: 41.976cqw; height: 42.068cqw; }
+    .decision-ring--48 { left: 36.766cqw; top: 22.041cqw; width: 24.732cqw; height: 24.641cqw; }
+    .decision-ring--48 img { width: 24.489cqw; height: 24.580cqw; }
+
+    .decision-h1,
+    .decision-h2 {
+      position: absolute;
+      left: 50%;
+      margin: 0;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .decision-h1 {
+      transform: translateX(calc(-50% - 0.647cqw));
+      top: 8.408cqw;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 5.158cqw;
+      letter-spacing: -0.3095cqw;
+      color: #0B0B0B;
+      text-shadow: 0 0.0927cqw 0.0927cqw rgba(241, 233, 222, 0.25);
+    }
+    .decision-h2 {
+      transform: translateX(calc(-50% - 0.625cqw));
+      top: 11.491cqw;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 5.679cqw;
+      letter-spacing: -0.3407cqw;
+      color: #EB7848;
+      text-shadow: 0 0.1021cqw 0.1021cqw rgba(241, 233, 222, 0.25);
+    }
+
+    .decision-foot {
+      position: absolute;
+      left: 50%;
+      transform: translateX(calc(-50% + 1.188cqw));
+      top: 56.680cqw;
+      margin: 0;
+      white-space: pre;
+      text-align: center;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 3.829cqw;
+      letter-spacing: -0.2298cqw;
+      color: #0B0B0B;
+      text-shadow: 0 0.0688cqw 0.0688cqw rgba(241, 233, 222, 0.25);
+    }
+    .decision-one {
+      position: absolute;
+      left: 50%;
+      transform: translateX(calc(-50% - 0.6415cqw));
+      top: 52.406cqw;
+      margin: 0;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 10.826cqw;
+      letter-spacing: -0.6497cqw;
+      color: #EB7848;
+      text-shadow: 0 0.1947cqw 0.1947cqw rgba(241, 233, 222, 0.25);
+    }
+
+    /* Mobile — the desktop composition leaves ~24cqw of empty margin on
+       each side of the ring cluster (by design, at 1643-wide desktop
+       scale). On a 390px viewport that reads as "small and floating"
+       rather than intentional, so every ring/text element is rescaled
+       (~1.83×) around the composition's shared center (~48.85cqw,
+       ~34cqw, measured from the ring set) so the cluster reaches the
+       section's own side padding. Rescaling shifts the vertical extent
+       well past the aspect-ratio-locked stage box, so .decision gets
+       real padding (not cqw) to give the overflow room without being
+       clipped by its own overflow:hidden. */
+    @media (max-width: 560px) {
+      .decision { padding: 60px 20px 55px; }
+
+      .decision-ring--41 { left: 1.147cqw; top: -13.689cqw; width: 95.05cqw; height: 94.72cqw; }
+      .decision-ring--41 img { width: 94.14cqw; height: 94.48cqw; }
+      .decision-ring--40 { left: 4.118cqw; top: -10.851cqw; width: 89.07cqw; height: 89.10cqw; }
+      .decision-ring--40 img { width: 88.55cqw; height: 88.52cqw; }
+      .decision-ring--42 { left: 15.253cqw; top: 0.534cqw; width: 67.30cqw; height: 66.46cqw; }
+      .decision-ring--42 img { width: 66.05cqw; height: 66.89cqw; }
+      .decision-ring--43 { left: 6.512cqw; top: -7.665cqw; width: 84.78cqw; height: 82.89cqw; }
+      .decision-ring--43 img { width: 82.38cqw; height: 84.25cqw; }
+      .decision-ring--44 { left: 19.139cqw; top: 4.898cqw; width: 59.89cqw; height: 58.56cqw; }
+      .decision-ring--44 img { width: 58.19cqw; height: 59.53cqw; }
+      .decision-ring--45 { left: 12.974cqw; top: -1.868cqw; width: 71.90cqw; height: 71.73cqw; }
+      .decision-ring--45 img { width: 71.30cqw; height: 71.46cqw; }
+      .decision-ring--46 { left: 23.470cqw; top: 8.655cqw; width: 51.32cqw; height: 51.32cqw; }
+      .decision-ring--46 img { width: 51.00cqw; height: 51.00cqw; }
+      .decision-ring--47 { left: 10.141cqw; top: -4.442cqw; width: 77.46cqw; height: 77.29cqw; }
+      .decision-ring--47 img { width: 76.82cqw; height: 77.00cqw; }
+      .decision-ring--48 { left: 26.502cqw; top: 11.815cqw; width: 45.26cqw; height: 45.09cqw; }
+      .decision-ring--48 img { width: 44.81cqw; height: 44.98cqw; }
+
+      .decision-h1 {
+        transform: translateX(calc(-50% - 1.184cqw));
+        top: -12.83cqw;
+        font-size: 9.44cqw;
+        letter-spacing: -0.566cqw;
+        text-shadow: 0 0.170cqw 0.170cqw rgba(241, 233, 222, 0.25);
+      }
+      .decision-h2 {
+        transform: translateX(calc(-50% - 1.144cqw));
+        top: -7.24cqw;
+        font-size: 10.39cqw;
+        letter-spacing: -0.623cqw;
+        text-shadow: 0 0.187cqw 0.187cqw rgba(241, 233, 222, 0.25);
+      }
+      .decision-foot {
+        transform: translateX(calc(-50% + 2.174cqw));
+        top: 75.5cqw;
+        font-size: 7.01cqw;
+        letter-spacing: -0.420cqw;
+        text-shadow: 0 0.126cqw 0.126cqw rgba(241, 233, 222, 0.25);
+      }
+      .decision-one {
+        transform: translateX(calc(-50% - 1.174cqw));
+        top: 67.72cqw;
+        font-size: 19.81cqw;
+        letter-spacing: -1.189cqw;
+        text-shadow: 0 0.356cqw 0.356cqw rgba(241, 233, 222, 0.25);
+      }
+    }
+
+    /* ── Testimonials (section 10) ── pulled from Figma via get_design_context
+       (node 197:271, frame 1643 × 1194). Structured/repeating content, not
+       free-form art, so this uses the site's other established scale
+       convention (1440/1643 = 0.876445 × literal Figma px) rather than the
+       cqw-stage technique — same approach as .problem-card / .pricing.
+       The static Figma frame shows cards clipped by a rounded "window" via
+       a boolean-exclude mask; a real overflow:hidden rounded container
+       does the same job here and is what the marquee actually needs. */
+    .testimonials { position: relative; background: #F1E9DE; padding: 48px 24px 120px; }
+    /* Frame wrapping the window + the two hand-set headlines that bracket
+       it (node 197:271, 1643×1194) — same 1440/1643 = 0.876445 scale
+       convention as .testimonials-window itself. The sparkle sits behind
+       nothing in particular; it's just an absolute corner accent anchored
+       to the frame's own top-left, so it holds its overlap onto the
+       window's top-left corner regardless of window width. */
+    .testimonials-frame { position: relative; width: min(1440px, 100%); margin: 0 auto; }
+    .testimonials-sparkle {
+      position: absolute;
+      left: 45px; top: 16px;
+      width: 284px; height: 284px;
+      object-fit: cover;
+      /* Source asset is the olive sparkle from Figma — brightness(0) crushes
+         its color to solid black while keeping the cutout's alpha intact,
+         matching the black variant without needing a second asset file. */
+      filter: brightness(0);
+      pointer-events: none;
+      z-index: 2;
+    }
+    /* Anchored from the frame's own top — safe regardless of the window's
+       (content-driven) height, since it sits fully above the window. */
+    .testimonials-lead {
+      position: relative;
+      left: -303px;
+      width: max-content;
+      margin: 56px auto 0;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 55px;
+      letter-spacing: -0.06em;
+      color: #0B0B0B;
+      text-shadow: 0 1px 1px rgba(241, 233, 222, 0.25);
+    }
+    /* Sits right after the window in normal flow — so a small negative
+       margin (rather than an absolute top pinned to the frame) is what
+       creates the slight overlap onto the window's bottom edge, and it
+       holds that overlap even if the window's real height drifts from
+       the Figma reference's. */
+    .testimonials-trail {
+      position: relative;
+      left: 248px;
+      width: max-content;
+      margin: -11px auto 0;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 55px;
+      letter-spacing: -0.06em;
+      color: #0B0B0B;
+      text-shadow: 0 1px 1px rgba(241, 233, 222, 0.25);
+    }
+    .testimonials-trail em { font-style: italic; color: #EB7848; }
+    .trail-mobile-break { display: none; }
+    .testimonials-window {
+      position: relative;
+      width: min(100%, 967.65px);
+      margin: 0 auto;
+      border: 1px solid #0B0B0B;
+      border-radius: 18.41px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 19.71px;
+      padding: 0;
+    }
+    .marquee-row { overflow: hidden; width: 100%; }
+    .marquee-row:first-child { padding-top: 0; }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      gap: 22.79px;
+      will-change: transform;
+      animation: marquee-scroll linear infinite;
+    }
+    .marquee-row--a .marquee-track { animation-duration: 26s; }
+    .marquee-row--b .marquee-track { animation-duration: 35s; animation-direction: reverse; }
+    .marquee-row--c .marquee-track { animation-duration: 26s; }
+    .marquee-row:hover .marquee-track { animation-play-state: paused; }
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .marquee-track { animation-play-state: paused; }
+    }
+
+    .testimonial-card {
+      box-sizing: border-box;
+      flex: none;
+      width: 335.55px;
+      min-height: 215.19px;
+      padding: 29.8px 24.54px 29.8px 22.79px;
+      background: #F5F4EF;
+      border-radius: 15.05px;
+      display: flex;
+      flex-direction: column;
+      gap: 22.79px;
+    }
+    .testimonial-head { display: flex; align-items: center; gap: 13.15px; }
+    .testimonial-avatar {
+      flex: none;
+      width: 52.58px; height: 52.58px;
+      border-radius: 50%;
+      background: #D9D9D9;
+      object-fit: cover;
+      display: block;
+    }
+    .testimonial-id { display: flex; flex-direction: column; gap: 6.13px; min-width: 0; }
+    .testimonial-name {
+      margin: 0;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 500;
+      font-size: 21.03px;
+      line-height: 1.073;
+      letter-spacing: 0.01em;
+      color: #0B0B0B;
+    }
+    .testimonial-role {
+      margin: 0;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 15.49px;
+      line-height: 1.073;
+      letter-spacing: 0.01em;
+      color: #C1623B;
+    }
+    .testimonial-quote {
+      margin: 0;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: 15.49px;
+      line-height: 1.073;
+      letter-spacing: 0.01em;
+      color: #7d7d7d;
+    }
+
+    @media (max-width: 640px) {
+      .testimonials { padding: 72px 16px; }
+      .testimonial-card { width: 270px; min-height: auto; padding: 22px 18px; }
+      .testimonials-window { border-radius: 14px; gap: 14px; }
+      /* Repositioned to match Figma node 288:287 ("nineth-section"): lead
+         sits flush left (not centered), the sparkle moves to the window's
+         top-right corner and bleeds slightly past its edge, and the trail
+         right-aligns under the window with a hard break after "I've" —
+         all measured off that mobile frame, not derived from the desktop
+         bracket-the-window composition. */
+      .testimonials-sparkle { left: auto; right: -6px; top: -22px; width: 138px; height: 138px; }
+      .testimonials-lead { left: 0; margin: 44px 0 20px; font-size: 40px; }
+      .testimonials-trail { left: 0; width: 100%; margin: 12px 0 0; text-align: right; font-size: 40px; }
+      .trail-mobile-break { display: inline; }
+    }
+
+    /* Tablet gap (641–1024px): .testimonials-lead/-trail use a fixed-px
+       "left" offset (-303px / +248px) to bracket the window on wide
+       desktop layouts — see their base rules above. That offset doesn't
+       taper with viewport width, so at tablet widths it pushes the text
+       far enough past the frame's own (much narrower) edge to genuinely
+       widen the document beyond the viewport — confirmed via
+       getBoundingClientRect: .testimonials-trail's box actually starts
+       past window.innerWidth around 768–912px wide, the exact "shorter
+       than the screen, black on the right" symptom reported on iPad
+       sizes. Resetting left to 0 here lets the existing auto-margin
+       centering (in the base rules) take over instead, which can't
+       overflow regardless of width. */
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .testimonials-lead { left: 0; }
+      .testimonials-trail { left: 0; }
+      /* Sparkle's left:45px is fixed too — on the true 1440px desktop
+         frame that's a comfortable 3% in, but against a tablet frame
+         only ~700-950px wide it reads as roughly the 5-6% mark, closer
+         to center over the card grid than the left edge. Pull it in to
+         the window's actual left edge instead. */
+      .testimonials-sparkle { left: -10px; }
+    }
+
+    /* ── FAQ (section 11) ── pulled from Figma via get_design_context
+       (node 197:335, frame 1643 × 1477). Same 1440/1643 = 0.876445 scale
+       factor as .story-dome/.problem-card — this section is structurally
+       a repeat of the section-4 "dome" pattern (cream → black arc,
+       headline on top), so it reuses that exact technique rather than
+       the cqw-stage. The accordion at the center was a flattened
+       screenshot in Figma (no real layer data) — rebuilt as a real,
+       keyboard-accessible <details> accordion with the six FAQ answers,
+       terracotta accents instead of the reference's red, sized with
+       clamp()/max-width (not scaled proportionally like the dome art)
+       so it stays comfortably readable on small screens. */
+    .faq { position: relative; background: #F1E9DE; overflow: hidden; }
+    .faq-dome {
+      position: relative;
+      background-image: url('brand_assets/faq-dome.svg');
+      background-repeat: no-repeat;
+      background-position: top center;
+      background-size: 100% auto;
+      /* Bottom padding sized to fully contain the swirl arrow, which
+         sits well below the accordion's own (now-locked) height — was
+         100px, clipped the arrow by ~140px against .faq's overflow:hidden. */
+      padding: 145px 24px 278px;
+    }
+    .faq-headline {
+      margin: 0 0 60px;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(64px, 10.9vw, 156.78px);
+      letter-spacing: -0.055em;
+      text-align: center;
+      color: #F5F4EF;
+    }
+
+    .faq-block { position: relative; max-width: 744px; margin: 0 auto; }
+
+    /* Shifted right of its Figma-derived offset (604.75px) — that math
+       came from the flattened accordion screenshot's bounding box, which
+       doesn't match this real, narrower accordion; at the literal offset
+       the star overlapped the chevrons. Clears the accordion's right
+       edge (744px) with a visible gap instead. */
+    .faq-star {
+      position: absolute;
+      left: 770px; top: -90.28px;
+      width: 278.13px; height: 424.68px;
+      pointer-events: none;
+    }
+    .faq-star img { display: block; width: 100%; height: 100%; }
+
+    .faq-swirl {
+      position: absolute;
+      left: -9.58px; top: 398.8px;
+      width: 266.6px; height: 262.7px;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .faq-swirl img { flex: none; width: 171.03px; height: 213.85px; transform: rotate(49.02deg); }
+
+    .faq-accordion { position: relative; z-index: 1; display: flex; flex-direction: column; }
+    .faq-item { border-bottom: 1px solid #C1623B; }
+    .faq-item summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 0;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(18px, 1.9vw, 18px);
+      line-height: 1.4;
+      color: #F5F4EF;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary:focus-visible { outline: 2px solid #C1623B; outline-offset: 4px; }
+    .faq-chevron {
+      flex: none;
+      width: 14px; height: 14px;
+      color: #C1623B;
+      transition: transform 0.3s ease;
+    }
+    .faq-item[open] .faq-chevron { transform: rotate(180deg); }
+    /* Locked to the tallest answer's own measured height (set as
+       --faq-answer-h by JS) so the accordion's total height — and
+       therefore the dome, star, swirl arrow, and everything below the
+       section — never shifts when a different item is opened. */
+    .faq-answer {
+      margin: 0 0 22px;
+      max-width: 640px;
+      min-height: var(--faq-answer-h, auto);
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(18px, 1.5vw, 15px);
+      line-height: 1.6;
+      color: #A7A7A7;
+    }
+
+    @media (max-width: 700px) {
+      /* The desktop faq-dome.svg's arc rises 269/1643 = 16.4% of width —
+         way more curved than the mobile Figma frame's own dome (node
+         288:293, "Rectangle 45": 19.5/390 = 5% of width). Swapping to
+         that flatter asset for mobile, using the same ::before (curve,
+         cream shows through its transparent corners) / ::after (flat
+         black fill for the rest of the section) split .story-dome
+         already uses, so the two layers stay pixel-aligned at any width
+         via cqw instead of a fixed px offset. Side padding also bumped
+         up (20px felt cramped against the question text). */
+      .faq-dome {
+        container-type: inline-size;
+        background-image: none;
+        padding: 110px 32px 130px;
+      }
+      .faq-dome::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; width: 100%;
+        height: 44.487cqw;
+        background-image: url('brand_assets/mobile/rectangle45.svg');
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: 100% auto;
+        z-index: 0;
+      }
+      .faq-dome::after {
+        content: '';
+        position: absolute;
+        left: 0; width: 100%; bottom: 0;
+        top: 44.487cqw;
+        background: #0B0B0B;
+        z-index: 0;
+      }
+      .faq-headline, .faq-block { position: relative; z-index: 1; }
+      .faq-headline { margin-bottom: 44px; }
+      .faq-star { width: 140px; height: 214px; left: auto; right: -10px; top: -60px; }
+      .faq-swirl { width: 140px; height: 138px; left: -10px; top: auto; bottom: -90px; }
+      .faq-swirl img { width: 90px; height: 112px; }
+    }
+
+    /* .footer-curtain / .site-footer / .footer-* / .fade-up / .fade-in now live in shared.css. */
+  </style>
+</head>
+<body>
+
+  <!-- Nav: floating pill (shared across pages — see partials/nav.html) -->
+  <!--#include virtual="partials/nav.html" -->
+
+  <!-- Hero — pin wrapper provides scroll room for the moon transition -->
+  <div class="hero-pin-wrap">
+  <header class="hero">
+
+    <!-- Moon canvas: full circle → crescent, driven by scroll -->
+    <canvas id="moon-canvas" width="360" height="360" aria-hidden="true"></canvas>
+
+    <!-- Scroll-driven headline pair -->
+    <div class="hero-copy-wrap">
+      <!-- copy-a: opening tension, visible at scroll 0% -->
+      <div class="copy-a" aria-hidden="true">You don't need<br>a full design team.</div>
+      <!-- copy-b: resolution — sentence in PP Neue Montreal, rotating word in Times italic -->
+      <h1 class="copy-b">You need your<br>designer. <span class="rw-word">Monthly.</span></h1>
+    </div>
+
+    <div class="hero-subs">
+      <p class="hero-sub-a">Yet, having no design support at all can be just as costly — quietly draining deals, users, and investors until you pause and ask why.</p>
+      <p class="hero-sub-b">Senior product design &amp; build of premium websites and web-apps.<br>From your first launch to every month after. Cancel or pause anytime.</p>
+    </div>
+    <div class="hero-btns">
+      <a href="https://cal.com/cresenzi/30min?overlayCalendar=true" class="hero-btn hero-btn--primary" target="_blank" rel="noopener noreferrer">Book a call</a>
+      <a href="work.html" class="hero-btn hero-btn--secondary">See the work</a>
+    </div>
+
+    <!-- Scroll cue — fades out as soon as user begins scrolling -->
+    <div class="scroll-cue" aria-hidden="true">
+      <span class="scroll-cue-label">Scroll</span>
+      <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+        <path d="M1 1.5L6 6.5L11 1.5" stroke="rgba(167,167,167,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+  </header>
+  </div>
+
+  <!-- Marquee -->
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee-inner">
+      <span class="marquee-item">Your designer. Monthly.</span>
+      <span class="marquee-sep">·</span>
+      <span class="marquee-item">Senior taste. Founder speed.</span>
+      <span class="marquee-sep">·</span>
+      <span class="marquee-item">Fractional, not diminished.</span>
+      <span class="marquee-sep">·</span>
+      <span class="marquee-item">The designer you didn't have to hire.</span>
+      <span class="marquee-sep">·</span>
+      <span class="marquee-item">Fixed scope. Fixed price. No surprises.</span>
+      <span class="marquee-sep">·</span>
+      <span class="marquee-item">Your designer. Monthly.</span>
+      <span class="marquee-sep">·</span>
+      <span class="marquee-item">Senior taste. Founder speed.</span>
+      <span class="marquee-sep">·</span>
+      <span class="marquee-item">Fractional, not diminished.</span>
+      <span class="marquee-sep">·</span>
+      <span class="marquee-item">The designer you didn't have to hire.</span>
+      <span class="marquee-sep">·</span>
+      <span class="marquee-item">Fixed scope. Fixed price. No surprises.</span>
+      <span class="marquee-sep">·</span>
+    </div>
+  </div>
+
+  <!-- The Problem — Figma "Section 2" -->
+  <section class="problem">
+    <div class="problem2-wrap">
+      <h2 class="problem-headline fade-up">Your product deserves<br>better than <em>good enough</em>.</h2>
+
+      <!-- Mobile-only — pulled from the mobile Figma frame (node 275:74):
+           different copy trims, different order, and the "hired a designer
+           once" card is dropped entirely. Kept as its own block rather than
+           reordering/hiding pieces of .problem-grid so mobile and desktop
+           content can diverge exactly as designed without fighting each
+           other's flex order. -->
+      <div class="problem-mobile-statement fade-up">
+        <p class="problem-mobile-title">Your product deserves better than <em>good enough</em>.</p>
+        <p class="problem-mobile-sub">I partner with ambitious founders to build products that look, feel, and convert with uncompromising intent.</p>
+      </div>
+      <div class="problem-mobile-list">
+        <div class="problem-mobile-card fade-up" style="--i:0">
+          <h3 class="problem-mobile-card-title">Relying entirely on AI.</h3>
+          <p class="problem-mobile-card-body">You are using very powerful tools, but the output is recognizable. Your product looks like everyone else's. Founders who care about standing out know this feeling.</p>
+        </div>
+        <div class="problem-mobile-card fade-up" style="--i:1">
+          <h3 class="problem-mobile-card-title">Design keeps getting deprioritized.</h3>
+          <p class="problem-mobile-card-body">Design accumulates debt silently, until a deal falls through because the product didn't look serious.</p>
+        </div>
+        <div class="problem-mobile-card fade-up" style="--i:2">
+          <h3 class="problem-mobile-card-title">You can feel it's off.</h3>
+          <p class="problem-mobile-card-body">Something about the product doesn't land. Users leave. Investors hesitate. You can't articulate the problem — which means you can't fix it.</p>
+        </div>
+        <div class="problem-mobile-card fade-up" style="--i:3">
+          <h3 class="problem-mobile-card-title">Full-time is too much.</h3>
+          <p class="problem-mobile-card-body">You need design consistently, but a full-time hire feels like a commitment you can't justify yet. So you do nothing, which costs you more.</p>
+        </div>
+        <div class="problem-mobile-card problem-mobile-card--accent fade-up" style="--i:4">
+          <h3 class="problem-mobile-card-title">Your product is losing deals silently.</h3>
+          <p class="problem-mobile-card-body">A potential customer lands. Tries the product. Leaves. You never know why. But somewhere between first impression and decision, design was the reason.</p>
+        </div>
+      </div>
+
+      <div class="problem-grid">
+        <div class="problem-col">
+          <div class="problem-card fade-up" style="--i:0">
+            <h3 class="problem-card-title">Relying<br>entirely on AI.</h3>
+            <p class="problem-card-body">You are using very powerful tools, but the output is recognizable. Your product looks like everyone else's product. Founders who care about standing out know this feeling.</p>
+          </div>
+          <div class="problem-card fade-up" style="--i:1">
+            <h3 class="problem-card-title">You can feel it's off. You can't explain why.</h3>
+            <p class="problem-card-body">Something about the product doesn't land. Users leave. Investors hesitate. You can't articulate the problem — which means you can't fix it. Design decisions get made by default.</p>
+          </div>
+        </div>
+        <div class="problem-col">
+          <div class="problem-card fade-up" style="--i:1">
+            <h3 class="problem-card-title">Design<br>keeps getting deprioritized.</h3>
+            <p class="problem-card-body">Design accumulates debt silently, until a deal falls through because the product didn't look serious.</p>
+          </div>
+          <div class="problem-card fade-up" style="--i:2">
+            <h3 class="problem-card-title">Full-time is too much. Nothing is too little.</h3>
+            <p class="problem-card-body">You need design consistently. A full-time hire feels like a commitment you can't justify yet. So you do nothing, which costs you more than either option.</p>
+          </div>
+        </div>
+        <div class="problem-col">
+          <div class="problem-card fade-up" style="--i:2">
+            <h3 class="problem-card-title">You hired a designer once. It didn't work.</h3>
+            <p class="problem-card-body">Pretty mockups that couldn't be built. A junior who needed constant direction. Or an agency that charged a lot and delivered a template. Now you're skeptical, and behind.</p>
+          </div>
+          <div class="problem-card problem-card--accent fade-up" style="--i:3">
+            <h3 class="problem-card-title">Your product is losing deals silently.</h3>
+            <p class="problem-card-body">A potential customer lands on your site. Tries the product. Leaves. You never know why. But somewhere between the first impression and the decision, design was part of the reason.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Crescent promise — Figma "Section 3" -->
+  <section class="crescent-promise">
+    <!-- Mobile-only — pulled from mobile Figma frame (node 284:72, the
+         corrected/isolated "third section" node). CRITICAL coordinate
+         model, verified against this node's own JSX: .crescent-mobile is
+         the position:relative + container-type:inline-size root, sized to
+         the FULL 390px reference width. Absolutely-positioned children
+         (ring, letters, C-mark, tagline, intention, &) are positioned
+         relative to that full-width padding-box — i.e. their cqw/top
+         values are NOT inset by this element's own left/right/top
+         padding, per how CSS resolves an absolutely-positioned element's
+         containing block. (The first pass at this section wrongly
+         treated those coordinates as relative to the padded 350px
+         content box, which is what threw the ring and the letters off
+         and crowded the "&" against the CTA card.) Card and CTA stay
+         normal-flow children, which DO respect the padding normally. -->
+    <div class="crescent-mobile">
+      <img class="crescent-mobile-ring" src="brand_assets/mobile/group27.svg" alt="" aria-hidden="true" />
+
+      <div class="crescent-mobile-inner">
+        <div class="crescent-mobile-card" aria-hidden="true"></div>
+        <div class="crescent-mobile-cta">
+          <p>show the world<br>what your<br><em>business</em> actually is.</p>
+        </div>
+      </div>
+
+      <svg class="crescent-mobile-cmark" viewBox="0 0 680 675" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M491.665 241.065C498.12 229.757 491.503 218.961 483.056 208.987C471.875 195.785 455.557 204.479 440.013 196.557C420.005 186.359 418.663 164.927 396.97 158.865C376.092 153.03 363.75 166.978 342.039 167.286C318.111 167.625 303.615 150.239 281.368 158.865C262.206 166.296 261.162 183.686 245.294 196.557C225.787 212.379 203.739 208.503 189.543 229.036C176.14 248.423 186.743 266.017 178.475 287.979C171.42 306.72 155.517 313.019 153.469 332.888C150.942 357.397 171.247 367.433 178.475 391.03C184.8 411.681 176.943 427.473 189.543 445.162C202.791 463.76 222.497 460.511 240.785 474.433C258.562 487.966 260.249 506.862 281.368 514.53C305.162 523.17 320.504 502.965 345.728 505.709C362.6 507.544 370.666 519.141 387.542 517.337C410.81 514.85 414.547 492.616 435.094 481.65C453.993 471.564 476.854 481.509 486.746 462.805C493.513 450.009 497.274 435.989 486.746 425.915C476.446 416.06 462.769 419.672 449.852 425.915C440.21 430.575 440.285 440.62 430.585 445.162C415.307 452.315 404.418 438.54 387.542 439.949C370.537 441.368 362.468 455.632 345.728 452.379C326.517 448.646 325.155 430.007 309.654 418.296C292.836 405.591 272.478 409.595 262.921 391.03C252.328 370.451 274.321 355.902 273.17 332.888C272.272 314.94 257.476 305.141 262.921 287.979C269.177 268.265 290.157 269.616 305.555 255.5C318.535 243.6 319.805 229.138 336.3 222.62C355.006 215.229 367.37 228.71 387.542 229.036C404.397 229.308 414.657 220.425 430.585 225.828C445.383 230.848 445.389 249.51 460.92 251.49C473.521 253.097 485.47 251.918 491.665 241.065Z"/>
+      </svg>
+      <div class="crescent-mobile-letters" aria-hidden="true">
+        <span style="left:27.38cqw; top:59.71cqw; transform:translateX(-50%) rotate(1.65deg);">r</span>
+        <span style="left:34.62cqw; top:60.93cqw; transform:translateX(-50%) rotate(-8.96deg);">e</span>
+        <span style="left:45.06cqw; top:59.42cqw; transform:translateX(-50%) rotate(1.85deg);">s</span>
+        <span style="left:54.13cqw; top:60.23cqw; transform:translateX(-50%) rotate(-9.5deg);">c</span>
+        <span style="left:65.11cqw; top:58.59cqw; transform:translateX(-50%) rotate(4.82deg);">e</span>
+        <span style="left:76.14cqw; top:59.65cqw; transform:translateX(-50%) rotate(4.82deg);">n</span>
+        <span style="left:84.94cqw; top:59.62cqw; transform:translateX(-50%) rotate(-6.53deg);">t</span>
+      </div>
+      <img class="crescent-mobile-tick" src="brand_assets/mobile/vector39.svg" alt="" aria-hidden="true" />
+
+      <p class="crescent-mobile-tagline">helps you make your product feel like it was built with</p>
+      <p class="crescent-mobile-intention">intention</p>
+      <p class="crescent-mobile-amp" aria-hidden="true">&amp;</p>
+    </div>
+
+    <div class="rings-behind fade-in" aria-hidden="true">
+      <div class="echo-ring echo-ring--21"><img src="brand_assets/rings-165/vector-21.svg" alt="" /></div>
+      <div class="echo-ring echo-ring--20"><img src="brand_assets/rings-165/vector-20.svg" alt="" /></div>
+      <div class="echo-ring echo-ring--19"><img src="brand_assets/rings-165/vector-19.svg" alt="" /></div>
+      <div class="echo-ring echo-ring--18"><img src="brand_assets/rings-165/vector-18.svg" alt="" /></div>
+      <div class="echo-ring echo-ring--16"><img src="brand_assets/rings-165/vector-16.svg" alt="" /></div>
+      <div class="echo-ring echo-ring--17"><img src="brand_assets/rings-165/vector-17.svg" alt="" /></div>
+      <div class="echo-ring echo-ring--22"><img src="brand_assets/rings-165/vector-22.svg" alt="" /></div>
+      <div class="echo-ring echo-ring--23"><img src="brand_assets/rings-165/vector-23.svg" alt="" /></div>
+      <div class="echo-ring echo-ring--24"><img src="brand_assets/rings-165/vector-24.svg" alt="" /></div>
+    </div>
+
+    <div class="crescent-frame">
+      <div class="crescent-bg fade-in" aria-hidden="true"></div>
+
+      <div class="crescent-letters fade-up" style="--i:0" aria-hidden="true">
+        <svg class="crescent-c-mark" style="left:17.4%;" viewBox="0 0 680 675" xmlns="http://www.w3.org/2000/svg">
+          <path d="M491.665 241.065C498.12 229.757 491.503 218.961 483.056 208.987C471.875 195.785 455.557 204.479 440.013 196.557C420.005 186.359 418.663 164.927 396.97 158.865C376.092 153.03 363.75 166.978 342.039 167.286C318.111 167.625 303.615 150.239 281.368 158.865C262.206 166.296 261.162 183.686 245.294 196.557C225.787 212.379 203.739 208.503 189.543 229.036C176.14 248.423 186.743 266.017 178.475 287.979C171.42 306.72 155.517 313.019 153.469 332.888C150.942 357.397 171.247 367.433 178.475 391.03C184.8 411.681 176.943 427.473 189.543 445.162C202.791 463.76 222.497 460.511 240.785 474.433C258.562 487.966 260.249 506.862 281.368 514.53C305.162 523.17 320.504 502.965 345.728 505.709C362.6 507.544 370.666 519.141 387.542 517.337C410.81 514.85 414.547 492.616 435.094 481.65C453.993 471.564 476.854 481.509 486.746 462.805C493.513 450.009 497.274 435.989 486.746 425.915C476.446 416.06 462.769 419.672 449.852 425.915C440.21 430.575 440.285 440.62 430.585 445.162C415.307 452.315 404.418 438.54 387.542 439.949C370.537 441.368 362.468 455.632 345.728 452.379C326.517 448.646 325.155 430.007 309.654 418.296C292.836 405.591 272.478 409.595 262.921 391.03C252.328 370.451 274.321 355.902 273.17 332.888C272.272 314.94 257.476 305.141 262.921 287.979C269.177 268.265 290.157 269.616 305.555 255.5C318.535 243.6 319.805 229.138 336.3 222.62C355.006 215.229 367.37 228.71 387.542 229.036C404.397 229.308 414.657 220.425 430.585 225.828C445.383 230.848 445.389 249.51 460.92 251.49C473.521 253.097 485.47 251.918 491.665 241.065Z"/>
+        </svg>
+        <span class="crescent-letter" style="left:28.52%; top:3.19%; transform:rotate(1.65deg);">r</span>
+        <span class="crescent-letter" style="left:32.15%; top:4.76%; transform:rotate(-8.96deg);">e</span>
+        <span class="crescent-letter" style="left:40.42%; top:2.84%; transform:rotate(1.85deg);">s</span>
+        <span class="crescent-letter" style="left:46.00%; top:3.89%; transform:rotate(-9.5deg);">c</span>
+        <span class="crescent-letter" style="left:53.75%; top:1.80%; transform:rotate(4.82deg);">e</span>
+        <span class="crescent-letter" style="left:62.33%; top:3.12%; transform:rotate(4.82deg);">n</span>
+        <span class="crescent-letter" style="left:71.09%; top:3.11%; transform:rotate(-6.53deg);">t</span>
+      </div>
+
+      <p class="crescent-tagline fade-up" style="--i:1">helps you make your product feel like it was built with <em>intention</em>.</p>
+      <div class="crescent-amp fade-in" style="--i:2" aria-hidden="true">&amp;</div>
+
+      <div class="crescent-cta fade-up" style="--i:3">
+        <p>show the world what your <em>business</em> actually is.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Story proof — Figma "Section 4" -->
+  <section class="story-proof" id="values">
+    <!-- Mobile-only — rebuilt from Figma node 286:157 ("fourth section"),
+         the corrected/isolated version of what desktop splits into
+         story-proof + services (merged here into one continuous black
+         block, no beige seam). .services is hidden entirely at this
+         breakpoint. See the CSS comment on .storystats-mobile for the
+         coordinate model and the CTA straddle technique. -->
+    <div class="storystats-mobile">
+      <img class="storystats-mobile-dome" src="brand_assets/mobile/rectangle45.svg" alt="" aria-hidden="true" />
+
+      <div class="ss-inner">
+        <div class="ss-card-stack">
+          <div class="ss-card-layer ss-card-layer--stars" aria-hidden="true"><div></div></div>
+          <div class="ss-card-layer ss-card-layer--terracotta" aria-hidden="true"><div></div></div>
+          <div class="ss-card-layer ss-card-layer--cream" aria-hidden="true"><img src="brand_assets/mobile/rectangle41.svg" alt="" /></div>
+          <div class="ss-card-layer ss-card-layer--mark" aria-hidden="true"><img src="brand_assets/mobile/vector40.svg" alt="" /></div>
+          <div class="ss-card-layer ss-card-layer--quote">
+            <p class="ss-card-quote">Every business has a <span class="underline">story</span>. Boring design hides it, and most founders never show it. Design is the <span class="accent">bridge</span> where that story lands your people, and that's what makes them choose you.</p>
+          </div>
+        </div>
+
+        <p class="ss-headline">helping founders present that story is a form of <em>expertise</em>.</p>
+
+        <div class="ss-stats">
+          <div class="ss-stat ss-stat--projects">
+            <p class="ss-stat-num">25+</p>
+            <p class="ss-stat-label">Projects<br>shipped.</p>
+          </div>
+          <div class="ss-stat ss-stat--experience">
+            <p class="ss-stat-num">4+</p>
+            <p class="ss-stat-label">Years of<br>experience.</p>
+          </div>
+          <div class="ss-stat ss-stat--designer">
+            <p class="ss-stat-num">1</p>
+            <p class="ss-stat-label">Designer.</p>
+          </div>
+        </div>
+      </div>
+
+      <img class="ss-sparkle" src="brand_assets/sparks.png" alt="" aria-hidden="true" />
+      <img class="ss-swirl" src="brand_assets/mobile/vectorSwirl.svg" alt="" aria-hidden="true" />
+
+      <div class="ss-cta-stack">
+        <div class="ss-cta-back" aria-hidden="true"></div>
+        <div class="ss-cta-front" aria-hidden="true">
+          <img class="ss-cta-texture" src="brand_assets/image 112.png" alt="" />
+        </div>
+        <p class="ss-cta-line1">Two ways I can help your business.</p>
+        <p class="ss-cta-line2">One path forward.</p>
+      </div>
+    </div>
+
+    <div class="story-dome">
+      <div class="story-stack fade-up" style="--i:0">
+        <div class="story-card story-card--stars" aria-hidden="true"></div>
+        <div class="story-card story-card--terracotta" aria-hidden="true"></div>
+        <img class="story-card story-card--main-bg" src="brand_assets/main card.svg" alt="" aria-hidden="true" />
+        <div class="story-card-content">
+          <svg class="story-logo" viewBox="0 0 680 675" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M491.665 241.065C498.12 229.757 491.503 218.961 483.056 208.987C471.875 195.785 455.557 204.479 440.013 196.557C420.005 186.359 418.663 164.927 396.97 158.865C376.092 153.03 363.75 166.978 342.039 167.286C318.111 167.625 303.615 150.239 281.368 158.865C262.206 166.296 261.162 183.686 245.294 196.557C225.787 212.379 203.739 208.503 189.543 229.036C176.14 248.423 186.743 266.017 178.475 287.979C171.42 306.72 155.517 313.019 153.469 332.888C150.942 357.397 171.247 367.433 178.475 391.03C184.8 411.681 176.943 427.473 189.543 445.162C202.791 463.76 222.497 460.511 240.785 474.433C258.562 487.966 260.249 506.862 281.368 514.53C305.162 523.17 320.504 502.965 345.728 505.709C362.6 507.544 370.666 519.141 387.542 517.337C410.81 514.85 414.547 492.616 435.094 481.65C453.993 471.564 476.854 481.509 486.746 462.805C493.513 450.009 497.274 435.989 486.746 425.915C476.446 416.06 462.769 419.672 449.852 425.915C440.21 430.575 440.285 440.62 430.585 445.162C415.307 452.315 404.418 438.54 387.542 439.949C370.537 441.368 362.468 455.632 345.728 452.379C326.517 448.646 325.155 430.007 309.654 418.296C292.836 405.591 272.478 409.595 262.921 391.03C252.328 370.451 274.321 355.902 273.17 332.888C272.272 314.94 257.476 305.141 262.921 287.979C269.177 268.265 290.157 269.616 305.555 255.5C318.535 243.6 319.805 229.138 336.3 222.62C355.006 215.229 367.37 228.71 387.542 229.036C404.397 229.308 414.657 220.425 430.585 225.828C445.383 230.848 445.389 249.51 460.92 251.49C473.521 253.097 485.47 251.918 491.665 241.065Z"/>
+          </svg>
+          <div class="story-quote-wrap">
+            <p class="story-quote">Every business has a <span class="underline">story</span>.<br>Boring design hides it, and most founders<br>never show it.<br>Design is the <span class="accent">bridge</span> where that story lands your people, and that's what makes them choose you.</p>
+          </div>
+        </div>
+      </div>
+      <h2 class="story-headline fade-up" style="--i:1">helping founders present that story is a form of <em>expertise</em>.</h2>
+    </div>
+  </section>
+
+  <!-- Services (section 5) -->
+  <section class="services" id="services">
+    <img class="services-texture" src="brand_assets/beige background.png" alt="" aria-hidden="true" />
+    <div class="services-stage">
+      <div class="services-stat services-stat--projects fade-up" style="--i:0">
+        <p class="services-stat-num">25+</p>
+        <p class="services-stat-label">Projects<br>shipped.</p>
+      </div>
+
+      <div class="services-sparkles fade-in" style="--i:1" aria-hidden="true">
+        <img src="brand_assets/sparks.png" alt="" />
+      </div>
+
+      <div class="services-stat services-stat--experience fade-up" style="--i:1">
+        <p class="services-stat-num">4+</p>
+        <p class="services-stat-label">Years of<br>experience.</p>
+      </div>
+
+      <div class="services-stat services-stat--designer fade-up" style="--i:2">
+        <p class="services-stat-num">1</p>
+        <p class="services-stat-label">Designer.</p>
+      </div>
+
+      <div class="services-swirl fade-in" style="--i:2" aria-hidden="true">
+        <img src="brand_assets/arrow.svg" alt="" />
+      </div>
+
+      <div class="services-card services-card--back fade-in" style="--i:3" aria-hidden="true"></div>
+      <div class="services-card services-card--front fade-up" style="--i:4">
+        <img class="services-card-texture" src="brand_assets/image 112.png" alt="" aria-hidden="true" />
+        <p class="services-cta-line1">Two ways I can help your business.</p>
+        <p class="services-cta-line2">One path forward.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing (section 6) -->
+  <section class="pricing" id="pricing">
+    <div class="pricing-wrap">
+      <div class="pricing-cards">
+        <div class="pricing-card pricing-card--sprint fade-up" style="--i:0">
+          <h3 class="pricing-card-title">The Sprint</h3>
+          <p class="pricing-card-eyebrow">For founders starting from zero.</p>
+          <p class="pricing-card-body"><span class="pricing-desktop-only">Design/build of MVP Product. (website/web app)</span><span class="pricing-mobile-only">MVP Product.</span><br><br>Fixed scope, fixed timeline, fixed price.<br><br>You go from idea to launched product with design that makes people take you seriously.</p>
+          <a href="https://cal.com/cresenzi/30min?overlayCalendar=true" class="pricing-cta" target="_blank" rel="noopener noreferrer">Book a 30-min intro call</a>
+          <svg class="pricing-card-mark" viewBox="0 0 680 675" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M491.665 241.065C498.12 229.757 491.503 218.961 483.056 208.987C471.875 195.785 455.557 204.479 440.013 196.557C420.005 186.359 418.663 164.927 396.97 158.865C376.092 153.03 363.75 166.978 342.039 167.286C318.111 167.625 303.615 150.239 281.368 158.865C262.206 166.296 261.162 183.686 245.294 196.557C225.787 212.379 203.739 208.503 189.543 229.036C176.14 248.423 186.743 266.017 178.475 287.979C171.42 306.72 155.517 313.019 153.469 332.888C150.942 357.397 171.247 367.433 178.475 391.03C184.8 411.681 176.943 427.473 189.543 445.162C202.791 463.76 222.497 460.511 240.785 474.433C258.562 487.966 260.249 506.862 281.368 514.53C305.162 523.17 320.504 502.965 345.728 505.709C362.6 507.544 370.666 519.141 387.542 517.337C410.81 514.85 414.547 492.616 435.094 481.65C453.993 471.564 476.854 481.509 486.746 462.805C493.513 450.009 497.274 435.989 486.746 425.915C476.446 416.06 462.769 419.672 449.852 425.915C440.21 430.575 440.285 440.62 430.585 445.162C415.307 452.315 404.418 438.54 387.542 439.949C370.537 441.368 362.468 455.632 345.728 452.379C326.517 448.646 325.155 430.007 309.654 418.296C292.836 405.591 272.478 409.595 262.921 391.03C252.328 370.451 274.321 355.902 273.17 332.888C272.272 314.94 257.476 305.141 262.921 287.979C269.177 268.265 290.157 269.616 305.555 255.5C318.535 243.6 319.805 229.138 336.3 222.62C355.006 215.229 367.37 228.71 387.542 229.036C404.397 229.308 414.657 220.425 430.585 225.828C445.383 230.848 445.389 249.51 460.92 251.49C473.521 253.097 485.47 251.918 491.665 241.065Z"/>
+          </svg>
+        </div>
+        <div class="pricing-card pricing-card--retainer fade-up" style="--i:1">
+          <h3 class="pricing-card-title">The Retainer</h3>
+          <p class="pricing-card-eyebrow">For founders ready to grow.</p>
+          <p class="pricing-card-body">Monthly partnership.<br><br>I'm embedded in your product, your team, your decisions.<br><br>Ongoing. Cancel anytime with 1 month notice.</p>
+          <a href="https://cal.com/cresenzi/30min?overlayCalendar=true" class="pricing-cta" target="_blank" rel="noopener noreferrer">Book a 30-min intro call</a>
+          <svg class="pricing-card-mark" viewBox="0 0 680 675" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M491.665 241.065C498.12 229.757 491.503 218.961 483.056 208.987C471.875 195.785 455.557 204.479 440.013 196.557C420.005 186.359 418.663 164.927 396.97 158.865C376.092 153.03 363.75 166.978 342.039 167.286C318.111 167.625 303.615 150.239 281.368 158.865C262.206 166.296 261.162 183.686 245.294 196.557C225.787 212.379 203.739 208.503 189.543 229.036C176.14 248.423 186.743 266.017 178.475 287.979C171.42 306.72 155.517 313.019 153.469 332.888C150.942 357.397 171.247 367.433 178.475 391.03C184.8 411.681 176.943 427.473 189.543 445.162C202.791 463.76 222.497 460.511 240.785 474.433C258.562 487.966 260.249 506.862 281.368 514.53C305.162 523.17 320.504 502.965 345.728 505.709C362.6 507.544 370.666 519.141 387.542 517.337C410.81 514.85 414.547 492.616 435.094 481.65C453.993 471.564 476.854 481.509 486.746 462.805C493.513 450.009 497.274 435.989 486.746 425.915C476.446 416.06 462.769 419.672 449.852 425.915C440.21 430.575 440.285 440.62 430.585 445.162C415.307 452.315 404.418 438.54 387.542 439.949C370.537 441.368 362.468 455.632 345.728 452.379C326.517 448.646 325.155 430.007 309.654 418.296C292.836 405.591 272.478 409.595 262.921 391.03C252.328 370.451 274.321 355.902 273.17 332.888C272.272 314.94 257.476 305.141 262.921 287.979C269.177 268.265 290.157 269.616 305.555 255.5C318.535 243.6 319.805 229.138 336.3 222.62C355.006 215.229 367.37 228.71 387.542 229.036C404.397 229.308 414.657 220.425 430.585 225.828C445.383 230.848 445.389 249.51 460.92 251.49C473.521 253.097 485.47 251.918 491.665 241.065Z"/>
+          </svg>
+        </div>
+      </div>
+      <p class="pricing-quote fade-up" style="--i:2">Most founders start with a Sprint. Then they <span class="accent">never</span> want to go back to doing it <span class="underline">alone</span>.</p>
+    </div>
+  </section>
+
+  <!-- Working with me (section 7) -->
+  <section class="working" id="working">
+    <div class="working-stage">
+      <img class="working-stars" src="brand_assets/Group 20.png" alt="" aria-hidden="true" />
+
+      <div class="working-headline fade-up" style="--i:0">
+        <h2 class="working-h1">What</h2>
+        <span class="working-h2">working</span>
+        <p class="working-h3">with me looks like:</p>
+      </div>
+
+      <ul class="working-list">
+        <li class="working-item working-item--1 fade-up" style="--i:1">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 3L61 37H97L68 59L79 94L50 73L21 94L32 59L3 37H39Z" fill="#B9A86D"/></svg>
+          Design delivered on a consistent cadence
+        </li>
+        <li class="working-item working-item--2 fade-up" style="--i:2">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 3L61 37H97L68 59L79 94L50 73L21 94L32 59L3 37H39Z" fill="#B9A86D"/></svg>
+          Async communication that respects your time
+        </li>
+        <li class="working-item working-item--3 fade-up" style="--i:3">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 3L61 37H97L68 59L79 94L50 73L21 94L32 59L3 37H39Z" fill="#B9A86D"/></svg>
+          UX, UI, and product thinking - not just screens
+        </li>
+        <li class="working-item working-item--4 fade-up" style="--i:4">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 3L61 37H97L68 59L79 94L50 73L21 94L32 59L3 37H39Z" fill="#B9A86D"/></svg>
+          From idea to shipped product
+        </li>
+        <li class="working-item working-item--5 fade-up" style="--i:5">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 3L61 37H97L68 59L79 94L50 73L21 94L32 59L3 37H39Z" fill="#B9A86D"/></svg>
+          A thinking partner, not just an executor
+        </li>
+      </ul>
+
+      <img class="working-photo fade-up" style="--i:6" src="brand_assets/imageofme.png" alt="" aria-hidden="true" />
+    </div>
+
+    <!-- Mobile-only — see the CSS comment above .working-mobile for why
+         this doesn't just reuse the desktop stage. -->
+    <div class="working-mobile">
+      <div class="wm-headline">
+        <p class="wm-row">
+          <span class="wm-h1">What</span>
+          <span class="wm-h2">working</span>
+        </p>
+        <p class="wm-h3">with me looks like:</p>
+      </div>
+      <ul class="wm-list">
+        <li><img class="wm-star" style="transform:rotate(0deg)" src="brand_assets/small star.png" alt="" aria-hidden="true" />Design delivered on a consistent cadence</li>
+        <li><img class="wm-star" style="transform:rotate(-30.22deg)" src="brand_assets/small star.png" alt="" aria-hidden="true" />Async communication that respects your time</li>
+        <li><img class="wm-star" style="transform:rotate(0deg)" src="brand_assets/small star.png" alt="" aria-hidden="true" />UX, UI, and product thinking - not just screens</li>
+        <li><img class="wm-star" style="transform:rotate(69.95deg)" src="brand_assets/small star.png" alt="" aria-hidden="true" />From idea to shipped product</li>
+        <li><img class="wm-star" style="transform:rotate(30.22deg)" src="brand_assets/small star.png" alt="" aria-hidden="true" />A thinking partner, not just an executor</li>
+      </ul>
+      <div class="wm-photo">
+        <img src="brand_assets/image-for-sixt-section.png" alt="" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Before/After (section 8) -->
+  <section class="swap" id="swap">
+    <div class="swap-stage">
+      <p class="swap-headline fade-up" style="--i:0">What changes when design is<br><em>finally</em> handled:</p>
+
+      <div class="swap-card swap-card--before fade-up" style="--i:1" aria-hidden="true"></div>
+      <div class="swap-card swap-card--after-back fade-up" style="--i:1" aria-hidden="true"></div>
+      <div class="swap-card--after-front-wrap fade-up" style="--i:2" aria-hidden="true">
+        <div class="swap-card--after-front">
+          <img src="brand_assets/image 112.png" alt="" />
+        </div>
+      </div>
+
+      <img class="swap-star swap-star--big fade-in" style="--i:2" src="brand_assets/big star.png" alt="" aria-hidden="true" />
+      <img class="swap-star swap-star--small fade-in" style="--i:3" src="brand_assets/small star.png" alt="" aria-hidden="true" />
+
+      <p class="swap-label swap-label--before fade-in" style="--i:2">before:</p>
+      <p class="swap-label swap-label--after fade-in" style="--i:2">after:</p>
+
+      <ul class="swap-list swap-list--before fade-up" style="--i:3">
+        <li class="swap-item">You're guessing what's wrong with your product</li>
+        <li class="swap-item">You're hesitant to send your site to investors</li>
+        <li class="swap-item">Design decisions are stalling everything else</li>
+        <li class="swap-item">Your product looks like every other AI build</li>
+        <li class="swap-item">You're spending founder time on design problems</li>
+        <li class="swap-item">Full-time hire feels too risky, nothing feels too little</li>
+        <li class="swap-item">Users leave and you don't know why</li>
+        <li class="swap-item">Design is always on the to-do list</li>
+      </ul>
+
+      <ul class="swap-list swap-list--after fade-up" style="--i:3">
+        <li class="swap-item">You know exactly what to fix and why</li>
+        <li class="swap-item">You're proud to share it with anyone</li>
+        <li class="swap-item">Decisions are made fast, you keep moving</li>
+        <li class="swap-item">Your product looks and feels like yours</li>
+        <li class="swap-item">That time goes back to building the business</li>
+        <li class="swap-item">Senior design, exactly when you need it</li>
+        <li class="swap-item">Your product earns trust before you say a word</li>
+        <li class="swap-item">Design is handled. Every month.</li>
+      </ul>
+    </div>
+
+    <!-- Mobile-only — see the CSS comment above .swap-mobile. -->
+    <div class="swap-mobile">
+      <p class="swap-mobile-headline">What changes when<br>design is <em>finally</em><br>handled:</p>
+
+      <div>
+        <p class="swap-mobile-label swap-mobile-label--before">before:</p>
+        <ul class="swap-mobile-list swap-mobile-list--before">
+          <li class="swap-mobile-item">You're guessing what's wrong with your product</li>
+          <li class="swap-mobile-item">You're hesitant to send your site to investors</li>
+          <li class="swap-mobile-item">Design decisions are stalling everything else</li>
+          <li class="swap-mobile-item">Your product looks like every other AI build</li>
+          <li class="swap-mobile-item">You're spending founder time on design problems</li>
+          <li class="swap-mobile-item">Full-time hire feels too risky, nothing feels too little</li>
+          <li class="swap-mobile-item">Users leave and you don't know why</li>
+          <li class="swap-mobile-item">Design is always on the to-do list</li>
+        </ul>
+      </div>
+
+      <div class="swap-mobile-after-wrap">
+        <p class="swap-mobile-label swap-mobile-label--after">after:</p>
+        <ul class="swap-mobile-list swap-mobile-list--after">
+          <li class="swap-mobile-item">You know exactly what to fix and why</li>
+          <li class="swap-mobile-item">You're proud to share it with anyone</li>
+          <li class="swap-mobile-item">Decisions are made fast, you keep moving</li>
+          <li class="swap-mobile-item">Your product looks and feels like yours</li>
+          <li class="swap-mobile-item">That time goes back to building the business</li>
+          <li class="swap-mobile-item">Senior design, exactly when you need it</li>
+          <li class="swap-mobile-item">Your product earns trust before you say a word</li>
+          <li class="swap-mobile-item">Design is handled. Every month.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- One decision (section 9) -->
+  <section class="decision" id="decision">
+    <div class="decision-stage">
+      <div class="decision-ring decision-ring--41" aria-hidden="true"><img src="brand_assets/ring-41.svg" alt="" /></div>
+      <div class="decision-ring decision-ring--40" aria-hidden="true"><img src="brand_assets/ring-40.svg" alt="" /></div>
+      <div class="decision-ring decision-ring--43" aria-hidden="true"><img src="brand_assets/ring-43.svg" alt="" /></div>
+      <div class="decision-ring decision-ring--47" aria-hidden="true"><img src="brand_assets/ring-47.svg" alt="" /></div>
+      <div class="decision-ring decision-ring--45" aria-hidden="true"><img src="brand_assets/ring-45.svg" alt="" /></div>
+      <div class="decision-ring decision-ring--42" aria-hidden="true"><img src="brand_assets/ring-42.svg" alt="" /></div>
+      <div class="decision-ring decision-ring--44" aria-hidden="true"><img src="brand_assets/ring-44.svg" alt="" /></div>
+      <div class="decision-ring decision-ring--48" aria-hidden="true"><img src="brand_assets/ring-48.svg" alt="" /></div>
+      <div class="decision-ring decision-ring--46" aria-hidden="true"><img src="brand_assets/ring-46.svg" alt="" /></div>
+
+      <p class="decision-h1 fade-in" style="--i:0">One decision.</p>
+      <p class="decision-h2 fade-in" style="--i:1">8+ problems solved.</p>
+      <p class="decision-foot fade-in" style="--i:2">Building trust,         project at a time.</p>
+      <p class="decision-one fade-in" style="--i:1">1</p>
+    </div>
+  </section>
+
+  <!-- Testimonials (section 10) -->
+  <section class="testimonials" id="testimonials">
+    <div class="testimonials-frame">
+      <img class="testimonials-sparkle fade-in" style="--i:0" src="brand_assets/testimonials-sparkle.png" alt="" aria-hidden="true" />
+      <p class="testimonials-lead fade-up" style="--i:0">hear it from...</p>
+
+      <div class="testimonials-window fade-in">
+
+      <div class="marquee-row marquee-row--a">
+        <div class="marquee-track">
+          <!-- set 1 -->
+          <article class="testimonial-card">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img1.jpg" alt="" aria-hidden="true" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Martin Tenovski</p>
+                <p class="testimonial-role">Designer, Mentor, Founder</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">Tijana has a keen eye for design and a deep understanding of user-centered design principles. She consistently met deadlines and delivered high-quality work, even when faced with tight deadlines or complex projects.</p>
+          </article>
+          <article class="testimonial-card">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img2.jpg" alt="" aria-hidden="true" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Branka Gjorgjievska</p>
+                <p class="testimonial-role">Accountant | UX/UI Designer</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">Tijana's designs were always clean, polished, and highly effective in achieving their intended purpose. Her ability to think creatively and come up with innovative solutions to complex design challenges was truly impressive.</p>
+          </article>
+          <article class="testimonial-card">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img3.jpg" alt="" aria-hidden="true" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Aleksandar Nofitoski</p>
+                <p class="testimonial-role">Designer at Vita Media Group</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">Tijana has a great eye for design and was able to create visually appealing interfaces while also considering the needs of the user.</p>
+          </article>
+          <!-- set 2 (duplicate, for the seamless loop) -->
+          <article class="testimonial-card" aria-hidden="true">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img1.jpg" alt="" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Martin Tenovski</p>
+                <p class="testimonial-role">Designer, Mentor, Founder</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">Tijana has a keen eye for design and a deep understanding of user-centered design principles. She consistently met deadlines and delivered high-quality work, even when faced with tight deadlines or complex projects.</p>
+          </article>
+          <article class="testimonial-card" aria-hidden="true">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img2.jpg" alt="" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Branka Gjorgjievska</p>
+                <p class="testimonial-role">Accountant | UX/UI Designer</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">Tijana's designs were always clean, polished, and highly effective in achieving their intended purpose. Her ability to think creatively and come up with innovative solutions to complex design challenges was truly impressive.</p>
+          </article>
+          <article class="testimonial-card" aria-hidden="true">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img3.jpg" alt="" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Aleksandar Nofitoski</p>
+                <p class="testimonial-role">Designer at Vita Media Group</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">Tijana has a great eye for design and was able to create visually appealing interfaces while also considering the needs of the user.</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="marquee-row marquee-row--b">
+        <div class="marquee-track">
+          <!-- set 1 -->
+          <article class="testimonial-card">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img4.jpg" alt="" aria-hidden="true" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Eva Ristova</p>
+                <p class="testimonial-role">Product Designer &amp; Owner, AI Experience Design (AIXD)</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">A wonderful team player with whom you can communicate to find a solution, discuss, and create a good product.</p>
+          </article>
+          <article class="testimonial-card">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img5.jpg" alt="" aria-hidden="true" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Mahmoud S. Ramadan</p>
+                <p class="testimonial-role">Brand Manager &amp; Full-Stack Marketer</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">I worked on a visual arts project with Tijana and she was so cooperative and helpful. She has a lovely spirit and always aspires for more, and she's really ambitious.</p>
+          </article>
+          <article class="testimonial-card">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img6.jpg" alt="" aria-hidden="true" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Vera Angelakova</p>
+                <p class="testimonial-role">Co-founder, Igralishte Skopje</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">Tijana designed an e-commerce website for our store along with 50 other candidates, and her solution really stood out. We had an amazing and easy workflow because of her knowledge, positivity, and professional approach to the project.</p>
+          </article>
+          <!-- set 2 (duplicate, for the seamless loop) -->
+          <article class="testimonial-card" aria-hidden="true">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img4.jpg" alt="" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Eva Ristova</p>
+                <p class="testimonial-role">Product Designer &amp; Owner, AI Experience Design (AIXD)</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">A wonderful team player with whom you can communicate to find a solution, discuss, and create a good product.</p>
+          </article>
+          <article class="testimonial-card" aria-hidden="true">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img5.jpg" alt="" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Mahmoud S. Ramadan</p>
+                <p class="testimonial-role">Brand Manager &amp; Full-Stack Marketer</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">I worked on a visual arts project with Tijana and she was so cooperative and helpful. She has a lovely spirit and always aspires for more, and she's really ambitious.</p>
+          </article>
+          <article class="testimonial-card" aria-hidden="true">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img6.jpg" alt="" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Vera Angelakova</p>
+                <p class="testimonial-role">Co-founder, Igralishte Skopje</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">Tijana designed an e-commerce website for our store along with 50 other candidates, and her solution really stood out. We had an amazing and easy workflow because of her knowledge, positivity, and professional approach to the project.</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="marquee-row marquee-row--c">
+        <div class="marquee-track">
+          <!-- set 1 -->
+          <article class="testimonial-card">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img7.jpg" alt="" aria-hidden="true" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Nadire Redjepi</p>
+                <p class="testimonial-role">President, REDI</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">The presented work has met and exceeded our expectations. Tijana created an app with creative elements as a solid baseline for operations &amp; marketing success.</p>
+          </article>
+          <article class="testimonial-card">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img8.jpg" alt="" aria-hidden="true" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Jana Todorovska</p>
+                <p class="testimonial-role">Head of Co-innovation &amp; Hiring, Brainster.co</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">Tijana showed the utmost dedication and commitment to all academy classes and real projects. She was one of the best students from the academy, showing great technical skills and a willingness to continuously learn and improve.</p>
+          </article>
+          <article class="testimonial-card">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img9.jpg" alt="" aria-hidden="true" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Zlatan Mujcin</p>
+                <p class="testimonial-role">Mentor</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">Tijana once again showed that she can deliver an excellent solution. The design itself clearly corresponds with the preferences and directions, which aimed to represent the project in a creative and unique way.</p>
+          </article>
+          <!-- set 2 (duplicate, for the seamless loop) -->
+          <article class="testimonial-card" aria-hidden="true">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img7.jpg" alt="" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Nadire Redjepi</p>
+                <p class="testimonial-role">President, REDI</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">The presented work has met and exceeded our expectations. Tijana created an app with creative elements as a solid baseline for operations &amp; marketing success.</p>
+          </article>
+          <article class="testimonial-card" aria-hidden="true">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img8.jpg" alt="" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Jana Todorovska</p>
+                <p class="testimonial-role">Head of Co-innovation &amp; Hiring, Brainster.co</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">Tijana showed the utmost dedication and commitment to all academy classes and real projects. She was one of the best students from the academy, showing great technical skills and a willingness to continuously learn and improve.</p>
+          </article>
+          <article class="testimonial-card" aria-hidden="true">
+            <div class="testimonial-head">
+              <img class="testimonial-avatar" src="brand_assets/testimonials/img9.jpg" alt="" />
+              <div class="testimonial-id">
+                <p class="testimonial-name">Zlatan Mujcin</p>
+                <p class="testimonial-role">Mentor</p>
+              </div>
+            </div>
+            <p class="testimonial-quote">Tijana once again showed that she can deliver an excellent solution. The design itself clearly corresponds with the preferences and directions, which aimed to represent the project in a creative and unique way.</p>
+          </article>
+        </div>
+      </div>
+
+      </div>
+
+      <p class="testimonials-trail fade-up" style="--i:0">the <em>people</em> I've<br class="trail-mobile-break"> worked with!</p>
+    </div>
+  </section>
+
+  <!-- FAQ (section 11) -->
+  <section class="faq" id="faq">
+    <div class="faq-dome">
+      <h2 class="faq-headline fade-up" style="--i:0">FAQ:</h2>
+
+      <div class="faq-block">
+        <div class="faq-star fade-in" style="--i:1" aria-hidden="true"><img src="brand_assets/star gold.png" alt="" /></div>
+        <div class="faq-swirl fade-in" style="--i:1" aria-hidden="true"><img src="brand_assets/faq-swirl.svg" alt="" /></div>
+
+        <div class="faq-accordion fade-up" style="--i:2">
+          <details class="faq-item" name="faq-group" open>
+            <summary>
+              <span>What's the difference between the Sprint and the Retainer?</span>
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <p class="faq-answer">The Sprint is a one-time, fixed-scope project, which is from an idea to shippable product in four to six weeks. The Retainer is an ongoing monthly partnership for products that keep growing. Most people start with a Sprint and move to a Retainer once there's something worth maintaining.</p>
+          </details>
+          <details class="faq-item" name="faq-group">
+            <summary>
+              <span>Do I get the design files when we're done?</span>
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <p class="faq-answer">Yes. Full handoff of source files and assets at the end of a Sprint, or at any point during a Retainer.</p>
+          </details>
+          <details class="faq-item" name="faq-group">
+            <summary>
+              <span>Can I cancel or pause the Retainer?</span>
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <p class="faq-answer">Yes. It is month-to-month, no long-term contract. Cancel or pause anytime with one month's notice.</p>
+          </details>
+          <details class="faq-item" name="faq-group">
+            <summary>
+              <span>How do we communicate during a project?</span>
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <p class="faq-answer">Async by default, either Slack or email. Higher retainer tiers include a weekly call and faster turnaround; details are scoped to what your product actually needs, not a fixed script.</p>
+          </details>
+          <details class="faq-item" name="faq-group">
+            <summary>
+              <span>Do you handle branding and logo design too?</span>
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <p class="faq-answer">I am generally focused on product design, UX, UI, and the systems around them. If a project needs a logo or brand identity as part of scoping a Sprint, that's a conversation to have upfront, not an assumption either way.</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer (shared across pages — see partials/footer.html) -->
+  <!--#include virtual="partials/footer.html" -->
+
+  <script>
+
+    // ── Sky: starfield + shooting stars + layered cloud float ──
+    (function () {
+      var hero   = document.querySelector('.hero');
+      var canvas = document.createElement('canvas');
+      canvas.id  = 'cloud-canvas';
+      canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;';
+      hero.insertBefore(canvas, hero.firstChild);
+
+      var ctx  = canvas.getContext('2d');
+      var W, H, tick = 0;
+      var bufs     = [];
+      var STARS    = [];
+      var shooters = [];
+      var nextShooterTick = 0;
+
+      // ── Stars ──
+      function buildStars() {
+        STARS = [];
+        var count = Math.max(130, Math.min(260, Math.round(W * H / 4000)));
+        for (var i = 0; i < count; i++) {
+          var bright = Math.random() < 0.18;
+          STARS.push({
+            x:     Math.random() * W,
+            y:     Math.random() * H,
+            r:     bright ? 1.2 + Math.random() * 1.0 : 0.4 + Math.random() * 0.7,
+            // Base opacity + amplitude set so each star swings through a clearly
+            // visible range (roughly 0.2–1.0 for bright, 0.1–0.7 for dim)
+            a:     bright ? 0.62 + Math.random() * 0.14 : 0.38 + Math.random() * 0.18,
+            amp:   bright ? 0.30 + Math.random() * 0.10 : 0.22 + Math.random() * 0.12,
+            // freq in rad/tick at 60fps — 0.013–0.035 gives 3–8 s per cycle,
+            // slow enough to feel calm, fast enough to read as shimmer
+            freq:  0.013 + Math.random() * 0.022,
+            phase: Math.random() * Math.PI * 2,
+          });
+        }
+        nextShooterTick = Math.round(600 + Math.random() * 600);
+      }
+
+      function spawnShooter() {
+        var ang = 0.20 + Math.random() * 0.48;
+        var spd = 7 + Math.random() * 5;
+        var trl = 100 + Math.random() * 90;
+        shooters.push({
+          x: W * (0.08 + Math.random() * 0.50),
+          y: H * (0.05 + Math.random() * 0.38),
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd,
+          trl: trl,
+          dur: Math.ceil((trl + 50) / spd),
+          elapsed: 0,
+        });
+      }
+
+      // ── Cloud puff cluster ──
+      var PUFFS = [
+        [ 0,     0,    1.00, 0.52],
+        [-0.50,  0.10, 0.78, 0.46],
+        [ 0.50,  0.10, 0.78, 0.46],
+        [-0.26, -0.22, 0.62, 0.40],
+        [ 0.26, -0.22, 0.62, 0.40],
+        [ 0,    -0.38, 0.52, 0.34],
+        [-0.82,  0.22, 0.46, 0.30],
+        [ 0.82,  0.22, 0.46, 0.30],
+      ];
+
+      function drawCloud(bctx, cx, cy, baseR, r, g, b, a) {
+        PUFFS.forEach(function (p) {
+          var px = cx + p[0] * baseR, py = cy + p[1] * baseR;
+          var rx = p[2] * baseR,      ry = p[3] * baseR;
+          var gr = bctx.createRadialGradient(px, py, 0, px, py, rx);
+          gr.addColorStop(0,    'rgba(' + r + ',' + g + ',' + b + ',' + a + ')');
+          gr.addColorStop(0.50, 'rgba(' + r + ',' + g + ',' + b + ',' + (a * 0.32).toFixed(3) + ')');
+          gr.addColorStop(1,    'rgba(0,0,0,0)');
+          bctx.beginPath();
+          bctx.ellipse(px, py, rx, ry, 0, 0, Math.PI * 2);
+          bctx.fillStyle = gr;
+          bctx.fill();
+        });
+      }
+
+      var MAX_AMP = 70;
+      var LAYERS = [
+        {
+          amp: 42, freq: 0.00080, phase: 0.00,
+          r: 0.30, rgb: [44, 44, 44], a: 0.78,
+          clouds: [
+            [0.06, 0.05], [0.04, 0.34], [0.08, 0.62], [0.05, 0.88],
+            [0.94, 0.05], [0.96, 0.34], [0.92, 0.62], [0.95, 0.88],
+            [0.20, 0.94], [0.80, 0.94]
+          ]
+        },
+        {
+          amp: 58, freq: 0.00115, phase: 2.09,
+          r: 0.20, rgb: [54, 54, 54], a: 0.68,
+          clouds: [
+            [0.03, 0.18], [0.07, 0.50], [0.04, 0.76], [0.12, 0.92],
+            [0.97, 0.18], [0.93, 0.50], [0.96, 0.76], [0.88, 0.92],
+            [0.28, 0.96], [0.72, 0.96]
+          ]
+        },
+        {
+          amp: 70, freq: 0.00160, phase: 4.19,
+          r: 0.13, rgb: [32, 32, 32], a: 0.86,
+          clouds: [
+            [0.02, 0.28], [0.06, 0.56], [0.03, 0.80], [0.14, 0.95],
+            [0.98, 0.28], [0.94, 0.56], [0.97, 0.80], [0.86, 0.95],
+            [0.38, 0.97], [0.62, 0.97]
+          ]
+        }
+      ];
+
+      function buildBufs() {
+        var padW = W + MAX_AMP * 2;
+        bufs = LAYERS.map(function (L) {
+          var buf  = document.createElement('canvas');
+          buf.width = padW; buf.height = H;
+          var bctx = buf.getContext('2d');
+          var baseR = L.r * H;
+          var r = L.rgb[0], g = L.rgb[1], b = L.rgb[2];
+          L.clouds.forEach(function (c) {
+            drawCloud(bctx, c[0] * W + MAX_AMP, c[1] * H, baseR, r, g, b, L.a);
+          });
+          return { buf: buf, amp: L.amp, freq: L.freq, phase: L.phase };
+        });
+      }
+
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+        buildStars();
+        buildBufs();
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        // Stars — drawn first, behind clouds
+        STARS.forEach(function (s) {
+          var a = Math.max(0, Math.min(1, s.a + s.amp * Math.sin(tick * s.freq + s.phase)));
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(245,244,239,' + a.toFixed(3) + ')';
+          ctx.fill();
+        });
+
+        // Shooting stars — rare, one at a time
+        if (tick >= nextShooterTick && shooters.length === 0) {
+          spawnShooter();
+          nextShooterTick = tick + 600 + Math.floor(Math.random() * 600);
+        }
+        for (var i = shooters.length - 1; i >= 0; i--) {
+          var sh   = shooters[i];
+          var pct   = sh.elapsed / sh.dur;
+          var alpha = Math.sin(pct * Math.PI) * 0.76;
+          var hx    = sh.x + sh.vx * sh.elapsed;
+          var hy    = sh.y + sh.vy * sh.elapsed;
+          var spd   = Math.sqrt(sh.vx * sh.vx + sh.vy * sh.vy);
+          var tLen  = Math.min(sh.elapsed, sh.trl / spd) * spd;
+          var tx    = hx - (sh.vx / spd) * tLen;
+          var ty    = hy - (sh.vy / spd) * tLen;
+          var gr    = ctx.createLinearGradient(tx, ty, hx, hy);
+          gr.addColorStop(0,    'rgba(245,244,239,0)');
+          gr.addColorStop(0.65, 'rgba(245,244,239,' + (alpha * 0.28).toFixed(3) + ')');
+          gr.addColorStop(1,    'rgba(245,244,239,' + alpha.toFixed(3) + ')');
+          ctx.beginPath();
+          ctx.moveTo(tx, ty);
+          ctx.lineTo(hx, hy);
+          ctx.strokeStyle = gr;
+          ctx.lineWidth = 1.4;
+          ctx.stroke();
+          sh.elapsed++;
+          if (sh.elapsed >= sh.dur) shooters.splice(i, 1);
+        }
+
+        // Cloud layers — on top of stars, sine oscillation in place
+        bufs.forEach(function (layer) {
+          var ox = layer.amp * Math.sin(tick * layer.freq + layer.phase);
+          ctx.drawImage(layer.buf, -(MAX_AMP + ox), 0);
+        });
+
+        tick++;
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+  </script>
+
+  <script>
+    // ── Moon phase transition + scroll narrative ──
+    (function () {
+      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      var pinWrap    = document.querySelector('.hero-pin-wrap');
+      var moonCanvas = document.getElementById('moon-canvas');
+      var moonCtx    = moonCanvas.getContext('2d');
+      var copyA      = document.querySelector('.copy-a');
+      var copyB      = document.querySelector('.copy-b');
+      var heroSubA   = document.querySelector('.hero-sub-a');
+      var heroSubB   = document.querySelector('.hero-sub-b');
+      var heroBtn    = document.querySelector('.hero-btns');
+      var scrollCue  = document.querySelector('.scroll-cue');
+
+      var S = 360; // canvas size (displayed at 180 CSS px → 2× HiDPI)
+      var R = S / 2; // radius = 180
+
+      // ── Path definitions ──
+      // Circle: 4-segment cubic bezier approximation, centred at (R, R) = (180, 180)
+      // Rendered at 360×360 px internally; displayed at 180 CSS px → 2× HiDPI quality
+      var kappa = 0.5522847498;
+      var CIRCLE_PATH =
+        'M ' + R + ',0 ' +
+        'C ' + (R + kappa*R) + ',0 ' + (2*R) + ',' + (R - kappa*R) + ' ' + (2*R) + ',' + R + ' ' +
+        'C ' + (2*R) + ',' + (R + kappa*R) + ' ' + (R + kappa*R) + ',' + (2*R) + ' ' + R + ',' + (2*R) + ' ' +
+        'C ' + (R - kappa*R) + ',' + (2*R) + ' 0,' + (R + kappa*R) + ' 0,' + R + ' ' +
+        'C 0,' + (R - kappa*R) + ' ' + (R - kappa*R) + ',0 ' + R + ',0 Z';
+
+      // Crescent: exact path from brand_assets/Logo - SVG.svg (viewBox 0 0 680 675)
+      // Real cubic bezier curves — 32 C segments, no straight lines.
+      var SVG_CRESCENT_RAW =
+        'M491.665 241.065C498.12 229.757 491.503 218.961 483.056 208.987' +
+        'C471.875 195.785 455.557 204.479 440.013 196.557' +
+        'C420.005 186.359 418.663 164.927 396.97 158.865' +
+        'C376.092 153.03 363.75 166.978 342.039 167.286' +
+        'C318.111 167.625 303.615 150.239 281.368 158.865' +
+        'C262.206 166.296 261.162 183.686 245.294 196.557' +
+        'C225.787 212.379 203.739 208.503 189.543 229.036' +
+        'C176.14 248.423 186.743 266.017 178.475 287.979' +
+        'C171.42 306.72 155.517 313.019 153.469 332.888' +
+        'C150.942 357.397 171.247 367.433 178.475 391.03' +
+        'C184.8 411.681 176.943 427.473 189.543 445.162' +
+        'C202.791 463.76 222.497 460.511 240.785 474.433' +
+        'C258.562 487.966 260.249 506.862 281.368 514.53' +
+        'C305.162 523.17 320.504 502.965 345.728 505.709' +
+        'C362.6 507.544 370.666 519.141 387.542 517.337' +
+        'C410.81 514.85 414.547 492.616 435.094 481.65' +
+        'C453.993 471.564 476.854 481.509 486.746 462.805' +
+        'C493.513 450.009 497.274 435.989 486.746 425.915' +
+        'C476.446 416.06 462.769 419.672 449.852 425.915' +
+        'C440.21 430.575 440.285 440.62 430.585 445.162' +
+        'C415.307 452.315 404.418 438.54 387.542 439.949' +
+        'C370.537 441.368 362.468 455.632 345.728 452.379' +
+        'C326.517 448.646 325.155 430.007 309.654 418.296' +
+        'C292.836 405.591 272.478 409.595 262.921 391.03' +
+        'C252.328 370.451 274.321 355.902 273.17 332.888' +
+        'C272.272 314.94 257.476 305.141 262.921 287.979' +
+        'C269.177 268.265 290.157 269.616 305.555 255.5' +
+        'C318.535 243.6 319.805 229.138 336.3 222.62' +
+        'C355.006 215.229 367.37 228.71 387.542 229.036' +
+        'C404.397 229.308 414.657 220.425 430.585 225.828' +
+        'C445.383 230.848 445.389 249.51 460.92 251.49' +
+        'C473.521 253.097 485.47 251.918 491.665 241.065Z';
+
+      // Measure bounding box from all coordinate numbers in the path.
+      // For cubic beziers the drawn curve never exceeds the convex hull of its
+      // control points, so min/max of all numbers is a valid outer bound.
+      function pathBBox(d) {
+        var xs = [], ys = [], isX = true;
+        d.replace(/(-?\d+\.?\d*)/g, function(n) {
+          var v = parseFloat(n);
+          if (isX) xs.push(v); else ys.push(v);
+          isX = !isX;
+        });
+        return {
+          x0: Math.min.apply(null, xs), x1: Math.max.apply(null, xs),
+          y0: Math.min.apply(null, ys), y1: Math.max.apply(null, ys)
+        };
+      }
+
+      // Scale every coordinate pair in the path by (scale, dx, dy).
+      // Works because every SVG command in this path contributes an even number
+      // of coordinates (M=2, C=6, Z=0), so the X/Y toggle stays in sync.
+      function scalePath(d, scale, dx, dy) {
+        var isX = true;
+        return d.replace(/(-?\d+\.?\d*)/g, function(n) {
+          var v = parseFloat(n);
+          var r = (isX ? v * scale + dx : v * scale + dy).toFixed(2);
+          isX = !isX;
+          return r;
+        });
+      }
+
+      // Fit the crescent into the 360×360 canvas — padding kept small so the
+      // crescent reads at nearly the same size as the full moon (which fills
+      // the canvas edge-to-edge), just a touch smaller, not noticeably so.
+      var bb  = pathBBox(SVG_CRESCENT_RAW);
+      var bw  = bb.x1 - bb.x0, bh = bb.y1 - bb.y0;
+      var pad = 8;
+      var avail = S - 2 * pad;                        // 304
+      var sc  = avail / Math.max(bw, bh);
+      var dx  = pad + (avail - bw * sc) / 2 - bb.x0 * sc;
+      var dy  = pad + (avail - bh * sc) / 2 - bb.y0 * sc;
+      var CRESCENT_PATH = scalePath(SVG_CRESCENT_RAW, sc, dx, dy);
+
+      // Flubber interpolator: morphs the full circle into the logo crescent as t: 0 → 1
+      // maxSegmentLength subdivides long edges so the morph moves smoothly
+      var moonMorph = window.flubber.interpolate(CIRCLE_PATH, CRESCENT_PATH, { maxSegmentLength: 8 });
+
+      // Single offscreen canvas for compositing
+      var off    = document.createElement('canvas');
+      off.width  = S; off.height = S;
+      var offCtx = off.getContext('2d');
+
+      // Full Spectrum gradient mapped so lavender sits at the crescent's top horn
+      // (covers the full circle at t=0 and the crescent at t=1)
+      var specGrad = offCtx.createLinearGradient(180, 0, 290, 400);
+      specGrad.addColorStop(0,    '#E2C2FF');
+      specGrad.addColorStop(0.19, '#D2896B');
+      specGrad.addColorStop(0.49, '#C1623B');
+      specGrad.addColorStop(1,    '#0B0B0B');
+
+      // Real lunar photo, recoloured warm beige via a duotone luminance map.
+      // The dark anchor is Moon Background's own hue/saturation at lower
+      // lightness (not a terracotta-ramp stop, which read as red/rust), and
+      // the luminance range is compressed toward the light end so the result
+      // stays soft and faded rather than high-contrast.
+      var moonImg      = new Image();
+      var moonTex      = document.createElement('canvas');
+      moonTex.width    = S; moonTex.height = S;
+      var moonTexCtx   = moonTex.getContext('2d');
+      var moonTexReady = false;
+      var lastT        = 0;
+      var DUOTONE_DARK  = [0x96, 0x6E, 0x40]; // Moon Background hue/sat, darker L — tan, not red
+      var DUOTONE_LIGHT = [0xF1, 0xE9, 0xDE]; // Moon Background
+      moonImg.onload = function () {
+        var tmp  = document.createElement('canvas');
+        tmp.width = S; tmp.height = S;
+        var tctx = tmp.getContext('2d');
+        tctx.drawImage(moonImg, 0, 0, S, S);
+
+        var imgData = tctx.getImageData(0, 0, S, S);
+        var data    = imgData.data;
+        for (var i = 0; i < data.length; i += 4) {
+          var l = data[i] / 255; // source is greyscale: r === g === b
+          l = 0.4 + 0.6 * l;     // lift the floor — softer, faded contrast
+          data[i]     = DUOTONE_DARK[0] + (DUOTONE_LIGHT[0] - DUOTONE_DARK[0]) * l;
+          data[i + 1] = DUOTONE_DARK[1] + (DUOTONE_LIGHT[1] - DUOTONE_DARK[1]) * l;
+          data[i + 2] = DUOTONE_DARK[2] + (DUOTONE_LIGHT[2] - DUOTONE_DARK[2]) * l;
+          // alpha (data[i + 3]) untouched — keeps the photo's transparent surround
+        }
+        moonTexCtx.putImageData(imgData, 0, 0);
+        moonTexReady = true;
+        drawMoon(lastT);
+      };
+      moonImg.src = 'brand_assets/image%20105.png';
+
+      function drawMoon(t) {
+        lastT = t;
+        var gAlpha      = Math.max(0, Math.min(1, (t - 0.4) / 0.6));
+        var craterAlpha = Math.max(0, 1 - t / 0.15);
+
+        var pathStr = moonMorph(t);
+        var shape   = new Path2D(pathStr);
+
+        offCtx.clearRect(0, 0, S, S);
+
+        // 1. Fill with Moon Background
+        offCtx.fillStyle = '#F1E9DE';
+        offCtx.fill(shape);
+
+        // 2. Lunar texture — full-moon state only, fades out by t=0.15
+        if (craterAlpha > 0.001 && moonTexReady) {
+          offCtx.save();
+          offCtx.clip(shape);
+          offCtx.globalAlpha = craterAlpha;
+          offCtx.drawImage(moonTex, 0, 0);
+          offCtx.globalAlpha = 1;
+          offCtx.restore();
+        }
+
+        // 3. Full Spectrum gradient overlaid, fading in t = 0.4 → 1
+        if (gAlpha > 0.001) {
+          offCtx.save();
+          offCtx.clip(shape);
+          offCtx.globalAlpha = gAlpha;
+          offCtx.fillStyle = specGrad;
+          offCtx.fillRect(0, 0, S, S);
+          offCtx.restore();
+        }
+
+        // 4. Stamp to display canvas
+        moonCtx.clearRect(0, 0, S, S);
+        moonCtx.drawImage(off, 0, 0);
+      }
+
+      // Rotating word — scroll-driven; always restarts at "Monthly." when crescent is entered
+      var heroSubALive = false;
+      var rwEl       = document.querySelector('.rw-word');
+      var rwWords    = ['Monthly.', 'Retained.', 'Embedded.', 'Steady.'];
+      var rwIdx      = 0;
+      var rwInterval = null;
+      var inCrescent = false;
+
+      function startRwCycle() {
+        rwIdx = 0;
+        rwEl.textContent   = rwWords[0];
+        rwEl.style.opacity = '1';
+        if (rwInterval) clearInterval(rwInterval);
+        rwInterval = setInterval(function () {
+          rwEl.style.opacity = '0';
+          setTimeout(function () {
+            rwIdx = (rwIdx + 1) % rwWords.length;
+            rwEl.textContent   = rwWords[rwIdx];
+            rwEl.style.opacity = '1';
+          }, 500);
+        }, 2500);
+      }
+
+      function stopRwCycle() {
+        if (rwInterval) { clearInterval(rwInterval); rwInterval = null; }
+      }
+
+      function updateHero(t) {
+        drawMoon(t);
+
+        // copy-a fades out over 0 → 0.52
+        var aAlpha = Math.max(0, 1 - t / 0.52);
+        // copy-b fades in over 0.48 → 1
+        var bAlpha = Math.max(0, Math.min(1, (t - 0.48) / 0.52));
+        copyA.style.opacity = aAlpha;
+        copyB.style.opacity  = bAlpha;
+
+        // Full-moon subtext fades with copy-a; crescent sub + buttons appear at scroll ≥ 90%
+        if (heroSubALive) heroSubA.style.opacity = aAlpha.toString();
+        var nowCrescent = t >= 0.90;
+        if (nowCrescent) {
+          heroSubB.classList.add('in');
+          heroBtn.classList.add('in');
+        } else {
+          heroSubB.classList.remove('in');
+          heroBtn.classList.remove('in');
+        }
+
+        // Scroll cue — hide once user has scrolled past t=0.05
+        if (scrollCue) {
+          if (t > 0.05) scrollCue.classList.add('hidden');
+          else scrollCue.classList.remove('hidden');
+        }
+
+        // Rotating word — start/stop based on crescent entry/exit; no motion in reducedMotion
+        if (!reducedMotion) {
+          if (nowCrescent && !inCrescent) {
+            startRwCycle();
+            inCrescent = true;
+          } else if (!nowCrescent && inCrescent) {
+            stopRwCycle();
+            inCrescent = false;
+          }
+        }
+      }
+
+      function getScrollT() {
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        // Animation completes over exactly one viewport height of scrolling.
+        // pin-wrap is 280vh so after t=1 there is ~80vh of crescent hold before the next section.
+        return Math.max(0, Math.min(1, scrollTop / window.innerHeight));
+      }
+
+      if (reducedMotion) {
+        // Skip scroll theatre — jump straight to the resolved crescent state
+        if (scrollCue) scrollCue.classList.add('hidden');
+        updateHero(1);
+        moonCanvas.style.opacity = '1';
+        heroSubA.style.opacity   = '1';
+        heroSubB.style.opacity   = '1';
+        heroSubB.style.transform = 'none';
+        heroBtn.style.opacity    = '1';
+        heroBtn.style.transform  = 'none';
+      } else {
+        // Initial draw at t = 0 (full moon, copy-a visible)
+        updateHero(0);
+
+        // Moon canvas + copy-a on timers; full-moon subtext appears with copy-a; crescent sub+buttons are scroll-driven
+        setTimeout(function () { moonCanvas.classList.add('in'); }, 160);
+        setTimeout(function () {
+          copyA.classList.add('in');
+          heroSubALive = true;
+          heroSubA.style.opacity = '1';
+        }, 700);
+
+        // Scroll → moon progress + scroll-driven reveals
+        window.addEventListener('scroll', function () {
+          updateHero(getScrollT());
+        }, { passive: true });
+      }
+    })();
+
+    // .fade-up / .fade-in reveal observer now lives in shared.js (runs on every page).
+
+    // ── FAQ accordion: exclusive open (one at a time) + locked answer
+    // height so toggling never reflows the dome background, star, swirl
+    // arrow, or anything below the section. Height is measured from the
+    // tallest answer (not hardcoded) so it stays correct at any viewport
+    // width/font size, and re-measured on resize since text reflows. ──
+    (function () {
+      var accordion = document.querySelector('.faq-accordion');
+      if (!accordion) return;
+      var items = Array.prototype.slice.call(accordion.querySelectorAll('.faq-item'));
+      if (!items.length) return;
+
+      function measureAndLockHeight() {
+        var wasOpen = items.map(function (d) { return d.open; });
+        items.forEach(function (d) { d.open = true; });
+        var maxH = 0;
+        items.forEach(function (d) {
+          var ans = d.querySelector('.faq-answer');
+          if (ans) maxH = Math.max(maxH, ans.getBoundingClientRect().height);
+        });
+        items.forEach(function (d, i) { d.open = wasOpen[i]; });
+        accordion.style.setProperty('--faq-answer-h', maxH + 'px');
+      }
+
+      var resizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(measureAndLockHeight, 150);
+      });
+
+      measureAndLockHeight();
+
+      items.forEach(function (item) {
+        item.addEventListener('toggle', function () {
+          if (item.open) {
+            items.forEach(function (other) {
+              if (other !== item) other.open = false;
+            });
+          }
+        });
+      });
+    })();
+  </script>
+
+  <script src="shared.js?v=2"></script>
+
+</body>
+</html>

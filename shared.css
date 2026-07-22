@@ -1,0 +1,587 @@
+/* ══════════════════════════════════════════════════════════════════
+   shared.css — single source of truth for components used on more
+   than one page (nav pill, footer, ticker marquee, hero-style buttons).
+   Loaded by every page (index.html, about.html, …). Edit here once —
+   it reflects everywhere it's linked. Page-specific styles stay inline
+   in each page's own <style> block.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html:focus-within { scroll-behavior: smooth; }
+body {
+  background: #0B0B0B;
+  color: #F5F4EF;
+  font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Buttons — flat Terracotta fill / outlined secondary, no gradient, no glow ── */
+.hero-btn {
+  display: inline-block;
+  font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+  font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+  font-weight: 500; text-decoration: none;
+  padding: 14px 32px;
+  border-radius: 999px;
+  transition: background-color 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+}
+.hero-btn--primary {
+  background: #C1623B; color: #F1E9DE;
+  border: 1px solid #C1623B;
+}
+.hero-btn--primary:hover  { background: #9C4F30; border-color: #9C4F30; }
+.hero-btn--primary:focus-visible { outline: 2px solid #F1E9DE; outline-offset: 3px; }
+.hero-btn--primary:active { background: #753C24; border-color: #753C24; }
+.hero-btn--secondary {
+  background: transparent; color: #F5F4EF;
+  border: 1px solid rgba(245,244,239,0.25);
+}
+.hero-btn--secondary:hover  { border-color: rgba(245,244,239,0.55); background: rgba(245,244,239,0.05); }
+.hero-btn--secondary:focus-visible { outline: 2px solid #F5F4EF; outline-offset: 3px; }
+.hero-btn--secondary:active { background: rgba(245,244,239,0.10); }
+
+/* ── Nav: floating pill ──
+   Fixed, centered, top-anchored pill. Solid (near-solid) Eclipse Black —
+   no backdrop-blur. Shape morphs rounded-full → rounded-xl while the
+   mobile panel is open (kept as an explicit, deliberate exception to the
+   transform/opacity-only rule, same as the panel's display toggle below,
+   both structural rather than decorative). */
+.pill-nav {
+  position: fixed;
+  top: 20px; left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: calc(100% - 32px);
+  max-width: 460px;
+  padding: 14px 26px;
+  background: rgba(11, 11, 11, 0.94);
+  border: 1px solid rgba(167, 167, 167, 0.18);
+  border-radius: 999px;
+  transition: border-radius 0.25s ease, opacity 0.35s ease, transform 0.35s ease;
+}
+.pill-nav.is-open { border-radius: 20px; }
+@media (min-width: 640px) { .pill-nav { width: auto; max-width: none; } }
+
+/* Hidden while the hero's or footer's own CTA buttons are on screen —
+   fades/rises away smoothly rather than competing with them, and
+   returns the same way once they're out of view. */
+.pill-nav--hidden {
+  opacity: 0;
+  transform: translate(-50%, -14px);
+  pointer-events: none;
+}
+
+.pill-nav-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+@media (min-width: 640px) { .pill-nav-row { gap: 32px; } }
+
+/* flex-shrink:0 on both: without it, the nav row's flex-shrink algorithm
+   (triggered once the tablet-width row's natural content — logo + links
+   + CTA — needed a few px more than was available) squeezed the logo's
+   width toward 0 while its explicit height:36px stayed fixed, since the
+   img was the only flex item without a nowrap-text-driven minimum width
+   to resist shrinking. Fixed width+height (not width:auto) removes the
+   aspect-ratio-from-intrinsic-size computation entirely, so it can't be
+   squished no matter what the row does with everything else. */
+.pill-logo { display: flex; align-items: center; flex-shrink: 0; }
+.pill-logo img { height: 36px; width: 36px; object-fit: contain; flex-shrink: 0; }
+
+/* Centered desktop links */
+.pill-links { display: none; align-items: center; gap: 28px; }
+@media (min-width: 640px) { .pill-links { display: flex; } }
+
+/* Flip-up hover reveal: two stacked copies, translate up on hover */
+.pill-link { position: relative; display: inline-block; overflow: hidden; height: 24px; }
+.pill-link-inner {
+  display: flex; flex-direction: column;
+  transition: transform 0.4s ease-out;
+}
+.pill-link:hover .pill-link-inner { transform: translateY(-50%); }
+.pill-link-inner span {
+  display: block;
+  font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+  font-size: clamp(13px, 1.4vw, 16px); font-weight: 400; letter-spacing: 0.02em;
+  line-height: 24px; height: 24px;
+  white-space: nowrap;
+}
+.pill-link-inner span:first-child { color: #A7A7A7; }
+.pill-link-inner span:last-child { color: #C1623B; }
+.pill-link:focus-visible { outline: 2px solid #C1623B; outline-offset: 3px; border-radius: 2px; }
+
+/* CTA — flat Terracotta, no gradient, no glow */
+.pill-cta-wrap { display: none; }
+@media (min-width: 640px) { .pill-cta-wrap { display: flex; } }
+.pill-cta {
+  display: inline-block;
+  font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+  font-size: clamp(13px, 1.4vw, 16px); font-weight: 500; letter-spacing: 0.02em;
+  color: #F1E9DE;
+  background: #C1623B;
+  border: 1px solid #C1623B;
+  border-radius: 999px;
+  padding: 10px 22px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.pill-cta:hover { background: #9C4F30; border-color: #9C4F30; }
+.pill-cta:focus-visible { outline: 2px solid #F1E9DE; outline-offset: 3px; }
+.pill-cta:active { background: #753C24; border-color: #753C24; }
+
+/* Mobile hamburger toggle — menu/X cross-fade, transform + opacity only */
+.pill-toggle {
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  width: 30px; height: 30px;
+  padding: 0; background: transparent; border: none;
+  color: #A7A7A7; cursor: pointer;
+}
+@media (min-width: 640px) { .pill-toggle { display: none; } }
+.pill-toggle:focus-visible { outline: 2px solid #F5F4EF; outline-offset: 3px; border-radius: 50%; }
+.pill-toggle-icon {
+  position: absolute; inset: 0; margin: auto;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.pill-toggle-icon--menu { opacity: 1; transform: rotate(0deg) scale(1); }
+.pill-toggle-icon--close { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+.pill-nav.is-open .pill-toggle-icon--menu { opacity: 0; transform: rotate(90deg) scale(0.5); }
+.pill-nav.is-open .pill-toggle-icon--close { opacity: 1; transform: rotate(0deg) scale(1); }
+
+/* Mobile slide-down panel — flat, no shadow. Structural show/hide is an
+   instant display toggle; the actual motion (what the user sees) is a
+   transform/opacity fade+rise on the content, sequenced via JS so it
+   still reads as a smooth slide-down without animating layout props. */
+.pill-panel {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-top: 18px;
+}
+.pill-nav.is-open .pill-panel { display: flex; }
+@media (min-width: 640px) { .pill-panel { display: none !important; } }
+
+.pill-panel-links {
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+  width: 100%;
+  opacity: 0; transform: translateY(-8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.pill-cta--mobile {
+  margin-top: 16px; width: 100%; text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.pill-nav.panel-visible .pill-panel-links {
+  opacity: 1; transform: translateY(0);
+}
+.pill-nav.panel-visible .pill-cta--mobile { opacity: 1; }
+
+.pill-panel-link {
+  position: relative;
+  display: inline-block;
+  font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+  font-size: 16px; color: #A7A7A7; text-decoration: none;
+  transition: color 0.2s ease;
+}
+.pill-panel-link:hover { color: #C1623B; }
+.pill-panel-link:focus-visible { outline: 2px solid #C1623B; outline-offset: 3px; border-radius: 2px; }
+.pill-panel-link:active { color: #9C4F30; }
+.pill-panel-link.is-active { color: #F5F4EF; }
+
+/* Wavy hand-drawn underline — a real inline <path>, not a background
+   image (Figma's own "Line 31" asset was a flat placeholder, reused
+   identically — and mis-positioned — across all three states, so it
+   wasn't actually hand-tuned per word; this is a proper redraw). Sized
+   to the link's own rendered width via width:100%, so "Work"/
+   "Services"/"About" each get an underline matching their actual text
+   width without per-word tuning. `pathLength="1"` normalizes the path
+   so stroke-dasharray/dashoffset can just be 0–1 regardless of the
+   path's real length — animating dashoffset 1→0 draws the stroke on
+   from left to right, which reads as genuinely hand-drawn rather than
+   a scaleX wipe (a flat rectangle growing sideways) faking it. */
+.pill-panel-link-underline {
+  position: absolute;
+  left: 0; bottom: -7px;
+  width: 100%; height: 6px;
+  overflow: visible;
+}
+.pill-panel-link-underline path {
+  fill: none;
+  stroke: #C1623B;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.12s ease;
+}
+.pill-panel-link.is-active .pill-panel-link-underline path { stroke-dashoffset: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .pill-panel-link-underline path { transition: none; }
+}
+
+/* Full-screen takeover — the pill itself grows to cover the viewport,
+   solid (not the pill's usual translucent black) since a see-through
+   overlay at full-screen size would read as busy/glassy against
+   whatever's scrolled behind it, which the brand's flat-only rule
+   doesn't allow anyway.
+
+   Every element below (close button, logo, "Work"/"Services"/"About",
+   the CTA, and each state's photo/underline/accent) is positioned with
+   cqw against Figma's own 512px-wide mobile-menu frame — coordinates
+   measured directly off the flattened chrome render (node 298:91's
+   "image 119" layer, which bakes in the logo/list/button since those
+   don't have their own live Figma nodes) plus the three state exports'
+   own photo/underline/accent coordinates (nodes 298:91/95/105). Every
+   value below is (figma_px / 5.12), since 512 Figma px = 100cqw.
+   container-type:inline-size lives on .pill-nav itself so cqw is
+   available to both the row's children (the close button) and the
+   panel's (everything else) from one shared basis.
+
+   The 512:1120 frame is close to a real phone's own aspect ratio, but
+   not identical to every device — overflow-y:auto on the fullscreen
+   nav means a device shorter than that ratio scrolls to reach
+   everything rather than clipping it. */
+@media (max-width: 639px) {
+  .pill-nav.is-open {
+    position: fixed;
+    inset: 0;
+    left: 0;
+    width: 100%; height: 100%;
+    max-width: none;
+    border-radius: 0;
+    padding: 0;
+    border: none;
+    background: #0B0B0B;
+    transform: none;
+    container-type: inline-size;
+    overflow-y: auto;
+  }
+
+  /* display:contents removes the row's own box (so it stops driving
+     everything via flex/space-between) while keeping its children —
+     just the close button now, the row's own logo hides below — in
+     the DOM/event tree. */
+  .pill-nav.is-open .pill-nav-row { display: contents; }
+  .pill-nav.is-open .pill-nav-row .pill-logo { display: none; }
+  .pill-nav.is-open .pill-toggle {
+    position: absolute;
+    z-index: 2;
+    left: 91.31cqw; top: 7.32cqw;
+    transform: translate(-50%, -50%);
+    margin: 0;
+  }
+
+  .pill-nav.is-open .pill-panel {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    padding: 0;
+  }
+
+  /* Row's own logo hides when open — .pill-menu-logo (a second,
+     duplicate link inside .pill-panel) takes over instead, since the
+     row's logo can't be repositioned into the panel's coordinate space
+     without leaving the row (see the .pill-nav-row comment above). Its
+     entrance fade needs a combined transform (translate for position +
+     the -8px rise), not two separate `transform` declarations on the
+     same element — only the vertical component changes between hidden
+     and visible, the -50%/-50% centering stays constant throughout. */
+  .pill-nav.is-open .pill-menu-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 49.6cqw; top: 80.96cqw;
+    transform: translate(-50%, calc(-50% - 8px));
+    margin: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .pill-nav.is-open .pill-menu-logo img { width: 76px; height: 76px; }
+  .pill-nav.panel-visible .pill-menu-logo { opacity: 1; transform: translate(-50%, -50%); }
+
+  /* Each word is independently positioned (not a flex column anymore —
+     Work/Services/About sit 15.4cqw apart vertically in the reference,
+     not evenly "gapped" from a shared box) but .pill-panel-links itself
+     still carries the group's own fade-in, which visually applies to
+     these position:absolute children too since a transform on any
+     ancestor still shifts everything painted inside it, regardless of
+     the descendants' own positioning scheme. */
+  .pill-nav.is-open .pill-panel-link {
+    position: absolute;
+    left: 50cqw;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+  }
+  .pill-nav.is-open .pill-panel-link[data-word="work"] { top: 103.52cqw; }
+  .pill-nav.is-open .pill-panel-link[data-word="services"] { top: 118.36cqw; }
+  .pill-nav.is-open .pill-panel-link[data-word="about"] { top: 133.4cqw; }
+
+  .pill-nav.is-open .pill-cta--mobile {
+    position: absolute;
+    left: 50cqw; top: 150cqw;
+    transform: translate(-50%, calc(-50% - 8px));
+    width: 70.31cqw;
+    margin: 0;
+    font-size: 12px;
+  }
+  .pill-nav.panel-visible .pill-cta--mobile { transform: translate(-50%, -50%); }
+
+  /* Auto-cycling word/photo/accent — see shared.js for the interval
+     that toggles .is-active on all three groups (links, .menu-photo,
+     .menu-accent) together every ~3.5s. Photos/accents are positioned
+     by their own center point (not top-left) since the actual asset
+     used for each doesn't always share its target box's exact aspect
+     ratio (the Services/About photos were swapped for existing site
+     assets per instruction, not Figma's own now-unused source images;
+     the About "swirl" is a different existing curl-arrow asset, not
+     Figma's specific one) — width is set to match, height:auto
+     preserves whichever asset is actually placed there, and centering
+     keeps it visually balanced in the intended spot either way. */
+  .pill-nav.is-open .menu-photo {
+    display: block;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    height: auto;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    pointer-events: none;
+  }
+  .pill-nav.is-open .menu-photo.is-active { opacity: 1; }
+  .pill-nav.is-open .menu-photo[data-word="work"] { left: 82.22cqw; top: 52.95cqw; width: 54.27cqw; }
+  /* Flipped horizontally per feedback — the sticker faces left in its
+     source file, which read wrong sitting on this (right) side of the
+     composition. Sized down from the original 66.21cqw (matching
+     Figma's own box, designed for a different source photo) and
+     recentered so the shrunk image still hugs the left edge rather
+     than drifting toward center. */
+  .pill-nav.is-open .menu-photo[data-word="services"] {
+    left: 24cqw; top: 35.47cqw; width: 48cqw;
+    transform: translate(-50%, -50%) scaleX(-1);
+  }
+  .pill-nav.is-open .menu-photo[data-word="about"] { left: 49.99cqw; top: 191.3cqw; width: 58.97cqw; }
+
+  .pill-nav.is-open .menu-accent {
+    display: block;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    height: auto;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    pointer-events: none;
+  }
+  .pill-nav.is-open .menu-accent.is-active { opacity: 1; }
+  .pill-nav.is-open .menu-accent[data-word="work"] { left: 18.16cqw; top: 174.6cqw; width: 58.2cqw; }
+  .pill-nav.is-open .menu-accent[data-word="services"] { left: 73.05cqw; top: 164.2cqw; width: 28.13cqw; }
+  /* Rotated 71.45deg (180° past the same swirl asset's -108.55deg
+     rotation used elsewhere on the site, so it points down instead of
+     up) and sized down — unrotated at its earlier width it read as an
+     oversized, stretched-looking loop rather than a compact arrow
+     accent. */
+  .pill-nav.is-open .menu-accent[data-word="about"] {
+    left: 50.85cqw; top: 25.71cqw; width: 30cqw;
+    transform: translate(-50%, -50%) rotate(71.45deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pill-nav.is-open .menu-photo,
+    .pill-nav.is-open .menu-accent { transition: none; }
+  }
+}
+.pill-menu-logo, .menu-photo, .menu-accent { display: none; }
+
+/* ── Ticker marquee (used by the hero's strip and the footer's strip) ── */
+.marquee-wrap {
+  overflow: hidden;
+  background: #0B0B0B;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 16px 0;
+  white-space: nowrap;
+}
+.marquee-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 44px;
+  animation: marquee 48s linear infinite;
+  will-change: transform;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-item {
+  font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+  font-weight: 400;
+}
+.marquee-sep { color: #C1623B; font-size: 10px; flex-shrink: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-inner { animation-play-state: paused; }
+}
+
+/* ── Footer (curtain reveal) ──
+   .footer-curtain sits in normal flow and provides the scroll room;
+   .site-footer is fixed beneath the viewport and is revealed as
+   .footer-curtain's clip-path scrolls up past it. clip-path (not
+   overflow) is what actually clips a position:fixed descendant here. */
+.footer-curtain {
+  position: relative;
+  height: 100vh;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+.site-footer {
+  position: fixed;
+  bottom: 0; left: 0;
+  width: 100%; height: 100vh;
+  display: flex; flex-direction: column; justify-content: space-between;
+  background: #0B0B0B;
+  overflow: hidden;
+}
+
+/* Giant background wordmark — flat, quiet, bleeds off the edges */
+.footer-giant {
+  position: absolute;
+  left: 50%; bottom: -4vw;
+  transform: translateX(-50%);
+  font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 22vw;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  color: rgba(245, 244, 239, 0.05);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* Top pill row — Work/Services/About, at the top of the footer where the
+   floating pill nav hands off (it hides once the footer is reached) */
+.footer-topnav {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; flex-wrap: wrap;
+  padding: 28px 24px 0;
+}
+
+/* Center CTA */
+.footer-center {
+  position: relative; z-index: 1;
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  padding: 40px 48px;
+  perspective: 800px;
+}
+.footer-heading {
+  font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+  font-size: clamp(25px, 3.9vw, 55px);
+  color: #F5F4EF; font-weight: 400;
+  letter-spacing: -0.025em; line-height: 1.1;
+  max-width: 760px;
+  margin-bottom: 40px;
+}
+.footer-heading em {
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  font-size: 1.15em;
+}
+.footer-mobile-break { display: none; }
+.footer-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.footer-link {
+  display: inline-block;
+  font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+  font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+  font-weight: 500; text-decoration: none;
+  color: #A7A7A7;
+  padding: 10px 20px;
+  border: 1px solid rgba(167, 167, 167, 0.25);
+  border-radius: 999px;
+  transition: color 0.22s ease, border-color 0.22s ease, background-color 0.22s ease;
+}
+.footer-link:hover { color: #F5F4EF; border-color: rgba(245,244,239,0.4); background: rgba(245,244,239,0.05); }
+.footer-link:focus-visible { outline: 2px solid #F5F4EF; outline-offset: 3px; }
+.footer-link:active { color: #C1623B; border-color: rgba(193,98,59,0.5); }
+
+/* Bottom bar */
+.footer-bottom {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 32px 48px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  perspective: 800px;
+}
+@media (max-width: 640px) { .footer-bottom { padding: 24px; } }
+.footer-copyright { font-size: 11px; letter-spacing: 0.04em; color: rgba(245,244,239,0.3); font-weight: 400; }
+.footer-totop {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(245,244,239,0.2);
+  background: transparent;
+  color: #A7A7A7;
+  cursor: pointer;
+  transition: color 0.22s ease, border-color 0.22s ease, background-color 0.22s ease;
+}
+.footer-totop svg { transition: transform 0.3s ease; }
+.footer-totop:hover { color: #F5F4EF; border-color: rgba(245,244,239,0.4); background: rgba(245,244,239,0.05); }
+.footer-totop:hover svg { transform: translateY(-2px); }
+.footer-totop:focus-visible { outline: 2px solid #F5F4EF; outline-offset: 3px; }
+.footer-totop:active { color: #C1623B; border-color: rgba(193,98,59,0.5); }
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-giant, .footer-heading, .footer-btns, .footer-topnav { opacity: 1 !important; transform: none !important; }
+}
+
+/* Mobile — bigger heading (the desktop clamp floors out at 25px, too
+   small once the line splits into 4 short rows via .footer-mobile-break
+   in the markup), and the CTAs stack full-width instead of sitting
+   side by side, since two pill buttons don't fit shoulder to shoulder
+   at this width without shrinking illegibly. */
+@media (max-width: 640px) {
+  .footer-center { padding: 40px 24px; }
+  .footer-heading { font-size: 38px; margin-bottom: 32px; }
+  .footer-mobile-break { display: block; }
+  .footer-btns { flex-direction: column; align-items: center; width: 100%; }
+  .footer-btns .hero-btn { width: 85%; max-width: 300px; text-align: center; }
+}
+
+/* ── Section-load reveals (opacity + transform only) ── shared by every
+   page via shared.js's IntersectionObserver, which just toggles .visible.
+   .fade-up rises + fades — only use it on elements that don't already
+   carry their own CSS transform (rotation, centering translateX/Y, etc.),
+   since this transform would replace theirs rather than combine with it.
+   .fade-in is opacity-only and safe on anything, including already-
+   transformed elements (rotated cards, centered decorative marks). Both
+   are no-ops under reduced motion: elements simply start visible. */
+@media (prefers-reduced-motion: no-preference) {
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.85s ease, transform 0.85s ease;
+    transition-delay: calc(var(--i, 0) * 0.12s);
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  .fade-in {
+    opacity: 0;
+    transition: opacity 1s ease;
+    transition-delay: calc(var(--i, 0) * 0.1s);
+  }
+  .fade-in.visible { opacity: 1; }
+}

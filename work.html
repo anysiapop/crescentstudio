@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work — Crescent Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css?v=2" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            eclipse:      '#0B0B0B',
+            'moon-white': '#F5F4EF',
+            lunar:        '#A7A7A7',
+            'moon-bg':    '#F1E9DE',
+            terracotta:   '#C1623B',
+            'terra-dark': '#9C4F30',
+          },
+          fontFamily: {
+            sans:  ['PP Neue Montreal', 'Inter', 'system-ui', 'sans-serif'],
+            serif: ['Times New Roman', 'Times', 'Georgia', 'serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* ── Work page ── pulled from Figma via get_design_context (node
+       156:212, frame 1643 × 4745). Structured, repeating row content, so
+       this uses the site's 1440/1643 = 0.876445 scale factor (same
+       convention as .pricing-wrap / .about-wrap) applied to every literal
+       Figma px value below. */
+    body { background: #F1E9DE; color: #0B0B0B; }
+
+    .work-hero { position: relative; padding: 168px 24px 140px; overflow-x: hidden; }
+    .work-wrap { position: relative; max-width: 977px; margin: 0 auto; }
+
+    /* ── Title block ── giant faint watermark + title + terracotta subtitle,
+       same "flat quiet giant wordmark" language as .footer-giant. */
+    .work-title-block { position: relative; text-align: center; padding-bottom: 64px; }
+    .work-watermark {
+      position: absolute;
+      left: 50%; top: -46px;
+      transform: translateX(-50%);
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 60vw;
+      line-height: 0.8;
+      letter-spacing: -0.06em;
+      color: rgba(11, 11, 11, 0.05);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+    .work-title {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(56px, 13vw, 228px);
+      letter-spacing: -0.06em;
+      color: #0B0B0B;
+      background: url('brand_assets/about-star-tile.png') center / 140px repeat;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .work-subtitle {
+      position: relative;
+      z-index: 2;
+      margin: -1.7em 0 0;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(24px, 5.2vw, 90px);
+      letter-spacing: -0.06em;
+      color: #EB7848;
+    }
+
+    /* ── Project list ── bordered rounded container with divider lines
+       between each row (matches Figma's single outlined box wrapping all
+       four rows, node 161:309). */
+    .work-list { border: 1px solid #0B0B0B; border-radius: 16.4px; background: #F1E9DE; }
+    .work-divider { border: none; border-top: 1px solid #0B0B0B; margin: 0 38px; }
+
+    .work-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      padding: 88px 38px;
+    }
+    .work-row--card-right { flex-direction: row-reverse; }
+
+    /* Card + rotated color backing — the backing is the exact same box as
+       the card, just rotated, centered on the card's own center, and
+       rendered behind it (see comment on .about-photo-mask for the same
+       "measure from the real box, not the Figma wrapper" lesson learned
+       on the about page — here it's simpler, verified against Figma's
+       raw coordinates: the wrapper's center coincides exactly with the
+       card's center). */
+    .work-card-slot {
+      position: relative; flex: 0 0 auto; width: 563px; height: 394px;
+      display: block;
+      perspective: 1600px;
+      text-decoration: none;
+    }
+    .work-card-slot:focus-visible { outline: 2px solid #0B0B0B; outline-offset: 4px; border-radius: 16.4px; }
+    .work-card-backing {
+      position: absolute; inset: 0;
+      border-radius: 16.4px;
+      transform: rotate(-5.81deg);
+      z-index: 1;
+    }
+    /* Flip: the slot itself has no hover styles — .work-card-flip is what
+       rotates, so .work-card-backing (a sibling, not a child) stays put
+       behind it instead of flipping along with the card. */
+    .work-card-flip {
+      position: absolute; inset: 0;
+      z-index: 2;
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .work-card-slot:hover .work-card-flip,
+    .work-card-slot:focus-visible .work-card-flip {
+      transform: rotateY(180deg);
+    }
+    .work-card {
+      position: absolute; inset: 0;
+      overflow: hidden;
+      border: 1px solid #0B0B0B;
+      border-radius: 16.4px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .work-card--cover img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .work-card-inset {
+      position: absolute;
+      object-fit: contain;
+    }
+    .work-card-back {
+      position: absolute; inset: 0;
+      overflow: hidden;
+      border: 1px solid #0B0B0B;
+      border-radius: 16.4px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform: rotateY(180deg);
+    }
+    .work-card-back img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    /* Bleed: each card overhangs the outer list border on its outer edge —
+       an intentional Figma detail, verified against the reference
+       screenshot (row 1's card sits left of the container's own border). */
+    .work-row--card-left .work-card-slot { margin-left: -76px; }
+    .work-row--card-right .work-card-slot { margin-right: -68px; }
+
+    .work-text-slot { flex: 1 1 320px; max-width: 380px; }
+    .work-project-title {
+      margin: 16px 0 34px;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(32px, 3vw, 46px);
+      line-height: 1.12;
+      letter-spacing: -0.06em;
+      color: #0B0B0B;
+    }
+    .work-project-body {
+      margin: 0 0 18px;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 16.3px;
+      line-height: 1.5;
+      letter-spacing: 0.01em;
+      color: #0B0B0B;
+    }
+    .work-project-link {
+      display: inline-block;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 14.5px;
+      letter-spacing: 0.01em;
+      color: #0B0B0B;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      cursor: pointer;
+    }
+    .work-project-link:hover { color: #9C4F30; }
+    .work-project-link:focus-visible { outline: 2px solid #0B0B0B; outline-offset: 3px; }
+
+    /* ── Mobile: cards stack above their text, full width, no bleed ── */
+    @media (max-width: 900px) {
+      .work-hero { padding: 120px 20px 100px; }
+      .work-watermark { font-size: 80vw; top: -20px; }
+      .work-title { font-size: clamp(80px, 20vw, 228px); }
+      .work-subtitle { font-size: clamp(40px, 9vw, 90px); }
+      .work-row, .work-row--card-right {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+        padding: 44px 22px;
+      }
+      .work-card-slot {
+        width: 100%;
+        max-width: 460px;
+        height: auto;
+        aspect-ratio: 642.471 / 449.997;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+      .work-text-slot { max-width: none; }
+    }
+
+    /* Tablet: the 460px cap above was sized for phones, where the row is
+       already narrower than that (so it never actually engaged) — on a
+       641-900px tablet row it does engage, leaving the card floating
+       with dead space beside it instead of spanning the padded row. */
+    @media (min-width: 641px) and (max-width: 900px) {
+      .work-card-slot { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav: floating pill (shared across pages — see partials/nav.html) -->
+  <!--#include virtual="partials/nav.html" -->
+
+  <section class="work-hero">
+    <div class="work-wrap">
+
+      <div class="work-title-block">
+        <span class="work-watermark" aria-hidden="true">Work</span>
+        <h1 class="work-title fade-up" style="--i:0">Work</h1>
+        <p class="work-subtitle fade-up" style="--i:1">I'm most proud of.</p>
+      </div>
+
+      <div class="work-list">
+
+        <!-- Row 1: Vinstreet -->
+        <div class="work-row work-row--card-left fade-up" style="--i:0">
+          <a class="work-card-slot" href="https://vinstreet.mk/" target="_blank" rel="noopener" aria-label="Check out Vinstreet">
+            <div class="work-card-backing" style="background:#C1623B"></div>
+            <div class="work-card-flip">
+              <div class="work-card" style="background:#342530">
+                <img class="work-card-inset" src="brand_assets/work-vinstreet-mark.png" alt="Vinstreet logo mark" style="left:18.45%; top:4.89%; width:63.18%; height:90.2%;" />
+              </div>
+              <div class="work-card-back">
+                <img src="brand_assets/work-hover-cards/vinstreet.png" alt="" />
+              </div>
+            </div>
+          </a>
+          <div class="work-text-slot">
+            <h2 class="work-project-title">Designed, built &amp; launched an entire marketplace 0&rarr;1</h2>
+            <p class="work-project-body">I am the founder of the Vinstreet marketplace! It's a platform for buying and selling second hand clothes &amp; goods. It is made for the North Macedonian market.</p>
+            <a class="work-project-link" href="https://vinstreet.mk/" target="_blank" rel="noopener">&rarr; Check out the website here</a>
+          </div>
+        </div>
+
+        <hr class="work-divider" />
+
+        <!-- Row 2: REDI Recycling -->
+        <div class="work-row work-row--card-right fade-up" style="--i:1">
+          <a class="work-card-slot" href="https://apps.apple.com/mk/app/redi-recycling/id6449428239" target="_blank" rel="noopener" aria-label="Check out the REDI Recycling app">
+            <div class="work-card-backing" style="background:#E2C2FF"></div>
+            <div class="work-card-flip">
+              <div class="work-card" style="background:#FFFFFF">
+                <img class="work-card-inset" src="brand_assets/work-redi-logo.png" alt="REDI Recycling logo" style="left:6.24%; top:25.61%; width:87.34%; height:48.83%;" />
+              </div>
+              <div class="work-card-back">
+                <img src="brand_assets/work-hover-cards/redi.png" alt="" />
+              </div>
+            </div>
+          </a>
+          <div class="work-text-slot">
+            <h2 class="work-project-title">Designed an app for informal plastic collectors.</h2>
+            <p class="work-project-body">REDI Recycling connects independent waste pickers with recycling points across the city, turning informal collection into steady, trackable income. I designed the field app they use every day — from logging a pickup to getting paid.</p>
+            <a class="work-project-link" href="https://apps.apple.com/mk/app/redi-recycling/id6449428239" target="_blank" rel="noopener">&rarr; Check out the app here</a>
+          </div>
+        </div>
+
+        <hr class="work-divider" />
+
+        <!-- Row 3: Kantina -->
+        <div class="work-row work-row--card-left fade-up" style="--i:2">
+          <a class="work-card-slot" href="case-study-kantina.html" aria-label="Read the Kantina case study">
+            <div class="work-card-backing" style="background:#B9A76B"></div>
+            <div class="work-card-flip">
+              <div class="work-card work-card--cover">
+                <img src="brand_assets/work-kantina.png" alt="Kantina brand mark" />
+              </div>
+              <div class="work-card-back">
+                <img src="brand_assets/work-hover-cards/kantina.png" alt="" />
+              </div>
+            </div>
+          </a>
+          <div class="work-text-slot">
+            <h2 class="work-project-title">Translated a physical vibe into a digital experience.</h2>
+            <p class="work-project-body">Kantina is a neighborhood spot with a strong personality — raw concrete, warm light, zero pretension. My job was to carry that same feeling online, from the homepage down to how people place an order.</p>
+            <a class="work-project-link" href="case-study-kantina.html">&rarr; Read the case study</a>
+          </div>
+        </div>
+
+        <hr class="work-divider" />
+
+        <!-- Row 4: igralishte -->
+        <div class="work-row work-row--card-right fade-up" style="--i:3">
+          <a class="work-card-slot" href="https://www.behance.net/gallery/184305411/igralishte-app-design" target="_blank" rel="noopener" aria-label="Check out the Igralishte project">
+            <div class="work-card-backing" style="background:#E2C2FF"></div>
+            <div class="work-card-flip">
+              <div class="work-card work-card--cover">
+                <img src="brand_assets/work-igralishte.png" alt="Igralishte app mockup" />
+              </div>
+              <div class="work-card-back">
+                <img src="brand_assets/work-hover-cards/igralishte.png" alt="" />
+              </div>
+            </div>
+          </a>
+          <div class="work-text-slot">
+            <h2 class="work-project-title">Designed a website for Macedonia's first vintage thrift store</h2>
+            <p class="work-project-body">Igralishte sells curated vintage, and every piece hand-picked, nothing mass-produced. The website needed the same character: functional enough to actually sell online, distinctive enough not to look like a template. The site pairs straightforward e-commerce with the same attention to detail the store is known for in person.</p>
+            <a class="work-project-link" href="https://www.behance.net/gallery/184305411/igralishte-app-design" target="_blank" rel="noopener">&rarr; Check out the project here</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer (shared across pages — see partials/footer.html) -->
+  <!--#include virtual="partials/footer.html" -->
+
+  <script src="shared.js?v=2"></script>
+
+</body>
+</html>

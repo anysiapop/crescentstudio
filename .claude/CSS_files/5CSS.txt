@@ -1,0 +1,370 @@
+/* fifth section */
+
+position: relative;
+width: 1643px;
+height: 1705px;
+
+/* Eclipse Black
+
+Primary
+*/
+background: #0B0B0B;
+
+
+/* download (2) 1 */
+
+position: absolute;
+width: 1643px;
+height: 1768px;
+left: 0px;
+top: 1276px;
+
+background: url(download (2).png);
+
+
+/* Group 21 */
+
+position: absolute;
+width: 964px;
+height: 476.25px;
+left: 340px;
+top: 1014.62px;
+
+
+
+/* Rectangle 47 */
+
+position: absolute;
+width: 934.75px;
+height: 416.8px;
+left: calc(50% - 934.75px/2 + 2.67px);
+top: 1051.29px;
+
+/* Sunset Terracota
+
+Accent
+*/
+background: #C1623B;
+border-radius: 17.4393px;
+
+
+/* Rectangle 48 */
+
+position: absolute;
+width: 934.75px;
+height: 402.31px;
+left: calc(50% - 934.75px/2 - 14.06px);
+top: 1014.73px;
+
+/* Sunset Mandarin
+
+Accent
+*/
+background: #EB7848;
+border-radius: 17.4393px;
+transform: rotate(-4.59deg);
+
+
+/* image 112 */
+
+position: absolute;
+width: 934.18px;
+height: 402.79px;
+left: 340px;
+top: 1014.63px;
+
+background: url(image.png);
+border-radius: 18.3113px;
+transform: rotate(-4.59deg);
+
+
+/* Vector */
+
+position: absolute;
+left: 43.42%;
+right: 37.85%;
+top: 43.45%;
+bottom: 35.91%;
+
+/* Moon Background
+
+Backgrounds
+*/
+border: 6.97573px solid #F1E9DE;
+transform: rotate(108.55deg);
+
+
+/* Frame 33 */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 27.9029px 34.8786px;
+gap: 27.9px;
+
+position: absolute;
+width: 439.66px;
+height: 185.81px;
+left: 633.21px;
+top: 215px;
+
+/* Moon White
+
+Primary
+*/
+border: 0.871966px solid #F5F4EF;
+border-radius: 17.4393px;
+
+
+/* 25+ */
+
+width: 173px;
+height: 130px;
+
+font-family: 'Times New Roman';
+font-style: normal;
+font-weight: 400;
+font-size: 113.356px;
+line-height: 130px;
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Projects shipped. */
+
+width: 169px;
+height: 118px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 49.1631px;
+line-height: 59px;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 3.48786px 3.48786px rgba(255, 255, 255, 0.25);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Frame 32 */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 27.9029px 34.8786px;
+gap: 27.9px;
+
+position: absolute;
+width: 446.66px;
+height: 185.81px;
+left: 539.04px;
+top: 416.42px;
+
+/* Moon White
+
+Primary
+*/
+border: 0.871966px solid #F5F4EF;
+border-radius: 17.4393px;
+
+
+/* 4+ */
+
+width: 119px;
+height: 130px;
+
+font-family: 'Times New Roman';
+font-style: normal;
+font-weight: 400;
+font-size: 113.356px;
+line-height: 130px;
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Years of experience. */
+
+width: 230px;
+height: 118px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 49.1631px;
+line-height: 59px;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 3.48786px 3.48786px rgba(255, 255, 255, 0.25);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Two ways I can help your business. */
+
+position: absolute;
+width: 792px;
+height: 68px;
+left: 427.43px;
+top: 1171.53px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 56.8976px;
+line-height: 68px;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 4.03659px 4.03659px rgba(255, 255, 255, 0.25);
+transform: rotate(-2.63deg);
+
+
+/* One path forward. */
+
+position: absolute;
+width: 402px;
+height: 65px;
+left: 621.18px;
+top: 1264.44px;
+
+font-family: 'Times New Roman';
+font-style: italic;
+font-weight: 400;
+font-size: 56.8976px;
+line-height: 65px;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 4.03659px 4.03659px rgba(255, 255, 255, 0.25);
+transform: rotate(-2.63deg);
+
+
+/* Frame 34 */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 27.9029px 34.8786px;
+gap: 27.9px;
+
+position: absolute;
+width: 374.95px;
+height: 185.81px;
+left: 698.61px;
+top: 617.85px;
+
+/* Moon Background
+
+Backgrounds
+*/
+background: #F1E9DE;
+/* Eclipse Black
+
+Primary
+*/
+border: 0.871966px solid #0B0B0B;
+border-radius: 17.4393px;
+
+
+/* 1 */
+
+width: 57px;
+height: 130px;
+
+font-family: 'Times New Roman';
+font-style: normal;
+font-weight: 400;
+font-size: 113.356px;
+line-height: 130px;
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Designer. */
+
+width: 186px;
+height: 59px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 49.1631px;
+line-height: 59px;
+/* identical to box height */
+letter-spacing: -0.02em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+text-shadow: 0px 3.48786px 3.48786px rgba(255, 255, 255, 0.25);
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* pngegg (9) 1 */
+
+position: absolute;
+width: 324.37px;
+height: 324.37px;
+left: 341.98px;
+top: 450.43px;
+
+background: url(pngegg (9).png);
+

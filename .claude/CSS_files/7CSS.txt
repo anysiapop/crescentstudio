@@ -1,0 +1,332 @@
+/* seventh section */
+
+position: relative;
+width: 1643px;
+height: 1246px;
+
+/* Moon Background
+
+Backgrounds
+*/
+background: #F1E9DE;
+
+
+/* Rectangle 44 */
+
+position: absolute;
+width: 1643px;
+height: 1024px;
+left: calc(50% - 1643px/2);
+top: -114px;
+
+background: url(Group 20.png);
+
+
+/* Group 22 */
+
+position: absolute;
+width: 521.64px;
+height: 194.31px;
+left: calc(50% - 521.64px/2 - 424.68px);
+top: 134px;
+
+
+
+/* with me looks like: */
+
+position: absolute;
+width: 518px;
+height: 87px;
+left: 139.64px;
+top: 223.94px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 72.7026px;
+line-height: 87px;
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 5.15787px 5.15787px rgba(255, 255, 255, 0.25);
+
+
+/* working */
+
+position: absolute;
+width: 301px;
+height: 108px;
+left: 286.31px;
+top: 134px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 90.0711px;
+line-height: 108px;
+/* identical to box height */
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Sunset Mandarin */
+color: #EB7848;
+
+text-shadow: 0px 6.39007px 6.39007px rgba(255, 255, 255, 0.25);
+transform: rotate(3.73deg);
+
+
+/* What */
+
+position: absolute;
+width: 157px;
+height: 174px;
+left: 136px;
+top: 154.31px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 72.7026px;
+line-height: 87px;
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 5.15787px 5.15787px rgba(255, 255, 255, 0.25);
+
+
+/* Group 23 */
+
+position: absolute;
+width: 682.35px;
+height: 325.5px;
+left: 139.64px;
+top: 408.55px;
+
+
+
+/* Design delivered on a consistent cadence */
+
+position: absolute;
+width: 619px;
+height: 34px;
+left: 152.98px;
+top: 411.28px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 31.8528px;
+line-height: 107.33%;
+/* or 34px */
+letter-spacing: 0.01em;
+
+/* Moon White */
+color: #F5F4EF;
+
+
+
+/* A thinking partner, not just an executor */
+
+position: absolute;
+width: 566px;
+height: 34px;
+left: 152.98px;
+top: 680.31px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 31.8528px;
+line-height: 107.33%;
+/* or 34px */
+letter-spacing: 0.01em;
+
+/* Moon White */
+color: #F5F4EF;
+
+
+
+/* Async communication that respects your time */
+
+position: absolute;
+width: 669px;
+height: 34px;
+left: 152.98px;
+top: 478.71px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 31.8528px;
+line-height: 107.33%;
+/* or 34px */
+letter-spacing: 0.01em;
+
+/* Moon White */
+color: #F5F4EF;
+
+
+
+/* From idea to shipped product */
+
+position: absolute;
+width: 450px;
+height: 34px;
+left: 152.98px;
+top: 612.87px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 31.8528px;
+line-height: 107.33%;
+/* or 34px */
+letter-spacing: 0.01em;
+
+/* Moon White */
+color: #F5F4EF;
+
+
+
+/* UX, UI, and product thinking - not just screens */
+
+position: absolute;
+width: 664px;
+height: 34px;
+left: 152.98px;
+top: 545.43px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 31.8528px;
+line-height: 107.33%;
+/* or 34px */
+letter-spacing: 0.01em;
+
+/* Moon White */
+color: #F5F4EF;
+
+
+
+/* pngegg (10) 1 */
+
+position: absolute;
+width: 47.27px;
+height: 47.75px;
+left: 148.44px;
+top: 408.55px;
+
+background: url(pngegg (10).png);
+
+
+/* pngegg (10) 2 */
+
+position: absolute;
+width: 47.27px;
+height: 47.75px;
+left: 139.64px;
+top: 466.27px;
+
+background: url(pngegg (10).png);
+transform: rotate(-30.22deg);
+
+
+/* pngegg (10) 3 */
+
+position: absolute;
+width: 47.27px;
+height: 47.75px;
+left: 148.44px;
+top: 544.02px;
+
+background: url(pngegg (10).png);
+
+
+/* pngegg (10) 4 */
+
+position: absolute;
+width: 47.27px;
+height: 47.75px;
+left: 141.55px;
+top: 600.23px;
+
+background: url(pngegg (10).png);
+transform: rotate(69.95deg);
+
+
+/* pngegg (10) 5 */
+
+position: absolute;
+width: 47.27px;
+height: 47.75px;
+left: 139.64px;
+top: 669px;
+
+background: url(pngegg (10).png);
+transform: rotate(30.22deg);
+
+
+/* Group 24 */
+
+position: absolute;
+width: 855.2px;
+height: 754.57px;
+left: 788px;
+top: 241px;
+
+
+
+/* Vector 45 */
+
+position: absolute;
+width: 855.2px;
+height: 754.57px;
+left: 788px;
+top: 241px;
+
+background: #D9D9D9;
+/* Moon White
+
+Primary
+*/
+border: 15.7989px solid #F5F4EF;
+
+
+/* Mask group */
+
+position: absolute;
+width: 843.66px;
+height: 744.39px;
+left: 791.95px;
+top: 248.27px;
+
+
+
+/* Vector 44 */
+
+position: absolute;
+width: 843.66px;
+height: 744.39px;
+left: 791.95px;
+top: 248.27px;
+
+background: #D9D9D9;
+border: 0.677642px solid #000000;
+
+
+/* ChatGPT Image Apr 24, 2026, 09_16_21 PM 1 */
+
+position: absolute;
+width: 849.76px;
+height: 849.76px;
+left: 782.8px;
+top: 145.27px;
+
+background: url(ChatGPT Image Apr 24, 2026, 09_16_21 PM.png);

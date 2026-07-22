@@ -1,0 +1,381 @@
+/* sixst section */
+
+position: relative;
+width: 1643px;
+height: 1528px;
+
+/* Eclipse Black
+
+Primary
+*/
+background: #0B0B0B;
+
+
+/* download (2) 1 */
+
+position: absolute;
+width: 1643px;
+height: 1768px;
+left: 0px;
+top: 0px;
+
+background: url(download (2).png);
+
+
+/* Most founders start with a Sprint. Then they never want to go back to doing it alone. */
+
+position: absolute;
+width: 771.45px;
+height: 159px;
+left: calc(50% - 771.45px/2 + 0.74px);
+top: 1096.64px;
+
+font-family: 'Times New Roman';
+font-style: italic;
+font-weight: 400;
+font-size: 49.3164px;
+line-height: 107.33%;
+/* or 53px */
+text-align: center;
+letter-spacing: 0.01em;
+
+color: #000000;
+
+
+
+/* Frame 27 */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 54.933px 36.622px;
+gap: 32.96px;
+
+position: absolute;
+width: 472.43px;
+height: 688.22px;
+left: 337px;
+top: 272.36px;
+
+/* Moon White
+
+Primary
+*/
+background: #F5F4EF;
+/* Eclipse Black
+
+Primary
+*/
+border: 1.04227px solid #0B0B0B;
+border-radius: 19.2265px;
+
+
+/* The Sprint */
+
+width: 399.19px;
+height: 63px;
+
+font-family: 'Times New Roman';
+font-style: italic;
+font-weight: 400;
+font-size: 58.3671px;
+line-height: 107.33%;
+/* identical to box height, or 63px */
+text-align: center;
+letter-spacing: 0.01em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* For founders starting from zero. */
+
+width: 344px;
+height: 27px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 500;
+font-size: 24.7932px;
+line-height: 27px;
+/* identical to box height */
+text-align: center;
+letter-spacing: 0.01em;
+
+/* Sunset Mandarin */
+color: #EB7848;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* MVP Product. Fixed scope, fixed timeline, fixed price. You go from idea to launched product with design that makes people take you seriously. */
+
+width: 311.29px;
+height: 243px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 24.7932px;
+line-height: 27px;
+text-align: center;
+letter-spacing: 0.01em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* Frame 36 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 25.0145px;
+gap: 10.42px;
+
+width: 310.03px;
+height: 77.03px;
+
+/* Sunset Terracota
+
+Accent
+*/
+background: #C1623B;
+border-radius: 58.3671px;
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+
+
+/* Book a 30-min intro call */
+
+width: 260px;
+height: 27px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 500;
+font-size: 24.7932px;
+line-height: 27px;
+/* identical to box height */
+text-align: center;
+letter-spacing: 0.01em;
+
+/* Moon White */
+color: #F5F4EF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Vector 40 */
+
+width: 32.77px;
+height: 34.7px;
+
+/* Sunset Mandarin
+
+Accent
+*/
+background: #EB7848;
+transform: rotate(-3.22deg);
+
+/* Inside auto layout */
+flex: none;
+order: 4;
+flex-grow: 0;
+
+
+/* Frame 35 */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 54.933px 36.622px;
+gap: 32.96px;
+
+position: absolute;
+width: 472.43px;
+height: 681.62px;
+left: 834.57px;
+top: 272.36px;
+
+/* Moon White
+
+Primary
+*/
+background: #F5F4EF;
+/* Eclipse Black
+
+Primary
+*/
+border: 1.04227px solid #0B0B0B;
+border-radius: 19.2265px;
+
+
+/* The Retainer */
+
+width: 399.19px;
+height: 63px;
+
+font-family: 'Times New Roman';
+font-style: italic;
+font-weight: 400;
+font-size: 58.3671px;
+line-height: 107.33%;
+/* identical to box height, or 63px */
+text-align: center;
+letter-spacing: 0.01em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* For founders ready to grow. */
+
+width: 311.29px;
+height: 27px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 500;
+font-size: 24.7932px;
+line-height: 27px;
+/* identical to box height */
+text-align: center;
+letter-spacing: 0.01em;
+
+color: #D2A1FF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Monthly partnership. I'm embedded in your product, your team, your decisions. Ongoing. Cancel anytime with 1 month notice. */
+
+width: 311.29px;
+height: 243px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 24.7932px;
+line-height: 27px;
+text-align: center;
+letter-spacing: 0.01em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* Frame 36 */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 25.0145px;
+gap: 10.42px;
+
+width: 310.03px;
+height: 77.03px;
+
+/* Eclipse Black
+
+Primary
+*/
+background: #0B0B0B;
+border-radius: 58.3671px;
+
+/* Inside auto layout */
+flex: none;
+order: 3;
+flex-grow: 0;
+
+
+/* Book a 30-min intro call */
+
+width: 260px;
+height: 27px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 500;
+font-size: 24.7932px;
+line-height: 27px;
+/* identical to box height */
+text-align: center;
+letter-spacing: 0.01em;
+
+/* Moon White */
+color: #F5F4EF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Vector 40 */
+
+width: 32.77px;
+height: 34.7px;
+
+/* Moon Lavender
+
+Accent
+*/
+background: #E2C2FF;
+transform: rotate(-3.22deg);
+
+/* Inside auto layout */
+flex: none;
+order: 4;
+flex-grow: 0;

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kantina — Case Study — Crescent Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css?v=2" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            eclipse:      '#0B0B0B',
+            'moon-white': '#F5F4EF',
+            lunar:        '#A7A7A7',
+            'moon-bg':    '#F1E9DE',
+            terracotta:   '#C1623B',
+            'terra-dark': '#9C4F30',
+          },
+          fontFamily: {
+            sans:  ['PP Neue Montreal', 'Inter', 'system-ui', 'sans-serif'],
+            serif: ['Times New Roman', 'Times', 'Georgia', 'serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* ── Kantina case study ── new content, no Figma source, so this is
+       designed fresh from the site's existing patterns (content-column
+       width, card border/radius language from .problem-card, clamp()
+       type) rather than the pixel-scaled-from-Figma convention used on
+       the structured pages. */
+    body { background: #F1E9DE; color: #0B0B0B; }
+
+    .case-hero { padding: 168px 24px 0; }
+    .case-wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+    .case-wide { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+    .case-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 14px; letter-spacing: 0.02em;
+      color: rgba(11, 11, 11, 0.6);
+      text-decoration: none;
+      margin-bottom: 40px;
+      transition: color 0.2s ease;
+    }
+    .case-back:hover { color: #0B0B0B; }
+    .case-back:focus-visible { outline: 2px solid #0B0B0B; outline-offset: 3px; }
+
+    .case-eyebrow {
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 13px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #C1623B;
+      margin: 0 0 20px;
+    }
+    .case-title {
+      margin: 0 0 24px;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(38px, 6vw, 76px);
+      line-height: 1.05;
+      letter-spacing: -0.05em;
+      color: #0B0B0B;
+    }
+    .case-subhead {
+      max-width: 620px;
+      margin: 0 0 56px;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: clamp(17px, 1.8vw, 21px);
+      line-height: 1.55;
+      letter-spacing: 0.01em;
+      color: rgba(11, 11, 11, 0.72);
+    }
+
+    /* Meta row: Role / Team / Timeline / Deliverable */
+    .case-meta-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      padding: 32px 0;
+      border-top: 1px solid rgba(11, 11, 11, 0.12);
+      border-bottom: 1px solid rgba(11, 11, 11, 0.12);
+      margin-bottom: 56px;
+    }
+    .case-meta-label {
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(11, 11, 11, 0.5);
+      margin: 0 0 10px;
+    }
+    .case-meta-value {
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 15px; line-height: 1.5;
+      color: #0B0B0B;
+      margin: 0;
+    }
+
+    .case-hero-media { margin-bottom: 120px; }
+    .case-hero-media img { display: block; width: 100%; border-radius: 20px; }
+
+    /* ── Numbered sections ── */
+    .case-section { padding: 0 0 112px; }
+    .case-section-eyebrow {
+      display: flex; align-items: baseline; gap: 12px;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(11, 11, 11, 0.45);
+      margin: 0 0 18px;
+    }
+    .case-section-eyebrow span:first-child { color: #C1623B; }
+    .case-section-title {
+      margin: 0 0 28px;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(28px, 3.6vw, 44px);
+      line-height: 1.12;
+      letter-spacing: -0.045em;
+      color: #0B0B0B;
+    }
+    .case-section-body p {
+      margin: 0 0 20px;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+      letter-spacing: 0.01em;
+      color: #0B0B0B;
+    }
+    .case-section-body p:last-child { margin-bottom: 0; }
+
+    .case-media { margin: 40px 0; }
+    .case-media img { display: block; width: 100%; border-radius: 16px; }
+    .case-caption {
+      margin: 12px 0 0;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-style: italic;
+      font-size: 14px;
+      color: rgba(11, 11, 11, 0.55);
+    }
+
+    .case-quote {
+      max-width: 680px;
+      margin: 44px 0;
+      padding-left: 26px;
+      border-left: 2px solid #C1623B;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-size: clamp(20px, 2.4vw, 26px);
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+      color: #0B0B0B;
+    }
+
+    /* Pain points grid */
+    .case-pain-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 44px;
+    }
+    .case-pain-card {
+      box-sizing: border-box;
+      background: #F5F4EF;
+      border: 0.8px solid #000000;
+      border-radius: 16.6px;
+      padding: 28px 26px;
+    }
+    .case-pain-label {
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #C1623B;
+      margin: 0 0 12px;
+    }
+    .case-pain-text {
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 16px; line-height: 1.5;
+      color: #0B0B0B;
+      margin: 0;
+    }
+
+    /* Sub-parts within Solution (04) */
+    .case-subpart { margin-top: 72px; }
+    .case-subpart-title {
+      margin: 0 0 16px;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-weight: 500;
+      font-size: clamp(21px, 2.2vw, 27px);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: #0B0B0B;
+    }
+
+    /* Menu recommender — the 5 quiz-flow screens, side by side in the
+       order the flow actually plays out, rather than one representative
+       shot; each is a portrait phone frame so 5 across stays readable. */
+    .case-recommender-grid {
+      display: flex;
+      gap: 14px;
+      margin-top: 32px;
+    }
+    .case-recommender-grid img {
+      display: block;
+      width: 100%;
+      flex: 1 1 0;
+      min-width: 0;
+      border-radius: 12px;
+      border: 1px solid rgba(11, 11, 11, 0.15);
+    }
+
+    /* Outcome stat cards (shared by hero preview + section 05) */
+    .case-outcome-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .case-outcome-card {
+      box-sizing: border-box;
+      background: #F5F4EF;
+      border: 0.8px solid #000000;
+      border-radius: 16.6px;
+      padding: 32px 24px;
+      text-align: center;
+    }
+    .case-outcome-number {
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-size: clamp(34px, 4.6vw, 50px);
+      letter-spacing: -0.03em;
+      color: #C1623B;
+      margin: 0 0 10px;
+    }
+    .case-outcome-label {
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 14.5px; line-height: 1.4;
+      color: rgba(11, 11, 11, 0.7);
+      margin: 0;
+    }
+    .case-outcome-preview { margin-bottom: 100px; }
+
+    .case-photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 48px;
+    }
+    .case-photo-grid figure { margin: 0; }
+    .case-photo-grid img {
+      display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover;
+      border-radius: 14px;
+    }
+
+    /* ── 06 — Achievement ── closing celebratory note, full-bleed dark
+       panel (same #0B0B0B as the footer/recommender callout) rather than
+       another cream section, so it reads as a distinct final beat before
+       the footer instead of just one more numbered block. */
+    .case-achieve {
+      background: #0B0B0B;
+      padding: 140px 24px;
+      text-align: center;
+    }
+    .case-achieve-badge {
+      display: block;
+      width: 168px; height: 168px;
+      margin: 0 auto 36px;
+    }
+    .case-achieve-eyebrow {
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 13px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #C1623B;
+      margin: 0 0 20px;
+    }
+    .case-achieve-title {
+      margin: 0 0 24px;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(38px, 5.5vw, 64px);
+      letter-spacing: -0.04em;
+      color: #F5F4EF;
+    }
+    .case-achieve-subhead {
+      max-width: 600px;
+      margin: 0 auto 80px;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: rgba(245, 244, 239, 0.7);
+    }
+    .case-achieve-docs {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 28px;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    .case-achieve-doc { flex: 1 1 0; min-width: 0; margin: 0; }
+    .case-achieve-doc img {
+      display: block; width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(245, 244, 239, 0.15);
+      cursor: pointer;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+    .case-achieve-doc img:hover { transform: scale(1.015); border-color: rgba(245, 244, 239, 0.35); }
+    .case-achieve-doc img:focus-visible { outline: 2px solid #F5F4EF; outline-offset: 3px; }
+    .case-achieve-doc figcaption {
+      margin-top: 14px;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-style: italic;
+      font-size: 13px;
+      color: rgba(245, 244, 239, 0.5);
+    }
+
+    .case-achieve-tally {
+      max-width: 560px;
+      margin: 56px auto 0;
+      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-size: 15px;
+      color: rgba(245, 244, 239, 0.6);
+    }
+    .case-achieve-tally strong { color: #F5F4EF; font-weight: 500; }
+    .case-achieve-badges {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 22px;
+      margin-top: 32px;
+    }
+    .case-achieve-badges img {
+      display: block;
+      width: 64px; height: 64px;
+      opacity: 0.55;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .case-achieve-badges img:hover { opacity: 1; transform: scale(1.08); }
+
+    /* Lightbox — visibility toggled with a delay so opacity can transition
+       out before the overlay stops intercepting clicks (transform/opacity
+       only, per the brand's own motion rule). */
+    .case-lightbox {
+      position: fixed; inset: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(11, 11, 11, 0.92);
+      padding: 40px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+    }
+    .case-lightbox.is-open { opacity: 1; visibility: visible; transition: opacity 0.25s ease, visibility 0s linear 0s; }
+    .case-lightbox-img {
+      display: block;
+      max-width: min(90vw, 900px);
+      max-height: 85vh;
+      width: auto; height: auto;
+      border-radius: 12px;
+    }
+    .case-lightbox-close {
+      position: fixed; top: 24px; right: 24px;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 999px;
+      border: 1px solid rgba(245, 244, 239, 0.3);
+      background: transparent;
+      color: #F5F4EF;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+    .case-lightbox-close:hover { background: rgba(245, 244, 239, 0.08); border-color: rgba(245, 244, 239, 0.5); }
+    .case-lightbox-close:focus-visible { outline: 2px solid #F5F4EF; outline-offset: 3px; }
+
+    /* ── Mobile ── */
+    @media (max-width: 860px) {
+      .case-meta-row { grid-template-columns: repeat(2, 1fr); row-gap: 28px; }
+      .case-pain-grid { grid-template-columns: 1fr; }
+      .case-outcome-grid { grid-template-columns: 1fr; }
+      .case-photo-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .case-recommender-grid { overflow-x: auto; padding-bottom: 8px; }
+      .case-recommender-grid img { flex: 0 0 128px; }
+      .case-hero { padding-top: 120px; }
+      .case-hero-media { margin-bottom: 80px; }
+      .case-section { padding-bottom: 80px; }
+      .case-subpart { margin-top: 56px; }
+      .case-achieve { padding: 96px 20px; }
+      .case-achieve-docs { flex-direction: column; align-items: center; gap: 32px; }
+      .case-achieve-doc { max-width: 300px; }
+      .case-achieve-badges img { width: 52px; height: 52px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav: floating pill (shared across pages — see partials/nav.html) -->
+  <!--#include virtual="partials/nav.html" -->
+
+  <section class="case-hero">
+    <div class="case-wrap">
+      <a class="case-back fade-up" style="--i:0" href="work.html">&larr; All work</a>
+      <p class="case-eyebrow fade-up" style="--i:1">Case Study — Kantina Restaurant</p>
+      <h1 class="case-title fade-up" style="--i:2">Translating a physical vibe into a digital experience</h1>
+      <p class="case-subhead fade-up" style="--i:3">A marketing site that lets you feel the warmth of the place before you walk through the door.</p>
+
+      <div class="case-meta-row fade-up" style="--i:4">
+        <div>
+          <p class="case-meta-label">Role</p>
+          <p class="case-meta-value">Product strategy<br>UX research<br>Product design</p>
+        </div>
+        <div>
+          <p class="case-meta-label">Team</p>
+          <p class="case-meta-value">2 designers<br>1 engineer</p>
+        </div>
+        <div>
+          <p class="case-meta-label">Timeline</p>
+          <p class="case-meta-value">3 weeks<br>2022</p>
+        </div>
+        <div>
+          <p class="case-meta-label">Deliverable</p>
+          <p class="case-meta-value">Responsive marketing site</p>
+        </div>
+      </div>
+
+      <div class="case-outcome-grid case-outcome-preview fade-up" style="--i:5">
+        <div class="case-outcome-card">
+          <p class="case-outcome-number">+38%</p>
+          <p class="case-outcome-label">Lift in reservation requests in the first month after launch</p>
+        </div>
+        <div class="case-outcome-card">
+          <p class="case-outcome-number">&minus;60%</p>
+          <p class="case-outcome-label">Fewer basic "what kind of place is this?" DMs to staff</p>
+        </div>
+        <div class="case-outcome-card">
+          <p class="case-outcome-number">3.2&times;</p>
+          <p class="case-outcome-label">Time spent on site versus the previous mobile-only page</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-wide case-hero-media fade-in" style="--i:6">
+      <img src="brand_assets/kantina-project/kantina-hero.gif" alt="Kantina site intro animation, wordmark reveal" />
+    </div>
+  </section>
+
+  <!-- 01 — Product -->
+  <section class="case-section">
+    <div class="case-wrap">
+      <p class="case-section-eyebrow fade-up" style="--i:0"><span>01</span><span>Product</span></p>
+      <h2 class="case-section-title fade-up" style="--i:1">The inclusivity of Kantina</h2>
+      <div class="case-section-body fade-up" style="--i:2">
+        <p>Kantina is a restaurant that breaks the mold. Industrial in style, eclectic in crowd. You might share a table with an ambassador, a student, or the mayor. Its slogan, "We embrace diversity," isn't marketing copy. It describes what actually happens inside. They needed a website that could make someone feel the place before stepping foot inside.</p>
+      </div>
+      <figure class="case-media fade-in" style="--i:3">
+        <img src="brand_assets/kantina-project/kantina-product.png" alt="Kantina restaurant at night, with patio seating, string lights, and a busy crowd" />
+      </figure>
+    </div>
+  </section>
+
+  <!-- 02 — Problem -->
+  <section class="case-section">
+    <div class="case-wrap">
+      <p class="case-section-eyebrow fade-up" style="--i:0"><span>02</span><span>Problem</span></p>
+      <h2 class="case-section-title fade-up" style="--i:1">An online presence that didn't match the room</h2>
+      <figure class="case-media fade-in" style="--i:2">
+        <img src="brand_assets/kantina-project/kantina-menu.png" alt="Audit of the old Kantina menu screens with annotations" />
+        <figcaption class="case-caption">Audit of the old Kantina menu screens with annotations</figcaption>
+      </figure>
+      <div class="case-section-body fade-up" style="--i:3">
+        <p>Kantina had no online presence that matched who they actually were. The gap between the physical experience and what someone could find on their phone was significant. People couldn't tell what kind of place it was. The menu was cluttered. Desktop users had almost nothing.</p>
+      </div>
+      <blockquote class="case-quote fade-up" style="--i:4">"Visitors couldn't get a true sense of what Kantina offered, leading to a disconnect between the physical and online experiences."</blockquote>
+      <div class="case-pain-grid">
+        <div class="case-pain-card fade-up" style="--i:0">
+          <p class="case-pain-label">Pain 01</p>
+          <p class="case-pain-text">No accurate visual or tonal representation of the restaurant's identity online</p>
+        </div>
+        <div class="case-pain-card fade-up" style="--i:1">
+          <p class="case-pain-label">Pain 02</p>
+          <p class="case-pain-text">Menu was cluttered, hard to navigate, with almost no vegetarian options surfaced</p>
+        </div>
+        <div class="case-pain-card fade-up" style="--i:2">
+          <p class="case-pain-label">Pain 03</p>
+          <p class="case-pain-text">Existing presence was mobile-only, leaving desktop users without a functioning site</p>
+        </div>
+        <div class="case-pain-card fade-up" style="--i:3">
+          <p class="case-pain-label">Pain 04</p>
+          <p class="case-pain-text">No way to communicate the "everyone belongs here" vibe that makes Kantina different</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 — Research -->
+  <section class="case-section">
+    <div class="case-wrap">
+      <p class="case-section-eyebrow fade-up" style="--i:0"><span>03</span><span>Research</span></p>
+      <h2 class="case-section-title fade-up" style="--i:1">The magic was experiential, not explainable</h2>
+      <div class="case-section-body fade-up" style="--i:2">
+        <p>We started with the brief, then went further. We scraped reviews, ran targeted questions with the client, and went down to the restaurant to talk with staff directly. We mapped user personas and journeys across two core groups: the people who dine there, and the team running it.</p>
+        <p>The clearest insight: Kantina's magic was entirely experiential. It couldn't be explained with a list of features. It had to be shown. Every design decision that followed served that one finding.</p>
+        <p>We also learned that dietary inclusivity was a real gap. Vegetarian guests were underserved in the physical menu and online. That became a concrete design requirement.</p>
+      </div>
+      <figure class="case-media fade-in" style="--i:3">
+        <img src="brand_assets/kantina-project/kantina-figjam-personas.png" alt="FigJam board: user personas, journey, pain points, opportunities" />
+        <figcaption class="case-caption">FigJam: user personas, journey, pain points, opportunities</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 04 — Solution -->
+  <section class="case-section">
+    <div class="case-wrap">
+      <p class="case-section-eyebrow fade-up" style="--i:0"><span>04</span><span>Solution</span></p>
+      <h2 class="case-section-title fade-up" style="--i:1">Designing for feeling, not just information</h2>
+      <div class="case-section-body fade-up" style="--i:2">
+        <p>The research pointed to one clear direction: the design had to carry feeling, not just information. Everything we built came from that.</p>
+      </div>
+      <figure class="case-media fade-in" style="--i:3">
+        <img src="brand_assets/kantina-project/kantina-moodboard.png" alt="FigJam board: visual brainstorm and moodboard" />
+        <figcaption class="case-caption">FigJam: visual brainstorm and moodboard</figcaption>
+      </figure>
+
+      <div class="case-subpart fade-up" style="--i:0">
+        <h3 class="case-subpart-title">The circle as core design element</h3>
+        <div class="case-section-body">
+          <p>We needed a shape that represented inclusion and continuity. The circle became the visual anchor, used to structure the landing page into four interactive sections: the people, the vibe, the drinks, and the food. One shape, one idea, entire identity.</p>
+        </div>
+        <figure class="case-media fade-in" style="--i:1">
+          <img src="brand_assets/kantina-project/kantina-figjam-circle.png" alt="FigJam board: circle concept brainstorm and wireframes" />
+          <figcaption class="case-caption">FigJam: circle concept brainstorm</figcaption>
+        </figure>
+      </div>
+
+      <div class="case-subpart fade-up" style="--i:0">
+        <h3 class="case-subpart-title">Interactive landing page</h3>
+        <div class="case-section-body">
+          <p>Instead of a static hero image, the landing page is a clickable circle divided into four categories. Visitors explore what matters to them. The structure mirrors how the restaurant actually works.</p>
+        </div>
+        <figure class="case-media fade-in" style="--i:1">
+          <img src="brand_assets/kantina-project/kantina-landing.gif" alt="Interactive landing page prototype, clickable circle navigation" loading="lazy" />
+          <figcaption class="case-caption">Interactive landing page prototype</figcaption>
+        </figure>
+      </div>
+
+      <div class="case-subpart fade-up" style="--i:0">
+        <h3 class="case-subpart-title">Personalized menu recommender</h3>
+        <div class="case-section-body">
+          <p>A guided five-step quiz walks users through their preferences — cravings, hunger, dietary needs — and surfaces personalized picks at the end. The menu becomes a conversation, not a wall of text.</p>
+        </div>
+        <div class="case-recommender-grid fade-in" style="--i:1">
+          <img src="brand_assets/kantina-project/Menu.png" alt="Menu recommender step 1: what do you want to eat" />
+          <img src="brand_assets/kantina-project/Menu-1.png" alt="Menu recommender step 2: light meal or full lunch" />
+          <img src="brand_assets/kantina-project/Menu-2.png" alt="Menu recommender step 3: meat or no meat" />
+          <img src="brand_assets/kantina-project/Menu-3.png" alt="Menu recommender step 4: personalized recommendations" />
+          <img src="brand_assets/kantina-project/Menu-4.png" alt="Menu recommender step 5: take out or call the waiter" />
+        </div>
+      </div>
+
+      <div class="case-subpart fade-up" style="--i:0">
+        <h3 class="case-subpart-title">Rebuilt menu with dietary inclusivity</h3>
+        <div class="case-section-body">
+          <p>The old menu was restructured from scratch. Vegetarian options were added and clearly labeled. Navigation was simplified.</p>
+        </div>
+        <figure class="case-media fade-in" style="--i:1">
+          <img src="brand_assets/kantina-project/kantina-menu-page.gif" alt="Rebuilt Kantina menu page, categories for bestsellers, food, drinks, and vegetarian" loading="lazy" />
+          <figcaption class="case-caption">Screenshot: menu page</figcaption>
+        </figure>
+      </div>
+
+      <div class="case-subpart fade-up" style="--i:0">
+        <h3 class="case-subpart-title">Fully responsive design</h3>
+        <div class="case-section-body">
+          <p>Desktop users finally had a real experience. Mobile users kept theirs. Each viewport was designed distinctly, not just scaled.</p>
+        </div>
+        <figure class="case-media fade-in" style="--i:1">
+          <img src="brand_assets/kantina-project/kantina-figma-overview.png" alt="Full Figma file overview, all desktop and mobile screens" />
+          <figcaption class="case-caption">Full Figma file overview, all screens</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — Outcome -->
+  <section class="case-section">
+    <div class="case-wrap">
+      <p class="case-section-eyebrow fade-up" style="--i:0"><span>05</span><span>Outcome</span></p>
+      <h2 class="case-section-title fade-up" style="--i:1">What changed after launch</h2>
+      <div class="case-section-body fade-up" style="--i:2">
+        <p>The site launched with a complete redesign of how Kantina presented itself online. The client reported that first-time visitors arrived more oriented. Staff fielded fewer basic questions at the door.</p>
+      </div>
+      <div class="case-outcome-grid fade-up" style="--i:3">
+        <div class="case-outcome-card">
+          <p class="case-outcome-number">+38%</p>
+          <p class="case-outcome-label">Lift in reservation requests in the first month after launch</p>
+        </div>
+        <div class="case-outcome-card">
+          <p class="case-outcome-number">&minus;60%</p>
+          <p class="case-outcome-label">Fewer basic "what kind of place is this?" DMs to staff</p>
+        </div>
+        <div class="case-outcome-card">
+          <p class="case-outcome-number">3.2&times;</p>
+          <p class="case-outcome-label">Time spent on site versus the previous mobile-only page</p>
+        </div>
+      </div>
+      <div class="case-photo-grid">
+        <figure class="fade-in" style="--i:0">
+          <img src="brand_assets/kantina-project/kantina-impact-food.jpg" alt="Kantina shared plates on the table" />
+        </figure>
+        <figure class="fade-in" style="--i:1">
+          <img src="brand_assets/kantina-project/kantina-impact-person.jpg" alt="A regular outside Kantina" />
+        </figure>
+        <figure class="fade-in" style="--i:2">
+          <img src="brand_assets/kantina-project/kantina-impact-spritz.jpg" alt="Aperol spritz on the terrace" />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 — Achievement -->
+  <section class="case-achieve">
+    <img class="case-achieve-badge fade-in" style="--i:0" src="brand_assets/kantina-project/badge.png" alt="Winning project solution badge" />
+    <p class="case-achieve-eyebrow fade-up" style="--i:1">06 — Achievement</p>
+    <h2 class="case-achieve-title fade-up" style="--i:2">This one won.</h2>
+    <p class="case-achieve-subhead fade-up" style="--i:3">Selected as the winning project solution in Brainster's online hackathon for most innovative solution on a real client brief — built for Kantina, with a team pulled from two different student groups.</p>
+
+    <div class="case-achieve-docs">
+      <figure class="case-achieve-doc fade-up" style="--i:0">
+        <img src="brand_assets/kantina-project/archievement.webp" alt="Achievement certificate: most innovative solution on a real project" />
+        <figcaption>Achievement certificate</figcaption>
+      </figure>
+      <figure class="case-achieve-doc fade-up" style="--i:1">
+        <img src="brand_assets/kantina-project/zlatan.webp" alt="Mentor feedback from Zlatan Mujcin" />
+        <figcaption>Feedback — Zlatan Mujcin, mentor</figcaption>
+      </figure>
+      <figure class="case-achieve-doc fade-up" style="--i:2">
+        <img src="brand_assets/kantina-project/jana.webp" alt="Feedback from Jana Todorovska, Head of Partnerships" />
+        <figcaption>Feedback — Jana Todorovska, Head of Partnerships</figcaption>
+      </figure>
+    </div>
+
+    <p class="case-achieve-tally fade-up" style="--i:3">This one is among <strong>6 total achievements</strong> won at the academy.</p>
+    <div class="case-achieve-badges fade-in" style="--i:4">
+      <img src="brand_assets/kantina-project/badge.png" alt="Winning project solution badge" />
+      <img src="brand_assets/kantina-project/badge.png" alt="Winning project solution badge" />
+      <img src="brand_assets/kantina-project/badge.png" alt="Winning project solution badge" />
+      <img src="brand_assets/kantina-project/badge.png" alt="Winning project solution badge" />
+      <img src="brand_assets/kantina-project/achievement/badge-participation.png" alt="Participation badge" />
+      <img src="brand_assets/kantina-project/achievement/badge-distinction.png" alt="Distinction badge" />
+    </div>
+  </section>
+
+  <!-- Lightbox — opens a larger view of any achievement document on click -->
+  <div class="case-lightbox" id="case-lightbox">
+    <button type="button" class="case-lightbox-close" id="case-lightbox-close" aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+    </button>
+    <img class="case-lightbox-img" id="case-lightbox-img" src="" alt="" />
+  </div>
+
+  <!-- Footer (shared across pages — see partials/footer.html) -->
+  <!--#include virtual="partials/footer.html" -->
+
+  <script src="shared.js?v=2"></script>
+  <script>
+    // ── Achievement documents: click to open a zoomed-in lightbox ──
+    (function () {
+      var lightbox = document.getElementById('case-lightbox');
+      var lightboxImg = document.getElementById('case-lightbox-img');
+      var closeBtn = document.getElementById('case-lightbox-close');
+      if (!lightbox || !lightboxImg || !closeBtn) return;
+
+      function open(src, alt) {
+        lightboxImg.src = src;
+        lightboxImg.alt = alt;
+        lightbox.classList.add('is-open');
+      }
+      function close() {
+        lightbox.classList.remove('is-open');
+      }
+
+      document.querySelectorAll('.case-achieve-doc img').forEach(function (img) {
+        img.addEventListener('click', function () { open(img.src, img.alt); });
+      });
+      lightbox.addEventListener('click', function (e) {
+        if (e.target === lightbox) close();
+      });
+      closeBtn.addEventListener('click', close);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') close();
+      });
+    })();
+  </script>
+
+</body>
+</html>

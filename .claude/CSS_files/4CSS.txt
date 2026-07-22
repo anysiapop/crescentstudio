@@ -1,0 +1,134 @@
+/* fourth section */
+
+position: relative;
+width: 1643px;
+height: 1363px;
+
+/* Moon Background
+
+Backgrounds
+*/
+background: #F1E9DE;
+
+
+/* Rectangle 45 */
+
+position: absolute;
+width: 1643px;
+height: 1252px;
+left: 0px;
+top: 111px;
+
+/* Eclipse Black
+
+Primary
+*/
+background: #0B0B0B;
+
+
+/* helping founders present that story is a form of expertise. */
+
+position: absolute;
+width: 885px;
+height: 175px;
+left: calc(50% - 885px/2);
+top: 998px;
+
+font-family: 'PP Neue Montreal';
+font-style: normal;
+font-weight: 400;
+font-size: 64.8869px;
+line-height: 78px;
+text-align: center;
+letter-spacing: -0.02em;
+
+/* Moon White */
+color: #F5F4EF;
+
+text-shadow: 0px 4.60338px 4.60338px rgba(255, 255, 255, 0.25);
+
+
+/* Rectangle 39 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 699.84px;
+height: 416.74px;
+left: 460px;
+top: 353.15px;
+
+background: url(Group 20.png);
+border: 1.77357px solid #F1E9DE;
+border-radius: 23.7215px;
+transform: rotate(3.49deg);
+
+
+/* Rectangle 40 */
+
+position: absolute;
+width: 675.73px;
+height: 402.38px;
+left: 461.63px;
+top: 339px;
+
+background: #C1623B;
+border-radius: 25.495px;
+transform: rotate(-7.47deg);
+
+
+/* Rectangle 41 */
+
+position: absolute;
+width: 697.92px;
+height: 416.71px;
+left: 463.91px;
+top: 354.64px;
+
+/* Moon White
+
+Primary
+*/
+background: #F5F4EF;
+transform: rotate(-3.22deg);
+
+
+/* Vector 40 */
+
+position: absolute;
+width: 48.28px;
+height: 51.12px;
+left: calc(50% - 48.28px/2 - 0.17px);
+top: 446.71px;
+
+/* Eclipse Black
+
+Primary
+*/
+background: #0B0B0B;
+transform: rotate(-3.22deg);
+
+
+/* Every business has a story. 
+Boring design hides it, and most founders 
+never show it. 
+Design is the bridge where that story lands your people, and that's what makes them choose you. */
+
+position: absolute;
+width: 576.75px;
+height: 185px;
+left: 540px;
+top: 509px;
+
+font-family: 'Times New Roman';
+font-style: italic;
+font-weight: 400;
+font-size: 32px;
+line-height: 37px;
+text-align: center;
+letter-spacing: -0.04em;
+
+/* Eclipse Black */
+color: #0B0B0B;
+
+transform: rotate(-3.22deg);
