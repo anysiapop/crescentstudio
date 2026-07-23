@@ -9,12 +9,6 @@
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html:focus-within { scroll-behavior: smooth; }
-/* Hard horizontal clip: no element (fixed-position nav, scroll-scrubbed
-   decorative art, etc.) can ever push the page into sideways scroll or
-   wobble, even from a transient sub-pixel overflow during a scrub
-   animation or engine-specific momentum-scroll quirk. Vertical scroll
-   is unaffected. */
-html, body { overflow-x: hidden; }
 body {
   background: #0B0B0B;
   color: #F5F4EF;
