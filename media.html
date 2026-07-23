@@ -9,7 +9,7 @@
   <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Plus+Jakarta+Sans:ital,wght@0,300;1,300&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="shared.css?v=2" />
   <script>
     tailwind.config = {
@@ -24,7 +24,7 @@
             'terra-dark': '#9C4F30',
           },
           fontFamily: {
-            sans:  ['PP Neue Montreal', 'Inter', 'system-ui', 'sans-serif'],
+            sans:  ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
             serif: ['Times New Roman', 'Times', 'Georgia', 'serif'],
           },
         },
@@ -64,20 +64,20 @@
     .media-item::before {
       content: counter(media-item) ".";
       flex: 0 0 auto;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300;
       font-size: clamp(18px, 2.4vw, 32.4px);
       line-height: 1.073;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.03em;
       color: #0B0B0B;
     }
     .media-item-body { flex: 1 1 auto; }
     .media-item-title {
       display: inline-block;
       margin: 0;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300;
       font-size: clamp(18px, 2.4vw, 32.4px);
       line-height: 1.073;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.03em;
       color: #0B0B0B;
       text-decoration: none;
     }
@@ -86,9 +86,9 @@
     a.media-item-title:focus-visible { outline: 2px solid #0B0B0B; outline-offset: 3px; }
     .media-item-meta {
       margin: 6px 0 0;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300;
       font-size: 14px;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.03em;
       color: rgba(11, 11, 11, 0.6);
     }
 

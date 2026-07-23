@@ -10,7 +10,7 @@
   <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Plus+Jakarta+Sans:ital,wght@0,300;1,300&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="shared.css?v=2" />
   <script>
     tailwind.config = {
@@ -25,7 +25,7 @@
             'terra-dark': '#9C4F30',
           },
           fontFamily: {
-            sans:  ['PP Neue Montreal', 'Inter', 'system-ui', 'sans-serif'],
+            sans:  ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
             serif: ['Times New Roman', 'Times', 'Georgia', 'serif'],
           },
         },
@@ -82,11 +82,11 @@
     }
     .copy-a, .copy-b {
       grid-area: 1/1;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
       font-size: clamp(30px, 4.4vw, 58px);
       color: #F5F4EF;
-      font-weight: 400;
-      letter-spacing: -0.025em;
+      font-weight: 300;
+      letter-spacing: -0.03em;
       line-height: 1.06;
     }
     .copy-a {
@@ -172,12 +172,12 @@
     }
     .scroll-cue.hidden { opacity: 0 !important; animation: none; }
     .scroll-cue-label {
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
       font-size: 10px;
-      letter-spacing: 0.14em;
+      letter-spacing: -0.03em;
       text-transform: uppercase;
       color: rgba(167, 167, 167, 0.65);
-      font-weight: 400;
+      font-weight: 300;
     }
     @keyframes scrollCuePulse {
       0%, 100% { opacity: 0.36; }
@@ -234,11 +234,11 @@
     }
     .problem2-wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
     .problem-headline {
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 400;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 300;
       font-size: clamp(27px, 3.9vw, 56.3px);
       line-height: 1.2;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
       color: #0B0B0B;
       text-align: center;
       max-width: 640px;
@@ -275,19 +275,19 @@
       text-align: left;
     }
     .problem-card-title {
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 400;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 300;
       font-size: clamp(26px, 2.9vw, 37.9px);
       line-height: 1.0733;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.03em;
       color: #0B0B0B;
     }
     .problem-card-body {
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 400;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 300;
       font-size: clamp(16px, 1.5vw, 21.4px);
       line-height: 1.4;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.03em;
       color: #0B0B0B;
     }
     /* Same title/body weight and style on every card, including the
@@ -320,11 +320,11 @@
       }
       .problem-mobile-title {
         margin: 0;
-        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
         font-weight: 300;
         font-size: 36px;
         line-height: 1.2;
-        letter-spacing: -0.01em;
+        letter-spacing: -0.03em;
         color: #0B0B0B;
       }
       .problem-mobile-title em {
@@ -334,7 +334,7 @@
       }
       .problem-mobile-sub {
         margin: 0;
-        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300; letter-spacing: -0.03em;
         font-size: 16px;
         line-height: 1.6;
         color: #4A4A4A;
@@ -358,15 +358,15 @@
       }
       .problem-mobile-card-title {
         margin: 0;
-        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-        font-weight: 400;
+        font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+        font-weight: 300; letter-spacing: -0.03em;
         font-size: 22px;
         line-height: 1.2;
         color: #0B0B0B;
       }
       .problem-mobile-card-body {
         margin: 0;
-        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300; letter-spacing: -0.03em;
         font-size: 16px;
         line-height: 1.5;
         color: #3A3A3A;
@@ -374,7 +374,7 @@
       .problem-mobile-card--accent { background: #EB7848; border: none; }
       .problem-mobile-card--accent .problem-mobile-card-title,
       .problem-mobile-card--accent .problem-mobile-card-body { color: #F5F4EF; }
-      .problem-mobile-card--accent .problem-mobile-card-title { font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif; font-weight: 500; }
+      .problem-mobile-card--accent .problem-mobile-card-title { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 400; letter-spacing: -0.03em; }
     }
 
     /* ── "Crescent" promise — Figma "Section 3" conversion ──
@@ -501,11 +501,11 @@
     .crescent-tagline {
       position: absolute;
       left: 19.80%; top: 38.73%; width: 60.41%;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 400;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 300;
       font-size: clamp(19px, 4.429cqw, 46.4px);
       line-height: 1.2;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
       text-align: center;
       color: #F5F4EF;
       text-shadow: 0 4px 4px rgba(255, 255, 255, 0.25);
@@ -538,11 +538,11 @@
     }
     .crescent-cta p {
       margin: 0;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 400;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 300;
       font-size: clamp(19px, 4.429cqw, 46.4px);
       line-height: 1.2;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
       color: #F5F4EF;
     }
     .crescent-cta em {
@@ -639,10 +639,10 @@
         transform: translateX(-50%);
         width: 77.95cqw;
         margin: 0;
-        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300;
         font-size: 10.26cqw;
         line-height: 1.2;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.03em;
         text-align: center;
         color: #F5F4EF;
         text-shadow: 0 4px 4px rgba(255, 255, 255, 0.55);
@@ -690,10 +690,10 @@
       }
       .crescent-mobile-cta p {
         margin: 0;
-        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300;
         font-size: 28px;
         line-height: 1.2;
-        letter-spacing: -0.04em;
+        letter-spacing: -0.03em;
         color: #F5F4EF;
       }
       .crescent-mobile-cta em {
@@ -869,12 +869,12 @@
       z-index: 1;
       margin: 0;
       max-width: min(776px, 53.9vw);
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 400;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 300;
       font-size: clamp(28px, 4.15vw, 56.9px);
       line-height: 1.2;
       text-align: center;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
       color: #F5F4EF;
       text-shadow: 0 4px 4px rgba(255, 255, 255, 0.25);
     }
@@ -966,10 +966,10 @@
       .ss-headline {
         margin: 0;
         max-width: 340px;
-        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300;
         font-size: 25.66px;
         line-height: 1.25;
-        letter-spacing: -0.01em;
+        letter-spacing: -0.03em;
         text-align: center;
         color: #F5F4EF;
         text-shadow: 0 1.8px 1.8px rgba(255, 255, 255, 0.25);
@@ -1003,10 +1003,10 @@
       }
       .ss-stat-label {
         margin: 0;
-        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300;
         font-size: 18.15px;
         line-height: 1.1;
-        letter-spacing: -0.01em;
+        letter-spacing: -0.03em;
         text-shadow: 0 1.3px 1.3px rgba(255, 255, 255, 0.25);
       }
       .ss-stat--projects { left: 45.1px; top: 0; width: 210.9px; height: 88.95px; }
@@ -1109,14 +1109,12 @@
       .ss-cta-line1 {
         left: 13.27cqw; top: 1066.65px; width: 74.82cqw;
         transform: rotate(-2.7deg);
-        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-        /* PP Neue Montreal isn't actually loaded anywhere on the site
-           (no @font-face/license), so this silently renders in Inter or
-           a system fallback instead — both wider than the font this
-           nowrap width was tuned against, closing the margin to the
-           card's own edge to as little as ~20px on a narrow phone.
-           Since the exact fallback varies by device/browser, shrink the
-           font a bit rather than trusting any specific one to fit. */
+        font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300; letter-spacing: -0.03em;
+        /* Slightly smaller than the shared 5.36cqw: this is a fixed
+           nowrap width, so it still keeps a real margin to the card's
+           own edge across the mobile breakpoint range even though Plus
+           Jakarta Sans Light is narrower than the Inter fallback this
+           was originally tuned against. */
         font-size: 4.8cqw;
       }
       .ss-cta-line2 {
@@ -1176,9 +1174,9 @@
     }
     .services-stat-label {
       margin: 0;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300;
       font-size: 2.992cqw; line-height: 3.591cqw;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
       text-shadow: 0 0.212cqw 0.212cqw rgba(255, 255, 255, 0.25);
     }
     .services-stat--projects { left: 38.541cqw; top: 13.086cqw; width: 26.759cqw; height: 11.309cqw; color: #F5F4EF; }
@@ -1247,7 +1245,7 @@
     }
     .services-cta-line1 {
       left: 3.79cqw; top: 6.43cqw; width: 42.42cqw;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300; letter-spacing: -0.03em;
       font-size: 3.047cqw; line-height: 3.642cqw;
     }
     .services-cta-line2 {
@@ -1339,11 +1337,11 @@
     }
     .pricing-card-eyebrow {
       margin: 0;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 500;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
       font-size: clamp(15px, 1.5vw, 21.73px);
       line-height: 1.09;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.03em;
     }
     .pricing-card--sprint .pricing-card-eyebrow { color: #EB7848; }
     .pricing-card--retainer .pricing-card-eyebrow { color: #D2A1FF; }
@@ -1354,11 +1352,11 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 400;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 300;
       font-size: clamp(15px, 1.5vw, 21.73px);
       line-height: 1.09;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.03em;
       color: #0B0B0B;
     }
     .pricing-cta {
@@ -1369,10 +1367,10 @@
       padding: 13px 21.93px;
       min-width: 271.77px;
       border-radius: 51.14px;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 500;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
       font-size: clamp(15px, 1.5vw, 21.73px);
-      letter-spacing: 0.01em;
+      letter-spacing: -0.03em;
       text-decoration: none;
       color: #F5F4EF;
       border: none;
@@ -1464,9 +1462,9 @@
     .working-h3 {
       position: absolute;
       margin: 0;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 400;
-      letter-spacing: -0.02em;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 300;
+      letter-spacing: -0.03em;
       color: #F5F4EF;
       text-shadow: 0 0.314cqw 0.314cqw rgba(255, 255, 255, 0.25);
     }
@@ -1500,11 +1498,11 @@
       align-items: center;
       gap: 0.85cqw;
       margin: 0;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 400;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 300;
       font-size: 1.939cqw;
       line-height: 1.0733;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.03em;
       color: #F5F4EF;
     }
     .working-item svg { flex: none; width: 2.878cqw; height: 2.907cqw; }
@@ -1561,10 +1559,10 @@
       }
       .wm-h1, .wm-h3 {
         margin: 0;
-        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300;
         font-size: 41px;
         line-height: 1.15;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.03em;
         color: #F5F4EF;
         text-shadow: 0 2.9px 2.9px rgba(255, 255, 255, 0.25);
       }
@@ -1589,10 +1587,10 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300;
         font-size: 16.3px;
         line-height: 1.3;
-        letter-spacing: 0.01em;
+        letter-spacing: -0.03em;
         color: #F5F4EF;
       }
       .wm-star { flex: none; width: 24px; height: 24px; }
@@ -1710,10 +1708,10 @@
       padding-left: 1.1cqw;
       padding-bottom: 0.7235cqw;
       border-bottom: 0.0242cqw solid currentColor;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300;
       font-size: 1.0757cqw;
       line-height: 1.073;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.03em;
     }
     .swap-item:last-child { border-bottom: none; padding-bottom: 0; }
     .swap-item::before {
@@ -1793,10 +1791,10 @@
         padding-left: 18px;
         padding-bottom: 9px;
         border-bottom: 0.5px solid currentColor;
-        font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300;
         font-size: 13px;
         line-height: 1.3;
-        letter-spacing: 0.01em;
+        letter-spacing: -0.03em;
       }
       .swap-mobile-item:last-child { border-bottom: none; padding-bottom: 0; }
       .swap-mobile-item::before {
@@ -1880,11 +1878,11 @@
     .decision-h1 {
       transform: translateX(calc(-50% - 0.647cqw));
       top: 8.408cqw;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
       font-style: italic;
-      font-weight: 400;
+      font-weight: 300;
       font-size: 5.158cqw;
-      letter-spacing: -0.3095cqw;
+      letter-spacing: -0.03em;
       color: #0B0B0B;
       text-shadow: 0 0.0927cqw 0.0927cqw rgba(241, 233, 222, 0.25);
     }
@@ -2113,30 +2111,30 @@
     .testimonial-id { display: flex; flex-direction: column; gap: 6.13px; min-width: 0; }
     .testimonial-name {
       margin: 0;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 500;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
       font-size: 21.03px;
       line-height: 1.073;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.03em;
       color: #0B0B0B;
     }
     .testimonial-role {
       margin: 0;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
       font-style: italic;
-      font-weight: 400;
+      font-weight: 300;
       font-size: 15.49px;
       line-height: 1.073;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.03em;
       color: #C1623B;
     }
     .testimonial-quote {
       margin: 0;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 400;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 300;
       font-size: 15.49px;
       line-height: 1.073;
-      letter-spacing: 0.01em;
+      letter-spacing: -0.03em;
       color: #7d7d7d;
     }
 
@@ -2247,8 +2245,8 @@
       justify-content: space-between;
       gap: 16px;
       padding: 20px 0;
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 400;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 300; letter-spacing: -0.03em;
       font-size: clamp(18px, 1.9vw, 18px);
       line-height: 1.4;
       color: #F5F4EF;
@@ -2270,8 +2268,8 @@
       margin: 0 0 22px;
       max-width: 640px;
       min-height: var(--faq-answer-h, auto);
-      font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
-      font-weight: 400;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 300; letter-spacing: -0.03em;
       font-size: clamp(18px, 1.5vw, 15px);
       line-height: 1.6;
       color: #A7A7A7;
@@ -2406,7 +2404,7 @@
     <div class="hero-copy-wrap">
       <!-- copy-a: opening tension, visible at scroll 0% -->
       <div class="copy-a" aria-hidden="true">You don't need<br>a full design team.</div>
-      <!-- copy-b: resolution — sentence in PP Neue Montreal, rotating word in Times italic -->
+      <!-- copy-b: resolution — sentence in Plus Jakarta Sans, rotating word in Times italic -->
       <h1 class="copy-b">You need your<br>designer. <span class="rw-word">Monthly.</span></h1>
     </div>
 
