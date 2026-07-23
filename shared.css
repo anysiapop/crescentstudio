@@ -398,18 +398,21 @@ body {
     position: absolute;
     transform: translate(-50%, -50%);
     height: auto;
-    /* Once max-height (below) actually clamps the computed height on a
-       short viewport, width and height stop matching the asset's
-       natural aspect ratio — object-fit:contain keeps the image itself
-       proportional inside that box instead of squashing/stretching
-       (the browser's default fill behavior) to fill it. */
-    object-fit: contain;
+    /* max-height (below) is the exact size at which the box's own top/
+       bottom edge would touch the container's edge — i.e. the largest
+       it can ever be without overflowing, not a conservative shrink.
+       cover (rather than contain) fills that box completely and crops
+       whatever doesn't fit instead of shrinking the whole image down;
+       object-position:top keeps the top/face of the subject anchored
+       so any crop comes off the bottom. */
+    object-fit: cover;
+    object-position: top center;
     opacity: 0;
     transition: opacity 0.12s ease;
     pointer-events: none;
   }
   .pill-nav.is-open .menu-photo.is-active { opacity: 1; }
-  .pill-nav.is-open .menu-photo[data-word="work"] { left: 82.22cqw; top: 24.21cqh; width: 54.27cqw; max-height: 40cqh; }
+  .pill-nav.is-open .menu-photo[data-word="work"] { left: 82.22cqw; top: 24.21cqh; width: 54.27cqw; max-height: 48cqh; }
   /* Flipped horizontally per feedback — the sticker faces left in its
      source file, which read wrong sitting on this (right) side of the
      composition. Sized down from the original 66.21cqw (matching
@@ -417,10 +420,10 @@ body {
      recentered so the shrunk image still hugs the left edge rather
      than drifting toward center. */
   .pill-nav.is-open .menu-photo[data-word="services"] {
-    left: 24cqw; top: 16.21cqh; width: 48cqw; max-height: 28cqh;
+    left: 24cqw; top: 16.21cqh; width: 48cqw; max-height: 32cqh;
     transform: translate(-50%, -50%) scaleX(-1);
   }
-  .pill-nav.is-open .menu-photo[data-word="about"] { left: 49.99cqw; top: 87.45cqh; width: 58.97cqw; max-height: 20cqh; }
+  .pill-nav.is-open .menu-photo[data-word="about"] { left: 49.99cqw; top: 87.45cqh; width: 58.97cqw; max-height: 25cqh; }
 
   .pill-nav.is-open .menu-accent {
     display: block;
@@ -435,15 +438,19 @@ body {
     pointer-events: none;
   }
   .pill-nav.is-open .menu-accent.is-active { opacity: 1; }
-  .pill-nav.is-open .menu-accent[data-word="work"] { left: 18.16cqw; top: 79.82cqh; width: 58.2cqw; max-height: 34cqh; }
-  .pill-nav.is-open .menu-accent[data-word="services"] { left: 73.05cqw; top: 75.06cqh; width: 28.13cqw; max-height: 40cqh; }
+  .pill-nav.is-open .menu-accent[data-word="work"] { left: 18.16cqw; top: 79.82cqh; width: 58.2cqw; max-height: 40cqh; }
+  .pill-nav.is-open .menu-accent[data-word="services"] { left: 73.05cqw; top: 75.06cqh; width: 28.13cqw; max-height: 49cqh; }
   /* Rotated 71.45deg (180° past the same swirl asset's -108.55deg
      rotation used elsewhere on the site, so it points down instead of
      up) and sized down — unrotated at its earlier width it read as an
      oversized, stretched-looking loop rather than a compact arrow
-     accent. */
+     accent. max-height is tighter than the plain tangent formula
+     because rotation inflates the axis-aligned bounding box beyond the
+     pre-rotation element's own footprint — verified empirically rather
+     than solved analytically, since that growth depends on both cqw
+     and cqh (different bases) at once. */
   .pill-nav.is-open .menu-accent[data-word="about"] {
-    left: 50.85cqw; top: 11.75cqh; width: 30cqw; max-height: 11cqh;
+    left: 50.85cqw; top: 11.75cqh; width: 30cqw; max-height: 14cqh;
     transform: translate(-50%, -50%) rotate(71.45deg);
   }
 
