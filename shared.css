@@ -223,7 +223,6 @@ body {
 .pill-panel-link:hover { color: #C1623B; }
 .pill-panel-link:focus-visible { outline: 2px solid #C1623B; outline-offset: 3px; border-radius: 2px; }
 .pill-panel-link:active { color: #9C4F30; }
-.pill-panel-link.is-active { color: #F5F4EF; }
 
 /* Wavy hand-drawn underline — a real inline <path>, not a background
    image (Figma's own "Line 31" asset was a flat placeholder, reused
@@ -249,12 +248,12 @@ body {
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-dasharray: 1;
+  /* Never draws in — the auto-cycling .is-active state used to trigger
+     this (stroke-dashoffset: 0) alongside a color brighten, which read
+     as a persistent "selected" state on whichever word was cycling
+     rather than a normal highlight. Removed per feedback; the photo/
+     accent that cycles alongside each word is left as the indication. */
   stroke-dashoffset: 1;
-  transition: stroke-dashoffset 0.12s ease;
-}
-.pill-panel-link.is-active .pill-panel-link-underline path { stroke-dashoffset: 0; }
-@media (prefers-reduced-motion: reduce) {
-  .pill-panel-link-underline path { transition: none; }
 }
 
 /* Full-screen takeover — the pill itself grows to cover the viewport,
