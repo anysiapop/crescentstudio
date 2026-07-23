@@ -75,6 +75,25 @@ body {
   pointer-events: none;
 }
 
+/* Compact icon-only circle — mobile only (see shared.js): replaces the
+   full pill while still in the hero or scrolling down, so the collapsed
+   nav doesn't compete with on-screen content for space; the full pill
+   reappears once scrolling up. Shrinking width to match height lets the
+   pill's existing 999px border-radius render a true circle instead of
+   a pill — background/border carry over unchanged since this is an
+   additional class on the same element, not a separate component. */
+@media (max-width: 639px) {
+  .pill-nav--icon-only {
+    left: auto; right: 24px;
+    transform: none;
+    width: 52px; height: 52px;
+    max-width: none;
+    padding: 0;
+  }
+  .pill-nav--icon-only .pill-nav-row { justify-content: center; }
+  .pill-nav--icon-only .pill-logo { display: none; }
+}
+
 .pill-nav-row {
   position: relative;
   display: flex;

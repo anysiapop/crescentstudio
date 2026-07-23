@@ -111,11 +111,12 @@
   // About pill row at its top that takes over from here.
   //
   // Mobile (<=640px, matching the site's own mobile breakpoint): the
-  // pill competes with the hero's own copy for a small screen, so it
-  // stays fully hidden for the whole hero — not just while the hero's
-  // CTAs happen to be on screen — then behaves like a normal
-  // hide-on-scroll-down / reveal-on-scroll-up nav once past it, right
-  // up until the footer takes over.
+  // full pill competes with the hero's own copy for a small screen, so
+  // it collapses to a small icon-only circle (top-right — see
+  // .pill-nav--icon-only) for the whole hero and while scrolling down,
+  // and only expands back to the full pill while actively scrolling up.
+  // Reaching the footer still hides it entirely, same as desktop — the
+  // footer has its own nav row.
   //
   // Driven by a rAF loop rather than a 'scroll' listener: the hero's
   // crescent-state class reacts to scroll too, and listener order isn't
@@ -167,22 +168,23 @@
 
   function updatePillVisibility() {
     updateScrollDirection();
-    // Never hide the pill while the mobile menu itself is open — the
-    // hero/footer/scroll-direction rules below are about the collapsed
-    // pill competing with other content, which doesn't apply once it's
-    // a full-screen takeover the user just asked to see.
+    // Never hide (or collapse) the pill while the mobile menu itself is
+    // open — the hero/footer/scroll-direction rules below are about the
+    // collapsed pill competing with other content, which doesn't apply
+    // once it's a full-screen takeover the user just asked to see.
     if (nav.classList.contains('is-open')) {
-      nav.classList.remove('pill-nav--hidden');
+      nav.classList.remove('pill-nav--hidden', 'pill-nav--icon-only');
       return;
     }
     var reachedFooter = hasReachedFooter();
-    var hidden;
     if (mobileMq.matches) {
-      hidden = isInHero() || reachedFooter || (scrollingDown && window.scrollY > 40);
+      nav.classList.toggle('pill-nav--hidden', reachedFooter);
+      var iconOnly = !reachedFooter && (isInHero() || (scrollingDown && window.scrollY > 40));
+      nav.classList.toggle('pill-nav--icon-only', iconOnly);
     } else {
-      hidden = isHeroCtaVisible() || reachedFooter;
+      nav.classList.toggle('pill-nav--hidden', isHeroCtaVisible() || reachedFooter);
+      nav.classList.remove('pill-nav--icon-only');
     }
-    nav.classList.toggle('pill-nav--hidden', hidden);
   }
 
   (function loop() {
