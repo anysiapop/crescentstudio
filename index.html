@@ -1021,16 +1021,33 @@
 
       /* Absolute, cqw-based, direct children of the OUTER container —
          positioned exactly like Figma's own coordinates (÷3.9). */
+      /* top is a fixed px value (not cqw) on both of these, same reason
+         as .ss-cta-stack below: .ss-inner's content above them
+         (card-stack/headline/stats) is fixed-px sized and doesn't
+         rescale with viewport width the way cqw does, so a cqw top
+         drifts out of alignment with it — converging enough on narrow
+         phones that the swirl visibly cut through the stat boxes above
+         it. Value is old_cqw * 3.9 (1cqw = 3.9px at the 390px reference
+         width, same conversion .ss-card-stack/.ss-stats etc. above are
+         already built from). left/width/height stay cqw since the
+         element's own size and horizontal position scale correctly
+         with viewport width. */
       .ss-sparkle {
         position: absolute;
-        left: 0; top: 170.13cqw;
+        left: 0; top: 663.5px;
         width: 31.03cqw; height: 31.03cqw;
         pointer-events: none;
       }
       .ss-swirl {
         position: absolute;
-        left: 25.64cqw; top: 180.25cqw;
-        width: 42.74cqw; height: 49.34cqw;
+        left: 25.64cqw; top: 866px;
+        /* Fixed px, not cqw — this whole connector zone sits in a fixed-
+           px vertical gap between two other fixed-px points (the stats
+           above, the CTA card below per .ss-cta-stack's own reasoning),
+           so a cqw *size* here still grows with viewport width even
+           though the gap it needs to fit inside doesn't, eventually
+           outgrowing one end or the other. */
+        width: 77px; height: 90px;
         transform: rotate(138.55deg);
         pointer-events: none;
       }
@@ -1093,6 +1110,14 @@
         left: 13.27cqw; top: 1066.65px; width: 74.82cqw;
         transform: rotate(-2.7deg);
         font-family: 'PP Neue Montreal', 'Inter', system-ui, sans-serif;
+        /* PP Neue Montreal isn't actually loaded anywhere on the site
+           (no @font-face/license), so this silently renders in Inter or
+           a system fallback instead — both wider than the font this
+           nowrap width was tuned against, closing the margin to the
+           card's own edge to as little as ~20px on a narrow phone.
+           Since the exact fallback varies by device/browser, shrink the
+           font a bit rather than trusting any specific one to fit. */
+        font-size: 4.8cqw;
       }
       .ss-cta-line2 {
         left: 31.31cqw; top: 1101.28px; width: 38.18cqw;
