@@ -89,6 +89,13 @@ body {
     width: 52px; height: 52px;
     max-width: none;
     padding: 0;
+    /* .pill-nav is a column flex container — align-items:center (base
+       rule) covers the cross-axis (horizontal), but with no
+       justify-content the main axis (vertical, for flex-direction:
+       column) defaults to flex-start, so the row sits at the top of
+       the circle instead of centered. Invisible on the short, wide
+       pill; obvious once it's a small square. */
+    justify-content: center;
   }
   .pill-nav--icon-only .pill-nav-row { justify-content: center; }
   .pill-nav--icon-only .pill-logo { display: none; }
