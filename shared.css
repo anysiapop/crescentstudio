@@ -256,9 +256,19 @@ body {
    panel's (everything else) from one shared basis.
 
    The 512:1120 frame is close to a real phone's own aspect ratio, but
-   not identical to every device — overflow-y:auto on the fullscreen
-   nav means a device shorter than that ratio scrolls to reach
-   everything rather than clipping it. */
+   not identical to every device — real phones are almost always
+   shorter (relative to width) than this frame, so every `top:` value
+   below is in cqh (container-query-height), not cqw. 100cqh always
+   equals the container's own height by definition, so the whole layout
+   compresses to fit whatever viewport height is available instead of
+   overflowing it — no internal scroll, ever, regardless of aspect
+   ratio. (`left:`/width values stay in cqw since those scale correctly
+   against the container's width.) Each cqh value is the equivalent cqw
+   value from the frame math above, rescaled by 512/1120 (cqw's basis)
+   to 100/1120 (cqh's basis) — i.e. old_cqw * (512/1120). container-type
+   is `size` rather than `inline-size` so cqh is actually available;
+   .pill-nav.is-open has a definite block size (fixed + inset:0), so
+   that's safe here. */
 @media (max-width: 639px) {
   .pill-nav.is-open {
     position: fixed;
@@ -271,8 +281,8 @@ body {
     border: none;
     background: #0B0B0B;
     transform: none;
-    container-type: inline-size;
-    overflow-y: auto;
+    container-type: size;
+    overflow: hidden;
   }
 
   /* display:contents removes the row's own box (so it stops driving
@@ -284,7 +294,7 @@ body {
   .pill-nav.is-open .pill-toggle {
     position: absolute;
     z-index: 2;
-    left: 91.31cqw; top: 7.32cqw;
+    left: 91.31cqw; top: 3.35cqh;
     transform: translate(-50%, -50%);
     margin: 0;
   }
@@ -310,7 +320,7 @@ body {
     align-items: center;
     justify-content: center;
     position: absolute;
-    left: 49.6cqw; top: 80.96cqw;
+    left: 49.6cqw; top: 37.01cqh;
     transform: translate(-50%, calc(-50% - 8px));
     margin: 0;
     opacity: 0;
@@ -330,15 +340,18 @@ body {
     position: absolute;
     left: 50cqw;
     transform: translate(-50%, -50%);
-    font-size: 24px;
+    /* Caps at the original 24px on tall viewports; shrinks in step with
+       everything else once height gets tight, so the text (and its
+       underline) never crowds into the CTA button below it. */
+    font-size: clamp(14px, 3.8cqh, 24px);
   }
-  .pill-nav.is-open .pill-panel-link[data-word="work"] { top: 103.52cqw; }
-  .pill-nav.is-open .pill-panel-link[data-word="services"] { top: 118.36cqw; }
-  .pill-nav.is-open .pill-panel-link[data-word="about"] { top: 133.4cqw; }
+  .pill-nav.is-open .pill-panel-link[data-word="work"] { top: 47.32cqh; }
+  .pill-nav.is-open .pill-panel-link[data-word="services"] { top: 54.10cqh; }
+  .pill-nav.is-open .pill-panel-link[data-word="about"] { top: 60.98cqh; }
 
   .pill-nav.is-open .pill-cta--mobile {
     position: absolute;
-    left: 50cqw; top: 150cqw;
+    left: 50cqw; top: 68.57cqh;
     transform: translate(-50%, calc(-50% - 8px));
     width: 70.31cqw;
     margin: 0;
@@ -367,7 +380,7 @@ body {
     pointer-events: none;
   }
   .pill-nav.is-open .menu-photo.is-active { opacity: 1; }
-  .pill-nav.is-open .menu-photo[data-word="work"] { left: 82.22cqw; top: 52.95cqw; width: 54.27cqw; }
+  .pill-nav.is-open .menu-photo[data-word="work"] { left: 82.22cqw; top: 24.21cqh; width: 54.27cqw; max-height: 40cqh; }
   /* Flipped horizontally per feedback — the sticker faces left in its
      source file, which read wrong sitting on this (right) side of the
      composition. Sized down from the original 66.21cqw (matching
@@ -375,10 +388,10 @@ body {
      recentered so the shrunk image still hugs the left edge rather
      than drifting toward center. */
   .pill-nav.is-open .menu-photo[data-word="services"] {
-    left: 24cqw; top: 35.47cqw; width: 48cqw;
+    left: 24cqw; top: 16.21cqh; width: 48cqw; max-height: 28cqh;
     transform: translate(-50%, -50%) scaleX(-1);
   }
-  .pill-nav.is-open .menu-photo[data-word="about"] { left: 49.99cqw; top: 191.3cqw; width: 58.97cqw; }
+  .pill-nav.is-open .menu-photo[data-word="about"] { left: 49.99cqw; top: 87.45cqh; width: 58.97cqw; max-height: 20cqh; }
 
   .pill-nav.is-open .menu-accent {
     display: block;
@@ -390,15 +403,15 @@ body {
     pointer-events: none;
   }
   .pill-nav.is-open .menu-accent.is-active { opacity: 1; }
-  .pill-nav.is-open .menu-accent[data-word="work"] { left: 18.16cqw; top: 174.6cqw; width: 58.2cqw; }
-  .pill-nav.is-open .menu-accent[data-word="services"] { left: 73.05cqw; top: 164.2cqw; width: 28.13cqw; }
+  .pill-nav.is-open .menu-accent[data-word="work"] { left: 18.16cqw; top: 79.82cqh; width: 58.2cqw; max-height: 34cqh; }
+  .pill-nav.is-open .menu-accent[data-word="services"] { left: 73.05cqw; top: 75.06cqh; width: 28.13cqw; max-height: 40cqh; }
   /* Rotated 71.45deg (180° past the same swirl asset's -108.55deg
      rotation used elsewhere on the site, so it points down instead of
      up) and sized down — unrotated at its earlier width it read as an
      oversized, stretched-looking loop rather than a compact arrow
      accent. */
   .pill-nav.is-open .menu-accent[data-word="about"] {
-    left: 50.85cqw; top: 25.71cqw; width: 30cqw;
+    left: 50.85cqw; top: 11.75cqh; width: 30cqw; max-height: 11cqh;
     transform: translate(-50%, -50%) rotate(71.45deg);
   }
 
