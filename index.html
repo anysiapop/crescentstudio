@@ -1039,17 +1039,12 @@
         pointer-events: none;
       }
       .ss-swirl {
-        position: absolute;
-        left: 25.64cqw; top: 866px;
-        /* Fixed px, not cqw — this whole connector zone sits in a fixed-
-           px vertical gap between two other fixed-px points (the stats
-           above, the CTA card below per .ss-cta-stack's own reasoning),
-           so a cqw *size* here still grows with viewport width even
-           though the gap it needs to fit inside doesn't, eventually
-           outgrowing one end or the other. */
-        width: 77px; height: 90px;
-        transform: rotate(138.55deg);
-        pointer-events: none;
+        /* Hidden per feedback — kept causing placement trouble (the
+           connector zone between the fixed-px stats above and the
+           fixed-px CTA card below is narrow enough that this rotated
+           element's inflated bounding box was a constant fight to fit
+           without touching either), and isn't worth the upkeep. */
+        display: none;
       }
 
       /* CTA card stack — deliberately positioned so its vertical center
