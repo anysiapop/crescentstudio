@@ -1237,6 +1237,10 @@
       color: #F5F4EF;
       text-shadow: 0 0.217cqw 0.217cqw rgba(255, 255, 255, 0.25);
       transform: rotate(-2.63deg);
+      /* Without this, the fixed width above wraps to 2 lines at some
+         viewport widths — the mobile equivalent (.ss-cta-line1/2) has
+         had this all along, this one was just missing it. */
+      white-space: nowrap;
     }
     .services-cta-line1 {
       left: 3.79cqw; top: 6.43cqw; width: 42.42cqw;
