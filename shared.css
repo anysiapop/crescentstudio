@@ -336,7 +336,10 @@ body {
     position: absolute;
     left: 50cqw;
     transform: translate(-50%, -50%);
-    font-size: 24px;
+    /* Caps at the original 24px on tall viewports; shrinks in step with
+       everything else once height gets tight, so the text (and its
+       underline) never crowds into the CTA button below it. */
+    font-size: clamp(14px, 3.8cqh, 24px);
   }
   .pill-nav.is-open .pill-panel-link[data-word="work"] { top: 47.32cqh; }
   .pill-nav.is-open .pill-panel-link[data-word="services"] { top: 54.10cqh; }
