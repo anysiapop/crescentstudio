@@ -262,9 +262,10 @@ body {
    old_cqw * (512/1120). container-type is `size` rather than
    `inline-size` so cqh is actually available; .pill-nav.is-open has a
    definite block size (fixed + inset:0), so that's safe here.
-   overflow-y:auto stays on for now as a safety net — a later change
-   removes it once every element's own vertical footprint (not just
-   its anchor point) is confirmed to always fit. */
+   overflow:hidden rather than overflow-y:auto — every element's own
+   vertical footprint (cqh anchor + max-height cap, not just its anchor
+   point) is verified to always fit, so there's nothing left to scroll
+   to; this makes that a hard guarantee rather than an assumption. */
 @media (max-width: 639px) {
   .pill-nav.is-open {
     position: fixed;
@@ -278,7 +279,7 @@ body {
     background: #0B0B0B;
     transform: none;
     container-type: size;
-    overflow-y: auto;
+    overflow: hidden;
   }
 
   /* display:contents removes the row's own box (so it stops driving
