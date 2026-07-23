@@ -167,14 +167,6 @@
 
   function updatePillVisibility() {
     updateScrollDirection();
-    // Never hide the pill while the mobile menu itself is open — the
-    // hero/footer/scroll-direction rules below are about the collapsed
-    // pill competing with other content, which doesn't apply once it's
-    // a full-screen takeover the user just asked to see.
-    if (nav.classList.contains('is-open')) {
-      nav.classList.remove('pill-nav--hidden');
-      return;
-    }
     var reachedFooter = hasReachedFooter();
     var hidden;
     if (mobileMq.matches) {
