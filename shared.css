@@ -372,6 +372,12 @@ body {
     position: absolute;
     transform: translate(-50%, -50%);
     height: auto;
+    /* Once max-height (below) actually clamps the computed height on a
+       short viewport, width and height stop matching the asset's
+       natural aspect ratio — object-fit:contain keeps the image itself
+       proportional inside that box instead of squashing/stretching
+       (the browser's default fill behavior) to fill it. */
+    object-fit: contain;
     opacity: 0;
     transition: opacity 0.12s ease;
     pointer-events: none;
@@ -395,6 +401,9 @@ body {
     position: absolute;
     transform: translate(-50%, -50%);
     height: auto;
+    /* Same reasoning as .menu-photo above — keeps the asset proportional
+       once max-height actually clamps it on a short viewport. */
+    object-fit: contain;
     opacity: 0;
     transition: opacity 0.12s ease;
     pointer-events: none;
