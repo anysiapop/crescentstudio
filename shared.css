@@ -10,7 +10,16 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html:focus-within { scroll-behavior: smooth; }
 body {
-  background: #0B0B0B;
+  /* Cream (moon-bg), not Eclipse Black — every dark section (.hero,
+     .marquee-wrap, .services, .site-footer) paints its own explicit
+     dark background over its full box, so this is never actually
+     visible behind them. It matters at the seams between the cream
+     sections that make up most of the page: those are heavily
+     aspect-ratio/cqw/vw sized, and sub-pixel rounding between two
+     adjacent fractional-height sections can leave a ~1px gap that
+     exposes whatever body's background is — cream makes that gap
+     blend in instead of showing as a stray black hairline. */
+  background: #F1E9DE;
   color: #F5F4EF;
   font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 300; letter-spacing: -0.03em;
   -webkit-font-smoothing: antialiased;
